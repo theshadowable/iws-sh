@@ -68,7 +68,7 @@ async def get_current_user(
         )
     
     # Get user from database
-    from main import db as database
+    from server import db as database
     user_doc = await database.users.find_one({"id": user_id}, {"_id": 0})
     
     if user_doc is None:
