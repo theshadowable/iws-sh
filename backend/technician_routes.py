@@ -31,7 +31,7 @@ async def create_meter_reading(
     db = None
 ):
     """Submit a new meter reading (manual entry)"""
-    from main import db as database
+    from server import db as database
     
     reading = MeterReading(**reading_data.model_dump(), technician_id=current_user.id)
     reading_dict = reading.model_dump()
@@ -60,7 +60,7 @@ async def create_meter_reading_with_ocr(
     current_user: User = Depends(require_role([UserRole.TECHNICIAN, UserRole.ADMIN]))
 ):
     """Submit meter reading with photo OCR processing"""
-    from main import db as database
+    from server import db as database
     
     # Save uploaded photo
     file_content = await photo.read()
@@ -107,7 +107,7 @@ async def get_meter_readings(
     current_user: User = Depends(require_role([UserRole.TECHNICIAN, UserRole.ADMIN]))
 ):
     """Get meter readings with optional filters"""
-    from main import db as database
+    from server import db as database
     
     query = {}
     if device_id:
@@ -145,7 +145,7 @@ async def get_work_orders(
     current_user: User = Depends(require_role([UserRole.TECHNICIAN, UserRole.ADMIN]))
 ):
     """Get work orders assigned to technician"""
-    from main import db as database
+    from server import db as database
     
     query = {}
     if current_user.role == UserRole.TECHNICIAN:
@@ -175,7 +175,7 @@ async def create_work_order(
     current_user: User = Depends(require_role([UserRole.ADMIN]))
 ):
     """Create a new work order (Admin only)"""
-    from main import db as database
+    from server import db as database
     
     work_order = WorkOrder(**work_order_data.model_dump(), created_by=current_user.id)
     work_order_dict = work_order.model_dump()
@@ -197,7 +197,7 @@ async def update_work_order(
     current_user: User = Depends(require_role([UserRole.TECHNICIAN, UserRole.ADMIN]))
 ):
     """Update work order status"""
-    from main import db as database
+    from server import db as database
     
     update_data = order_update.model_dump(exclude_unset=True)
     update_data['updated_at'] = datetime.utcnow().isoformat()
@@ -237,7 +237,7 @@ async def get_maintenance_schedules(
     current_user: User = Depends(require_role([UserRole.TECHNICIAN, UserRole.ADMIN]))
 ):
     """Get maintenance schedules"""
-    from main import db as database
+    from server import db as database
     
     query = {}
     if current_user.role == UserRole.TECHNICIAN:
@@ -268,7 +268,7 @@ async def create_maintenance_schedule(
     current_user: User = Depends(require_role([UserRole.ADMIN, UserRole.TECHNICIAN]))
 ):
     """Create maintenance schedule"""
-    from main import db as database
+    from server import db as database
     
     schedule = MaintenanceSchedule(**schedule_data.model_dump())
     schedule_dict = schedule.model_dump()
@@ -291,7 +291,7 @@ async def get_leak_alerts(
     current_user: User = Depends(require_role([UserRole.TECHNICIAN, UserRole.ADMIN]))
 ):
     """Get leak alerts"""
-    from main import db as database
+    from server import db as database
     
     query = {}
     if device_id:
@@ -316,7 +316,7 @@ async def run_leak_detection(
     current_user: User = Depends(require_role([UserRole.TECHNICIAN, UserRole.ADMIN]))
 ):
     """Run leak detection for a device"""
-    from main import db as database
+    from server import db as database
     
     # Get water usage records for last 24 hours
     start_time = datetime.utcnow() - timedelta(hours=24)
@@ -361,7 +361,7 @@ async def resolve_leak_alert(
     current_user: User = Depends(require_role([UserRole.TECHNICIAN, UserRole.ADMIN]))
 ):
     """Mark leak alert as resolved"""
-    from main import db as database
+    from server import db as database
     
     update_data = {
         "is_resolved": True,
@@ -395,7 +395,7 @@ async def generate_technician_report(
     current_user: User = Depends(require_role([UserRole.TECHNICIAN, UserRole.ADMIN]))
 ):
     """Generate technician performance report"""
-    from main import db as database
+    from server import db as database
     
     technician_id = current_user.id
     if current_user.role == UserRole.ADMIN and report_data.technician_id:
@@ -466,7 +466,7 @@ async def create_meter_condition_check(
     current_user: User = Depends(require_role([UserRole.TECHNICIAN, UserRole.ADMIN]))
 ):
     """Submit meter condition check"""
-    from main import db as database
+    from server import db as database
     
     condition = MeterCondition(**condition_data.model_dump())
     condition_dict = condition.model_dump()
@@ -490,7 +490,7 @@ async def get_meter_condition_history(
     current_user: User = Depends(require_role([UserRole.TECHNICIAN, UserRole.ADMIN]))
 ):
     """Get meter condition check history"""
-    from main import db as database
+    from server import db as database
     
     conditions = await database.meter_conditions.find(
         {"device_id": device_id},
@@ -511,7 +511,7 @@ async def get_customers_data_for_technician(
     current_user: User = Depends(require_role([UserRole.TECHNICIAN, UserRole.ADMIN]))
 ):
     """Get comprehensive customer data for field work"""
-    from main import db as database
+    from server import db as database
     
     # Aggregate data from multiple collections
     pipeline = [
@@ -580,7 +580,7 @@ async def optimize_technician_route(
     current_user: User = Depends(require_role([UserRole.TECHNICIAN, UserRole.ADMIN]))
 ):
     """Optimize route for multiple work orders"""
-    from main import db as database
+    from server import db as database
     
     # Get work orders with locations
     locations = []
