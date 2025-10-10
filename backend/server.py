@@ -632,8 +632,12 @@ async def get_dashboard_stats(
     return stats
 
 
-# Include router
+# Import technician routes
+from technician_routes import router as technician_router
+
+# Include routers
 app.include_router(api_router)
+api_router.include_router(technician_router)
 
 
 @app.on_event("shutdown")
