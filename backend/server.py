@@ -1,5 +1,6 @@
 from fastapi import FastAPI, APIRouter, HTTPException, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from motor.motor_asyncio import AsyncIOMotorClient
 from dotenv import load_dotenv
 from pathlib import Path
@@ -55,6 +56,11 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
+
+# Mount static files for uploads
+upload_dir = Path("/app/uploads")
+upload_dir.mkdir(parents=True, exist_ok=True)
+app.mount("/uploads", StaticFiles(directory=str(upload_dir)), name="uploads")
 
 
 # ==================== AUTHENTICATION ROUTES ====================
@@ -634,10 +640,14 @@ async def get_dashboard_stats(
 
 # Import technician routes
 from technician_routes import router as technician_router
+from file_upload_routes import router as upload_router
 
-# Include routers
-app.include_router(api_router)
+# Include routers - include technician routes in api_router first
 api_router.include_router(technician_router)
+app.include_router(upload_router)
+
+# Then include api_router in app
+app.include_router(api_router)
 
 
 @app.on_event("shutdown")
