@@ -17,7 +17,8 @@ import {
   UserCheck,
   Map,
   ShoppingCart,
-  History
+  History,
+  BarChart3
 } from 'lucide-react';
 
 export const Layout = ({ children }) => {
@@ -60,9 +61,17 @@ export const Layout = ({ children }) => {
     if (user?.role === 'customer') {
       items.push(
         { path: '/my-devices', icon: Gauge, label: 'My Devices', roles: ['customer'] },
+        { path: '/analytics', icon: BarChart3, label: 'Analytics', roles: ['customer'] },
         { path: '/balance-purchase', icon: ShoppingCart, label: 'Buy Balance', roles: ['customer'] },
         { path: '/purchase-history', icon: History, label: 'Purchase History', roles: ['customer'] },
         { path: '/transactions', icon: CreditCard, label: 'Transactions', roles: ['customer'] },
+      );
+    }
+    
+    // Analytics for admin
+    if (user?.role === 'admin') {
+      items.push(
+        { path: '/analytics', icon: BarChart3, label: 'Analytics', roles: ['admin'] }
       );
     }
 

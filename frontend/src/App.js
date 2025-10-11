@@ -17,6 +17,7 @@ import { PurchaseReceipt } from '@/pages/PurchaseReceipt';
 import { AdminPaymentSettings } from '@/pages/AdminPaymentSettings';
 import { AdminDashboard } from '@/pages/AdminDashboard';
 import { UserManagement } from '@/pages/UserManagement';
+import { Analytics } from '@/pages/Analytics';
 import "@/App.css";
 
 // Placeholder pages (will be created in next phases)
@@ -226,6 +227,15 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute allowedRoles={['customer']}>
             <Transactions />
+          </ProtectedRoute>
+        }
+      />
+      
+      <Route
+        path="/analytics"
+        element={
+          <ProtectedRoute allowedRoles={['admin', 'customer']}>
+            <Analytics />
           </ProtectedRoute>
         }
       />
