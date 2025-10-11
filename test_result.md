@@ -116,6 +116,15 @@ backend:
         - working: true
           agent: "main"
           comment: "Created seed script with correct field names (id, full_name) matching User model. All 3 demo accounts created successfully"
+        - working: "NA"
+          agent: "user"
+          comment: "User reported demo accounts cannot be used"
+        - working: true
+          agent: "main"
+          comment: "Database was empty. Ran seed_demo_users.py script. All 3 users now in database. Needs testing to confirm login works."
+        - working: true
+          agent: "testing"
+          comment: "VERIFIED: All 3 demo users successfully seeded and accessible via login endpoint. Database contains all required accounts."
   
   - task: "Authentication - Login endpoint"
     implemented: true
@@ -128,6 +137,15 @@ backend:
         - working: true
           agent: "main"
           comment: "Login working for all 3 demo accounts (admin, technician, customer). Returns JWT tokens successfully"
+        - working: "NA"
+          agent: "user"
+          comment: "User reported demo accounts cannot be used"
+        - working: "NA"
+          agent: "main"
+          comment: "Re-seeded users. Need to test backend login for all 3 accounts (admin, technician, customer)"
+        - working: true
+          agent: "testing"
+          comment: "CONFIRMED: All 3 demo accounts login successfully. Admin (admin@indowater.com/admin123), Technician (technician@indowater.com/tech123), Customer (customer@indowater.com/customer123). All return valid JWT tokens with correct roles and proper response structure (access_token, token_type: bearer, user object with id, email, full_name, role, is_active). Backend login endpoint fully functional."
 
 frontend:
   - task: "Login page"
@@ -163,3 +181,7 @@ agent_communication:
       message: "PHASE 1 COMPLETE - Technician Core Features Implemented. Backend: All technician API endpoints working (meter readings, work orders, customer data). Frontend: Created 3 new pages (TechnicianTasks, MeterReading, CustomerData). Sample data seeded (2 properties, 1 customer, 2 devices, 3 work orders). Ready for user testing."
     - agent: "main"
       message: "PHASE 2 COMPLETE - OCR, Photos & Location Tracking Implemented. Backend: File upload API with OCR processing (Tesseract), barcode/QR scanning endpoint. Frontend: PhotoUpload component with live OCR extraction, QRScanner component for device identification, MapView component with OpenStreetMap/Leaflet, TaskMap page for navigation. All integrated into MeterReading page. Ready for full testing."
+    - agent: "main"
+      message: "USER ISSUE: Demo accounts cannot be used. Found database was empty (0 users). Ran seed_demo_users.py successfully - all 3 users now in database. Need to test backend login endpoint for all accounts and then frontend login flow."
+    - agent: "testing"
+      message: "BACKEND LOGIN TESTING COMPLETE: Created comprehensive backend_test.py and verified all 3 demo accounts. Results: ✅ Admin login working (admin@indowater.com), ✅ Technician login working (technician@indowater.com), ✅ Customer login working (customer@indowater.com). All accounts return valid JWT tokens with correct roles. Response structure matches expected format with access_token, token_type: bearer, and complete user object. Backend authentication is fully functional."
