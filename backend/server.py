@@ -646,10 +646,16 @@ from file_upload_routes import router as upload_router
 from payment_routes import router as payment_router
 from admin_payment_routes import router as admin_payment_router
 
+# Import analytics routes
+from analytics_routes import router as analytics_router
+from report_routes import router as report_router
+
 # Include routers - include technician routes in api_router first
 api_router.include_router(technician_router)
 api_router.include_router(payment_router)
 api_router.include_router(admin_payment_router)
+api_router.include_router(analytics_router)
+api_router.include_router(report_router)
 app.include_router(upload_router)
 
 # Then include api_router in app

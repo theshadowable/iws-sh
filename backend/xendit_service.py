@@ -31,9 +31,13 @@ class XenditService:
         """Initialize Xendit client with environment configuration"""
         self.secret_key = os.getenv('XENDIT_SECRET_KEY')
         self.public_key = os.getenv('XENDIT_PUBLIC_KEY')
+        self.enabled = bool(self.secret_key)
         
-        if not self.secret_key:
-            raise ValueError("Xendit API keys not configured")
+        if not self.enabled:
+            print("Warning: Xendit API keys not configured. Payment gateway disabled.")
+            self.base_url = None
+            self.headers = {}
+            return
         
         # API base URL
         self.base_url = "https://api.xendit.co"
@@ -61,6 +65,11 @@ class XenditService:
         Returns:
             XenditVAResponse with VA details
         """
+        if not self.enabled:
+            raise HTTPException(
+                status_code=503,
+                detail="Xendit payment gateway is not configured"
+            )
         try:
             # Generate unique external ID
             external_id = self._generate_external_id(
@@ -143,6 +152,11 @@ class XenditService:
         Returns:
             XenditQRISResponse with QR code details
         """
+        if not self.enabled:
+            raise HTTPException(
+                status_code=503,
+                detail="Xendit payment gateway is not configured"
+            )
         try:
             # Generate unique external ID
             external_id = self._generate_external_id(
@@ -218,6 +232,11 @@ class XenditService:
         Returns:
             XenditEWalletResponse with checkout URL
         """
+        if not self.enabled:
+            raise HTTPException(
+                status_code=503,
+                detail="Xendit payment gateway is not configured"
+            )
         try:
             # Generate unique external ID
             external_id = self._generate_external_id(

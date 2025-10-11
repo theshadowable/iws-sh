@@ -27,9 +27,13 @@ class MidtransService:
         self.server_key = os.getenv('MIDTRANS_SERVER_KEY')
         self.client_key = os.getenv('MIDTRANS_CLIENT_KEY')
         self.is_production = os.getenv('MIDTRANS_IS_PRODUCTION', 'false').lower() == 'true'
+        self.enabled = bool(self.server_key and self.client_key)
         
-        if not self.server_key or not self.client_key:
-            raise ValueError("Midtrans API keys not configured")
+        if not self.enabled:
+            print("Warning: Midtrans API keys not configured. Payment gateway disabled.")
+            self.snap = None
+            self.core_api = None
+            return
         
         # Initialize Snap client
         self.snap = midtransclient.Snap(
@@ -58,6 +62,11 @@ class MidtransService:
         Returns:
             MidtransTransactionResponse with snap token and URL
         """
+        if not self.enabled:
+            raise HTTPException(
+                status_code=503,
+                detail="Midtrans payment gateway is not configured"
+            )
         try:
             # Generate unique reference ID
             reference_id = self._generate_reference_id(

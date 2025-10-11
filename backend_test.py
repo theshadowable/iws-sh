@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Backend API Testing Script for IndoWater Solution
-Tests login endpoint and payment history APIs
+Tests login, analytics, reporting, and payment history APIs
 """
 
 import requests
@@ -10,7 +10,7 @@ import sys
 from typing import Dict, Any, Optional
 
 # Backend URL from environment
-BACKEND_URL = "https://ui-fix-continue.preview.emergentagent.com/api"
+BACKEND_URL = "https://continue-dev-16.preview.emergentagent.com/api"
 
 # Demo accounts to test
 DEMO_ACCOUNTS = [
@@ -289,6 +289,400 @@ def test_payment_history_api(token: str, customer_id: str) -> Dict[str, Any]:
     return results
 
 
+def test_analytics_api(token: str, user_role: str, customer_id: str = None) -> Dict[str, Any]:
+    """Test analytics API endpoints"""
+    print(f"\n📊 Testing Analytics APIs ({user_role})...")
+    
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+    
+    results = {
+        "usage_month": {"success": False, "error": None, "data": None},
+        "usage_week": {"success": False, "error": None, "data": None},
+        "trends": {"success": False, "error": None, "data": None},
+        "predictions": {"success": False, "error": None, "data": None},
+        "admin_overview": {"success": False, "error": None, "data": None}
+    }
+    
+    try:
+        # Test 1: Monthly usage analytics
+        print("   📈 Testing GET /api/analytics/usage?period=month...")
+        response = requests.get(
+            f"{BACKEND_URL}/analytics/usage?period=month",
+            headers=headers,
+            timeout=15
+        )
+        
+        if response.status_code == 200:
+            data = response.json()
+            required_fields = ["period", "start_date", "end_date", "total_consumption", "total_cost", "average_daily", "data_points", "device_count"]
+            missing_fields = [field for field in required_fields if field not in data]
+            
+            if missing_fields:
+                results["usage_month"] = {"success": False, "error": f"Missing fields: {missing_fields}"}
+                print(f"      ❌ Missing required fields: {missing_fields}")
+            else:
+                print(f"      ✅ SUCCESS - Total consumption: {data['total_consumption']} m³, Cost: Rp {data['total_cost']:,.2f}")
+                print(f"      ✅ Data points: {len(data['data_points'])}, Devices: {data['device_count']}")
+                results["usage_month"] = {"success": True, "data": data}
+        else:
+            error_msg = f"Monthly usage failed: {response.status_code}"
+            try:
+                error_data = response.json()
+                error_msg += f" - {error_data.get('detail', '')}"
+            except:
+                pass
+            print(f"      ❌ {error_msg}")
+            results["usage_month"] = {"success": False, "error": error_msg}
+        
+        # Test 2: Weekly usage analytics
+        print("   📈 Testing GET /api/analytics/usage?period=week...")
+        response = requests.get(
+            f"{BACKEND_URL}/analytics/usage?period=week",
+            headers=headers,
+            timeout=15
+        )
+        
+        if response.status_code == 200:
+            data = response.json()
+            print(f"      ✅ SUCCESS - Weekly consumption: {data['total_consumption']} m³")
+            results["usage_week"] = {"success": True, "data": data}
+        else:
+            error_msg = f"Weekly usage failed: {response.status_code}"
+            print(f"      ❌ {error_msg}")
+            results["usage_week"] = {"success": False, "error": error_msg}
+        
+        # Test 3: Consumption trends
+        print("   📊 Testing GET /api/analytics/trends?period=month...")
+        response = requests.get(
+            f"{BACKEND_URL}/analytics/trends?period=month",
+            headers=headers,
+            timeout=15
+        )
+        
+        if response.status_code == 200:
+            data = response.json()
+            required_fields = ["period_type", "trends", "overall_trend", "growth_rate"]
+            missing_fields = [field for field in required_fields if field not in data]
+            
+            if missing_fields:
+                results["trends"] = {"success": False, "error": f"Missing fields: {missing_fields}"}
+                print(f"      ❌ Missing required fields: {missing_fields}")
+            else:
+                print(f"      ✅ SUCCESS - Overall trend: {data['overall_trend']}, Growth rate: {data['growth_rate']}%")
+                print(f"      ✅ Trend periods: {len(data['trends'])}")
+                results["trends"] = {"success": True, "data": data}
+        else:
+            error_msg = f"Trends failed: {response.status_code}"
+            print(f"      ❌ {error_msg}")
+            results["trends"] = {"success": False, "error": error_msg}
+        
+        # Test 4: Predictions (only for customers or with customer_id)
+        if user_role == "customer" or customer_id:
+            print("   🔮 Testing GET /api/analytics/predictions?days_ahead=7...")
+            url = f"{BACKEND_URL}/analytics/predictions?days_ahead=7"
+            if user_role != "customer" and customer_id:
+                url += f"&customer_id={customer_id}"
+            
+            response = requests.get(url, headers=headers, timeout=15)
+            
+            if response.status_code == 200:
+                data = response.json()
+                required_fields = ["customer_id", "prediction_method", "based_on_days", "predictions", "average_predicted"]
+                missing_fields = [field for field in required_fields if field not in data]
+                
+                if missing_fields:
+                    results["predictions"] = {"success": False, "error": f"Missing fields: {missing_fields}"}
+                    print(f"      ❌ Missing required fields: {missing_fields}")
+                else:
+                    print(f"      ✅ SUCCESS - Predictions: {len(data['predictions'])} days, Avg predicted: {data['average_predicted']} m³")
+                    print(f"      ✅ Method: {data['prediction_method']}, Based on: {data['based_on_days']} days")
+                    results["predictions"] = {"success": True, "data": data}
+            else:
+                error_msg = f"Predictions failed: {response.status_code}"
+                try:
+                    error_data = response.json()
+                    error_msg += f" - {error_data.get('detail', '')}"
+                except:
+                    pass
+                print(f"      ❌ {error_msg}")
+                results["predictions"] = {"success": False, "error": error_msg}
+        else:
+            print("   🔮 Skipping predictions test - requires customer context")
+            results["predictions"] = {"success": True, "data": {"skipped": "No customer context"}}
+        
+        # Test 5: Admin overview (only for admin)
+        if user_role == "admin":
+            print("   👑 Testing GET /api/analytics/admin/overview...")
+            response = requests.get(
+                f"{BACKEND_URL}/analytics/admin/overview",
+                headers=headers,
+                timeout=15
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                required_fields = ["total_devices", "active_devices", "total_customers", "total_consumption_30d", "total_revenue_30d"]
+                missing_fields = [field for field in required_fields if field not in data]
+                
+                if missing_fields:
+                    results["admin_overview"] = {"success": False, "error": f"Missing fields: {missing_fields}"}
+                    print(f"      ❌ Missing required fields: {missing_fields}")
+                else:
+                    print(f"      ✅ SUCCESS - Devices: {data['total_devices']} (active: {data['active_devices']})")
+                    print(f"      ✅ Customers: {data['total_customers']}, 30d consumption: {data['total_consumption_30d']} m³")
+                    print(f"      ✅ 30d revenue: Rp {data['total_revenue_30d']:,.2f}")
+                    results["admin_overview"] = {"success": True, "data": data}
+            else:
+                error_msg = f"Admin overview failed: {response.status_code}"
+                print(f"      ❌ {error_msg}")
+                results["admin_overview"] = {"success": False, "error": error_msg}
+        else:
+            print("   👑 Skipping admin overview - requires admin role")
+            results["admin_overview"] = {"success": True, "data": {"skipped": "Not admin"}}
+            
+    except requests.exceptions.RequestException as e:
+        error_msg = f"Connection error: {str(e)}"
+        print(f"   ❌ {error_msg}")
+        for key in results:
+            if not results[key]["success"]:
+                results[key]["error"] = error_msg
+    except Exception as e:
+        error_msg = f"Unexpected error: {str(e)}"
+        print(f"   ❌ {error_msg}")
+        for key in results:
+            if not results[key]["success"]:
+                results[key]["error"] = error_msg
+    
+    return results
+
+
+def test_report_generation_api(token: str, user_role: str, customer_id: str = None) -> Dict[str, Any]:
+    """Test report generation API endpoints"""
+    print(f"\n📄 Testing Report Generation APIs ({user_role})...")
+    
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+    
+    results = {
+        "pdf_report": {"success": False, "error": None, "data": None},
+        "excel_report": {"success": False, "error": None, "data": None}
+    }
+    
+    # Prepare report request data
+    from datetime import datetime, timedelta
+    end_date = datetime.utcnow()
+    start_date = end_date - timedelta(days=30)
+    
+    report_data = {
+        "start_date": start_date.strftime('%Y-%m-%d'),
+        "end_date": end_date.strftime('%Y-%m-%d'),
+        "report_type": "usage_summary",
+        "include_charts": True
+    }
+    
+    # Add customer_id for admin users
+    if user_role == "admin" and customer_id:
+        report_data["customer_id"] = customer_id
+    
+    try:
+        # Test 1: PDF Report Generation
+        print("   📋 Testing POST /api/reports/export-pdf...")
+        response = requests.post(
+            f"{BACKEND_URL}/reports/export-pdf",
+            json=report_data,
+            headers=headers,
+            timeout=30
+        )
+        
+        if response.status_code == 200:
+            content_type = response.headers.get('content-type', '')
+            content_length = len(response.content)
+            
+            if 'application/pdf' in content_type and content_length > 1000:
+                print(f"      ✅ SUCCESS - PDF generated, size: {content_length:,} bytes")
+                print(f"      ✅ Content-Type: {content_type}")
+                results["pdf_report"] = {"success": True, "data": {"size": content_length, "type": content_type}}
+            else:
+                error_msg = f"Invalid PDF response - Type: {content_type}, Size: {content_length}"
+                print(f"      ❌ {error_msg}")
+                results["pdf_report"] = {"success": False, "error": error_msg}
+        else:
+            error_msg = f"PDF generation failed: {response.status_code}"
+            try:
+                error_data = response.json()
+                error_msg += f" - {error_data.get('detail', '')}"
+            except:
+                pass
+            print(f"      ❌ {error_msg}")
+            results["pdf_report"] = {"success": False, "error": error_msg}
+        
+        # Test 2: Excel Report Generation
+        print("   📊 Testing POST /api/reports/export-excel...")
+        response = requests.post(
+            f"{BACKEND_URL}/reports/export-excel",
+            json=report_data,
+            headers=headers,
+            timeout=30
+        )
+        
+        if response.status_code == 200:
+            content_type = response.headers.get('content-type', '')
+            content_length = len(response.content)
+            
+            if 'spreadsheet' in content_type and content_length > 1000:
+                print(f"      ✅ SUCCESS - Excel generated, size: {content_length:,} bytes")
+                print(f"      ✅ Content-Type: {content_type}")
+                results["excel_report"] = {"success": True, "data": {"size": content_length, "type": content_type}}
+            else:
+                error_msg = f"Invalid Excel response - Type: {content_type}, Size: {content_length}"
+                print(f"      ❌ {error_msg}")
+                results["excel_report"] = {"success": False, "error": error_msg}
+        else:
+            error_msg = f"Excel generation failed: {response.status_code}"
+            try:
+                error_data = response.json()
+                error_msg += f" - {error_data.get('detail', '')}"
+            except:
+                pass
+            print(f"      ❌ {error_msg}")
+            results["excel_report"] = {"success": False, "error": error_msg}
+            
+    except requests.exceptions.RequestException as e:
+        error_msg = f"Connection error: {str(e)}"
+        print(f"   ❌ {error_msg}")
+        for key in results:
+            if not results[key]["success"]:
+                results[key]["error"] = error_msg
+    except Exception as e:
+        error_msg = f"Unexpected error: {str(e)}"
+        print(f"   ❌ {error_msg}")
+        for key in results:
+            if not results[key]["success"]:
+                results[key]["error"] = error_msg
+    
+    return results
+
+
+def test_analytics_and_reports():
+    """Test analytics and report generation for both admin and customer"""
+    print("=" * 80)
+    print("🧪 ANALYTICS & REPORTING API TESTING - IndoWater Solution")
+    print("=" * 80)
+    print(f"Backend URL: {BACKEND_URL}")
+    
+    # Test accounts
+    test_accounts = [
+        {
+            "name": "Admin",
+            "email": "admin@indowater.com",
+            "password": "admin123",
+            "expected_role": "admin"
+        },
+        {
+            "name": "Customer",
+            "email": "customer@indowater.com", 
+            "password": "customer123",
+            "expected_role": "customer"
+        }
+    ]
+    
+    all_results = {}
+    
+    for account in test_accounts:
+        print(f"\n{'='*60}")
+        print(f"🔐 Testing {account['name']} Account")
+        print(f"{'='*60}")
+        
+        # Login
+        login_result = test_login(
+            account["email"],
+            account["password"], 
+            account["expected_role"],
+            account["name"]
+        )
+        
+        if not login_result["success"]:
+            print(f"\n❌ CRITICAL: {account['name']} login failed - skipping tests")
+            all_results[account["name"]] = {"login": False, "analytics": {}, "reports": {}}
+            continue
+        
+        token = login_result["token"]
+        user = login_result["user"]
+        user_role = user["role"]
+        customer_id = user["id"] if user_role == "customer" else None
+        
+        print(f"\n✅ {account['name']} login successful - Role: {user_role}")
+        
+        # Test Analytics APIs
+        analytics_results = test_analytics_api(token, user_role, customer_id)
+        
+        # Test Report Generation
+        report_results = test_report_generation_api(token, user_role, customer_id)
+        
+        all_results[account["name"]] = {
+            "login": True,
+            "analytics": analytics_results,
+            "reports": report_results
+        }
+    
+    # Summary
+    print("\n" + "=" * 80)
+    print("📊 ANALYTICS & REPORTING TEST SUMMARY")
+    print("=" * 80)
+    
+    total_tests = 0
+    passed_tests = 0
+    
+    for account_name, account_results in all_results.items():
+        print(f"\n{account_name} Account:")
+        
+        if not account_results["login"]:
+            print("  ❌ Login failed - tests skipped")
+            continue
+        
+        # Analytics tests
+        analytics = account_results["analytics"]
+        for test_name, result in analytics.items():
+            total_tests += 1
+            if result["success"]:
+                passed_tests += 1
+                status = "✅ PASS"
+            else:
+                status = "❌ FAIL"
+            
+            print(f"  {status} - Analytics: {test_name}")
+            if not result["success"] and result["error"]:
+                print(f"        Error: {result['error']}")
+        
+        # Report tests
+        reports = account_results["reports"]
+        for test_name, result in reports.items():
+            total_tests += 1
+            if result["success"]:
+                passed_tests += 1
+                status = "✅ PASS"
+            else:
+                status = "❌ FAIL"
+            
+            print(f"  {status} - Reports: {test_name}")
+            if not result["success"] and result["error"]:
+                print(f"        Error: {result['error']}")
+    
+    print(f"\nOverall Results: {passed_tests}/{total_tests} tests passed")
+    
+    if passed_tests == total_tests:
+        print("🎉 ALL ANALYTICS & REPORTING TESTS PASSED!")
+        return True
+    else:
+        print("⚠️  SOME TESTS FAILED - Check errors above")
+        return False
+
+
 def test_customer_payment_apis():
     """Test customer login and payment APIs"""
     print("=" * 70)
@@ -398,11 +792,15 @@ def main():
     
     print(f"\nLogin Results: {success_count}/{len(DEMO_ACCOUNTS)} accounts working")
     
-    # Test 2: Payment APIs (only if customer login works)
+    # Test 2: Analytics & Reporting APIs
+    print(f"\n📊 PHASE 2: Testing Analytics & Reporting APIs...")
+    analytics_success = test_analytics_and_reports()
+    
+    # Test 3: Payment APIs (only if customer login works)
     customer_login_success = any(r["success"] and r["account_name"] == "Customer" for r in results)
     
     if customer_login_success:
-        print(f"\n💳 PHASE 2: Testing Payment History APIs...")
+        print(f"\n💳 PHASE 3: Testing Payment History APIs...")
         payment_success = test_customer_payment_apis()
     else:
         print(f"\n❌ SKIPPING Payment API tests - Customer login failed")
@@ -414,12 +812,14 @@ def main():
     print("=" * 60)
     
     login_status = "✅ PASS" if success_count == len(DEMO_ACCOUNTS) else "❌ FAIL"
+    analytics_status = "✅ PASS" if analytics_success else "❌ FAIL"
     payment_status = "✅ PASS" if payment_success else "❌ FAIL"
     
     print(f"{login_status} - Login Tests ({success_count}/{len(DEMO_ACCOUNTS)})")
+    print(f"{analytics_status} - Analytics & Reporting Tests")
     print(f"{payment_status} - Payment API Tests")
     
-    overall_success = (success_count == len(DEMO_ACCOUNTS)) and payment_success
+    overall_success = (success_count == len(DEMO_ACCOUNTS)) and analytics_success and payment_success
     
     if overall_success:
         print("\n🎉 ALL TESTS PASSED!")
