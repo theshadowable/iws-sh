@@ -15,7 +15,9 @@ import {
   ClipboardList,
   FileText,
   UserCheck,
-  Map
+  Map,
+  ShoppingCart,
+  History
 } from 'lucide-react';
 
 export const Layout = ({ children }) => {
@@ -40,6 +42,7 @@ export const Layout = ({ children }) => {
         { path: '/customers', icon: Users, label: 'Customers', roles: ['admin'] },
         { path: '/properties', icon: Building2, label: 'Properties', roles: ['admin'] },
         { path: '/devices', icon: Gauge, label: 'Devices', roles: ['admin'] },
+        { path: '/payment-settings', icon: Settings, label: 'Payment Settings', roles: ['admin'] },
       );
     }
 
@@ -57,6 +60,8 @@ export const Layout = ({ children }) => {
     if (user?.role === 'customer') {
       items.push(
         { path: '/my-devices', icon: Gauge, label: 'My Devices', roles: ['customer'] },
+        { path: '/balance-purchase', icon: ShoppingCart, label: 'Buy Balance', roles: ['customer'] },
+        { path: '/purchase-history', icon: History, label: 'Purchase History', roles: ['customer'] },
         { path: '/transactions', icon: CreditCard, label: 'Transactions', roles: ['customer'] },
       );
     }

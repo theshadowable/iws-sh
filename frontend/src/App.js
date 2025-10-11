@@ -11,6 +11,12 @@ import { TechnicianTasks } from '@/pages/TechnicianTasks';
 import { MeterReading } from '@/pages/MeterReading';
 import { CustomerData } from '@/pages/CustomerData';
 import { TaskMap } from '@/pages/TaskMap';
+import { BalancePurchase } from '@/pages/BalancePurchase';
+import { PurchaseHistory } from '@/pages/PurchaseHistory';
+import { PurchaseReceipt } from '@/pages/PurchaseReceipt';
+import { AdminPaymentSettings } from '@/pages/AdminPaymentSettings';
+import { AdminDashboard } from '@/pages/AdminDashboard';
+import { UserManagement } from '@/pages/UserManagement';
 import "@/App.css";
 
 // Placeholder pages (will be created in next phases)
@@ -62,6 +68,17 @@ const Unauthorized = () => (
   </div>
 );
 
+// Dashboard router based on role
+const DashboardRouter = () => {
+  const { user } = useAuth();
+  
+  if (user?.role === 'admin') {
+    return <AdminDashboard />;
+  }
+  
+  return <Dashboard />;
+};
+
 const AppRoutes = () => {
   const { isAuthenticated } = useAuth();
 
@@ -82,7 +99,7 @@ const AppRoutes = () => {
         path="/dashboard"
         element={
           <ProtectedRoute>
-            <Dashboard />
+            <DashboardRouter />
           </ProtectedRoute>
         }
       />
@@ -91,7 +108,7 @@ const AppRoutes = () => {
         path="/users"
         element={
           <ProtectedRoute allowedRoles={['admin']}>
-            <Users />
+            <UserManagement />
           </ProtectedRoute>
         }
       />
@@ -101,6 +118,15 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute allowedRoles={['admin']}>
             <Customers />
+          </ProtectedRoute>
+        }
+      />
+      
+      <Route
+        path="/payment-settings"
+        element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <AdminPaymentSettings />
           </ProtectedRoute>
         }
       />
@@ -164,6 +190,33 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute allowedRoles={['customer']}>
             <MyDevices />
+          </ProtectedRoute>
+        }
+      />
+      
+      <Route
+        path="/balance-purchase"
+        element={
+          <ProtectedRoute allowedRoles={['customer']}>
+            <BalancePurchase />
+          </ProtectedRoute>
+        }
+      />
+      
+      <Route
+        path="/purchase-history"
+        element={
+          <ProtectedRoute allowedRoles={['customer']}>
+            <PurchaseHistory />
+          </ProtectedRoute>
+        }
+      />
+      
+      <Route
+        path="/purchase-receipt/:referenceId"
+        element={
+          <ProtectedRoute allowedRoles={['customer']}>
+            <PurchaseReceipt />
           </ProtectedRoute>
         }
       />

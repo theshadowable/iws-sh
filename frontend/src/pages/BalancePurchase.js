@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout } from '@/components/Layout';
 import { useAuth } from '@/contexts/AuthContext';
 import axios from 'axios';
@@ -22,10 +22,33 @@ export const BalancePurchase = () => {
   const [paymentMethod, setPaymentMethod] = useState('');
   const [paymentDetails, setPaymentDetails] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [activeGateway, setActiveGateway] = useState('midtrans'); // Default gateway
   
   // Xendit specific options
   const [vaBank, setVaBank] = useState('BCA');
   const [ewalletType, setEwalletType] = useState('OVO');
+
+  // Fetch active gateway on component mount
+  useEffect(() => {
+    fetchActiveGateway();
+  }, []);
+
+  const fetchActiveGateway = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get(
+        `${BACKEND_URL}/api/admin/payment-settings`,
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+      setActiveGateway(response.data.active_gateway || 'midtrans');
+    } catch (error) {
+      console.error('Failed to fetch gateway settings:', error);
+      // Default to midtrans if fetch fails
+      setActiveGateway('midtrans');
+    }
+  };
 
   const predefinedAmounts = [
     { value: 50000, label: 'Rp 50.000', water: '5 m³' },
@@ -35,36 +58,51 @@ export const BalancePurchase = () => {
     { value: 1000000, label: 'Rp 1.000.000', water: '100 m³' },
   ];
 
-  const paymentMethods = [
-    {
-      id: 'midtrans',
-      name: 'Midtrans',
-      description: 'Credit Card, Bank Transfer, E-wallet',
-      icon: CreditCard,
-      color: 'blue'
-    },
-    {
-      id: 'xendit_va',
-      name: 'Virtual Account',
-      description: 'BCA, BNI, BRI, Mandiri, Permata',
-      icon: Building2,
-      color: 'green'
-    },
-    {
-      id: 'xendit_qris',
-      name: 'QRIS',
-      description: 'Scan QR with any banking app',
-      icon: QrCode,
-      color: 'purple'
-    },
-    {
-      id: 'xendit_ewallet',
-      name: 'E-wallet',
-      description: 'OVO, DANA, LinkAja, ShopeePay',
-      icon: Smartphone,
-      color: 'orange'
+  // Dynamic payment methods based on active gateway
+  const getPaymentMethods = () => {
+    if (activeGateway === 'midtrans') {
+      return [
+        {
+          id: 'midtrans',
+          name: 'All Payment Methods',
+          description: 'Credit/Debit Card, Bank Transfer, E-wallet, QRIS, and more',
+          icon: CreditCard,
+          color: 'blue',
+          note: 'Powered by Midtrans - Choose your preferred method at checkout'
+        }
+      ];
+    } else {
+      // Xendit
+      return [
+        {
+          id: 'xendit_va',
+          name: 'Virtual Account',
+          description: 'BCA, BNI, BRI, Mandiri, Permata',
+          icon: Building2,
+          color: 'green',
+          note: 'Transfer via ATM, mobile banking, or internet banking'
+        },
+        {
+          id: 'xendit_qris',
+          name: 'QRIS',
+          description: 'Scan QR with any banking app',
+          icon: QrCode,
+          color: 'purple',
+          note: 'Quick and instant payment via QR code'
+        },
+        {
+          id: 'xendit_ewallet',
+          name: 'E-wallet',
+          description: 'OVO, DANA, LinkAja, ShopeePay',
+          icon: Smartphone,
+          color: 'orange',
+          note: 'Pay using your favorite e-wallet'
+        }
+      ];
     }
-  ];
+  };
+
+  const paymentMethods = getPaymentMethods();
 
   const vaBanks = [
     { code: 'BCA', name: 'BCA' },
@@ -182,7 +220,16 @@ export const BalancePurchase = () => {
       toast.success('Payment created successfully!');
     } catch (error) {
       console.error('Payment creation error:', error);
-      toast.error(error.response?.data?.detail || 'Failed to create payment');
+      const errorDetail = error.response?.data?.detail || 'Failed to create payment';
+      
+      // Check for API key errors
+      if (errorDetail.includes('INVALID_API_KEY') || errorDetail.includes('API key provided is invalid')) {
+        toast.error('Payment gateway not configured. Please contact administrator to set up valid API keys.');
+      } else if (errorDetail.includes('Access denied') || errorDetail.includes('invalid')) {
+        toast.error('Payment gateway configuration error. Please contact administrator.');
+      } else {
+        toast.error(errorDetail);
+      }
     } finally {
       setLoading(false);
     }
@@ -301,20 +348,35 @@ export const BalancePurchase = () => {
                   key={method.id}
                   onClick={() => handlePaymentMethodSelect(method.id)}
                   disabled={loading}
-                  className={`w-full p-4 border-2 rounded-lg hover:border-${method.color}-500 hover:bg-${method.color}-50 transition-all text-left flex items-center justify-between group disabled:opacity-50 disabled:cursor-not-allowed`}
+                  className={`w-full p-5 border-2 rounded-lg hover:border-${method.color}-500 hover:bg-${method.color}-50 transition-all text-left group disabled:opacity-50 disabled:cursor-not-allowed`}
                 >
-                  <div className="flex items-center gap-4">
-                    <div className={`p-3 rounded-lg bg-${method.color}-100 text-${method.color}-600 group-hover:bg-${method.color}-200`}>
-                      <method.icon size={24} />
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start gap-4 flex-1">
+                      <div className={`p-3 rounded-lg bg-${method.color}-100 text-${method.color}-600 group-hover:bg-${method.color}-200 flex-shrink-0`}>
+                        <method.icon size={24} />
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-semibold text-gray-900 mb-1">{method.name}</div>
+                        <div className="text-sm text-gray-600 mb-2">{method.description}</div>
+                        {method.note && (
+                          <div className="text-xs text-gray-500 italic">{method.note}</div>
+                        )}
+                      </div>
                     </div>
-                    <div>
-                      <div className="font-semibold text-gray-900">{method.name}</div>
-                      <div className="text-sm text-gray-600">{method.description}</div>
-                    </div>
+                    <ChevronRight className="text-gray-400 group-hover:text-gray-600 flex-shrink-0 ml-2" />
                   </div>
-                  <ChevronRight className="text-gray-400 group-hover:text-gray-600" />
                 </button>
               ))}
+            </div>
+            
+            {/* Gateway Info */}
+            <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+              <p className="text-sm text-gray-600">
+                <span className="font-medium">Payment Gateway:</span> {activeGateway === 'midtrans' ? 'Midtrans' : 'Xendit'}
+              </p>
+              <p className="text-xs text-gray-500 mt-1">
+                Transactions are processed securely through our payment gateway partner
+              </p>
             </div>
           </div>
         )}
