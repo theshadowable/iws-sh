@@ -32,7 +32,7 @@ from midtrans_service import MidtransService
 from xendit_service import XenditService
 
 
-router = APIRouter(prefix="/api/payments", tags=["payments"])
+router = APIRouter(prefix="/payments", tags=["payments"])
 
 # Database connection
 mongo_url = os.environ['MONGO_URL']

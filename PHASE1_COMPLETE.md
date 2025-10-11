@@ -94,8 +94,8 @@
 ### 🚀 How to Use
 
 1. **Access the Application:**
-   - Frontend: https://resume-progress-15.preview.emergentagent.com
-   - Backend API: https://resume-progress-15.preview.emergentagent.com/api
+   - Frontend: https://ui-fix-continue.preview.emergentagent.com
+   - Backend API: https://ui-fix-continue.preview.emergentagent.com/api
 
 2. **Login:**
    - Use one of the demo credentials above

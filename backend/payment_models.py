@@ -170,6 +170,8 @@ class XenditEWalletResponse(BaseModel):
 class PaymentSettings(BaseModel):
     id: str = Field(default="payment_settings")
     payment_mode: PaymentMode = PaymentMode.SANDBOX
+    active_gateway: str = "midtrans"  # "midtrans" or "xendit"
+    mode: str = "sandbox"  # "sandbox" or "live" 
     midtrans_enabled: bool = True
     xendit_enabled: bool = True
     midtrans_server_key: Optional[str] = None
@@ -181,6 +183,8 @@ class PaymentSettings(BaseModel):
 
 class PaymentSettingsUpdate(BaseModel):
     payment_mode: Optional[PaymentMode] = None
+    active_gateway: Optional[str] = None
+    mode: Optional[str] = None
     midtrans_enabled: Optional[bool] = None
     xendit_enabled: Optional[bool] = None
 

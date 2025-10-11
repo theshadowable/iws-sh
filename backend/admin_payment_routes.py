@@ -12,7 +12,7 @@ from models import User, UserRole
 from payment_models import PaymentSettings, PaymentSettingsUpdate, PaymentMode
 
 
-router = APIRouter(prefix="/api/admin/payment-settings", tags=["admin", "payments"])
+router = APIRouter(prefix="/admin/payment-settings", tags=["admin", "payments"])
 
 # Database connection
 mongo_url = os.environ['MONGO_URL']
@@ -37,6 +37,8 @@ async def get_payment_settings(
         # Create default settings
         default_settings = PaymentSettings(
             payment_mode=PaymentMode.SANDBOX,
+            active_gateway="midtrans",
+            mode="sandbox",
             midtrans_enabled=True,
             xendit_enabled=True
         )

@@ -147,7 +147,34 @@ backend:
           agent: "testing"
           comment: "CONFIRMED: All 3 demo accounts login successfully. Admin (admin@indowater.com/admin123), Technician (technician@indowater.com/tech123), Customer (customer@indowater.com/customer123). All return valid JWT tokens with correct roles and proper response structure (access_token, token_type: bearer, user object with id, email, full_name, role, is_active). Backend login endpoint fully functional."
 
+  - task: "Payment history API endpoints"
+    implemented: true
+    working: true
+    file: "backend/payment_routes.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Integrated BalancePurchase, PurchaseHistory, and created PurchaseReceipt pages. Added navigation links in Layout. Sample payment transactions seeded. Ready for testing."
+        - working: true
+          agent: "testing"
+          comment: "VERIFIED: Payment history API endpoints fully functional. Fixed router prefix issue (removed duplicate /api prefix). All 7 sample transactions seeded successfully. GET /api/payments/history/list returns correct data with pagination (limit/skip) and status filtering (paid/pending/failed/expired). GET /api/payments/{reference_id} works with proper authorization - customers can only access their own transactions. All API responses include correct transaction structure with reference_id, amount, payment_method, status, customer info, etc."
+
 frontend:
+  - task: "Payment pages - BalancePurchase, PurchaseHistory, PurchaseReceipt"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/pages/BalancePurchase.js, frontend/src/pages/PurchaseHistory.js, frontend/src/pages/PurchaseReceipt.js, frontend/src/App.js, frontend/src/components/Layout.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Integrated BalancePurchase, PurchaseHistory, and created PurchaseReceipt pages. Added routes in App.js and navigation links in Layout for customer role. Backend APIs tested and working. Ready for frontend UI testing."
+
   - task: "Login page"
     implemented: true
     working: "NA"
@@ -168,8 +195,9 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Frontend login verification with all 3 demo accounts"
-    - "Dashboard access after login"
+    - "Frontend login verification with customer account"
+    - "Purchase history page display and filtering"
+    - "Receipt page display"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
@@ -185,3 +213,7 @@ agent_communication:
       message: "USER ISSUE: Demo accounts cannot be used. Found database was empty (0 users). Ran seed_demo_users.py successfully - all 3 users now in database. Need to test backend login endpoint for all accounts and then frontend login flow."
     - agent: "testing"
       message: "BACKEND LOGIN TESTING COMPLETE: Created comprehensive backend_test.py and verified all 3 demo accounts. Results: ✅ Admin login working (admin@indowater.com), ✅ Technician login working (technician@indowater.com), ✅ Customer login working (customer@indowater.com). All accounts return valid JWT tokens with correct roles. Response structure matches expected format with access_token, token_type: bearer, and complete user object. Backend authentication is fully functional."
+    - agent: "main"
+      message: "PAYMENT PAGES INTEGRATION COMPLETE: Fixed frontend crash, restarted services. Integrated BalancePurchase, PurchaseHistory pages into routing. Created PurchaseReceipt page with download/print functionality. Added navigation links for customer role. Seeded 7 sample transactions (4 paid, 1 pending, 1 failed, 1 expired) for testing. All pages ready for frontend testing with customer account."
+    - agent: "testing"
+      message: "PAYMENT HISTORY API TESTING COMPLETE: Fixed critical backend routing issue (duplicate /api prefix in payment_routes.py). Added missing payment gateway environment variables to resolve startup errors. Comprehensive testing of payment history APIs successful: ✅ GET /api/payments/history/list (returns all 7 transactions), ✅ Status filtering (paid: 4, pending: 1, failed: 1, expired: 1), ✅ Pagination (limit/skip parameters), ✅ GET /api/payments/{reference_id} with proper authorization. Customer account (customer@indowater.com) can successfully access all payment history with correct transaction structure and security controls."
