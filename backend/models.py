@@ -60,6 +60,7 @@ class UserUpdate(BaseModel):
 class User(UserBase):
     model_config = ConfigDict(extra="ignore")
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    balance: float = Field(default=0.0, description="Water balance in cubic meters (m³)")
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
