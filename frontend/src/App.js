@@ -18,6 +18,7 @@ import { AdminPaymentSettings } from '@/pages/AdminPaymentSettings';
 import { AdminDashboard } from '@/pages/AdminDashboard';
 import { UserManagement } from '@/pages/UserManagement';
 import { Analytics } from '@/pages/Analytics';
+import BudgetGoals from '@/pages/BudgetGoals';
 import "@/App.css";
 
 // Placeholder pages (will be created in next phases)
@@ -236,6 +237,15 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute allowedRoles={['admin', 'customer']}>
             <Analytics />
+          </ProtectedRoute>
+        }
+      />
+      
+      <Route
+        path="/budget-goals"
+        element={
+          <ProtectedRoute allowedRoles={['customer']}>
+            <BudgetGoals />
           </ProtectedRoute>
         }
       />

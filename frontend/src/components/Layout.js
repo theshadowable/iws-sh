@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import ChatWidget from './ChatWidget';
+import NotificationBell from './NotificationBell';
 import { 
   LayoutDashboard, 
   Users, 
@@ -18,7 +20,8 @@ import {
   Map,
   ShoppingCart,
   History,
-  BarChart3
+  BarChart3,
+  Target
 } from 'lucide-react';
 
 export const Layout = ({ children }) => {
@@ -62,6 +65,7 @@ export const Layout = ({ children }) => {
       items.push(
         { path: '/my-devices', icon: Gauge, label: 'My Devices', roles: ['customer'] },
         { path: '/analytics', icon: BarChart3, label: 'Analytics', roles: ['customer'] },
+        { path: '/budget-goals', icon: Target, label: 'Budget Goals', roles: ['customer'] },
         { path: '/balance-purchase', icon: ShoppingCart, label: 'Buy Balance', roles: ['customer'] },
         { path: '/purchase-history', icon: History, label: 'Purchase History', roles: ['customer'] },
         { path: '/transactions', icon: CreditCard, label: 'Transactions', roles: ['customer'] },
@@ -162,7 +166,7 @@ export const Layout = ({ children }) => {
       {/* Main content */}
       <div className="lg:pl-64">
         {/* Top bar */}
-        <header className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between lg:justify-end">
+        <header className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
           <button
             onClick={() => setSidebarOpen(true)}
             className="lg:hidden text-gray-500 hover:text-gray-700"
@@ -170,8 +174,11 @@ export const Layout = ({ children }) => {
             <Menu className="h-6 w-6" />
           </button>
           
-          <div className="text-sm text-gray-600">
-            Welcome back, <span className="font-medium text-gray-900">{user?.full_name}</span>
+          <div className="flex items-center gap-4">
+            <NotificationBell />
+            <div className="text-sm text-gray-600">
+              Welcome back, <span className="font-medium text-gray-900">{user?.full_name}</span>
+            </div>
           </div>
         </header>
 
@@ -180,6 +187,9 @@ export const Layout = ({ children }) => {
           {children}
         </main>
       </div>
+
+      {/* AI Chat Widget */}
+      <ChatWidget />
     </div>
   );
 };
