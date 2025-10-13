@@ -259,9 +259,9 @@ const CustomerDashboard = () => {
                 <div className="text-sm opacity-75 mb-1">Today's Usage</div>
                 <div className="text-2xl font-bold">
                   <AnimatedCounter 
-                    value={realTimeData.currentConsumption} 
-                    decimals={1}
-                    suffix=" L"
+                    value={realTimeData.currentConsumption / 1000} 
+                    decimals={2}
+                    suffix=" m³"
                   />
                 </div>
               </div>

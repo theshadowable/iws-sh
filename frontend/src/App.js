@@ -21,6 +21,7 @@ import { UserManagement } from '@/pages/UserManagement';
 import { Analytics } from '@/pages/Analytics';
 import BudgetGoals from '@/pages/BudgetGoals';
 import VoucherManagement from '@/pages/VoucherManagement';
+import CustomerManagement from '@/pages/CustomerManagement';
 import "@/App.css";
 
 // Placeholder pages (will be created in next phases)
@@ -34,13 +35,6 @@ const Devices = () => (
 const Users = () => (
   <div className="p-6">
     <h1 className="text-2xl font-bold">Users Page</h1>
-    <p>Coming soon...</p>
-  </div>
-);
-
-const Customers = () => (
-  <div className="p-6">
-    <h1 className="text-2xl font-bold">Customers Page</h1>
     <p>Coming soon...</p>
   </div>
 );
@@ -124,8 +118,8 @@ const AppRoutes = () => {
       <Route
         path="/customers"
         element={
-          <ProtectedRoute allowedRoles={['admin']}>
-            <Customers />
+          <ProtectedRoute allowedRoles={['admin', 'technician']}>
+            <CustomerManagement />
           </ProtectedRoute>
         }
       />

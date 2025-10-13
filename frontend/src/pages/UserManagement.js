@@ -45,7 +45,7 @@ export const UserManagement = () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.get(
-        `${BACKEND_URL}/api/auth/users`,
+        `${BACKEND_URL}/api/users`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -98,7 +98,7 @@ export const UserManagement = () => {
         }
         
         await axios.put(
-          `${BACKEND_URL}/api/auth/users/${editingUser.id}`,
+          `${BACKEND_URL}/api/users/${editingUser.id}`,
           updateData,
           {
             headers: { Authorization: `Bearer ${token}` }
@@ -108,7 +108,7 @@ export const UserManagement = () => {
       } else {
         // Create new user
         await axios.post(
-          `${BACKEND_URL}/api/auth/register`,
+          `${BACKEND_URL}/api/users`,
           formData,
           {
             headers: { Authorization: `Bearer ${token}` }
@@ -133,7 +133,7 @@ export const UserManagement = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.delete(
-        `${BACKEND_URL}/api/auth/users/${userId}`,
+        `${BACKEND_URL}/api/users/${userId}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
