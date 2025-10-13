@@ -649,6 +649,9 @@ from admin_payment_routes import router as admin_payment_router
 # Import analytics routes
 from analytics_routes import router as analytics_router
 from report_routes import router as report_router
+from chatbot_routes import router as chatbot_router
+from notification_routes import router as notification_router
+from budget_routes import router as budget_router
 
 # Include routers - include technician routes in api_router first
 api_router.include_router(technician_router)
@@ -656,10 +659,59 @@ api_router.include_router(payment_router)
 api_router.include_router(admin_payment_router)
 api_router.include_router(analytics_router)
 api_router.include_router(report_router)
+api_router.include_router(chatbot_router)
+api_router.include_router(notification_router)
+api_router.include_router(budget_router)
 app.include_router(upload_router)
 
 # Then include api_router in app
 app.include_router(api_router)
+
+
+# Background task for checking low balances
+import asyncio
+from notification_service import get_notification_service
+
+async def check_low_balances_task():
+    """Background task to check for low balances and send notifications"""
+    while True:
+        try:
+            # Check every hour
+            await asyncio.sleep(3600)
+            
+            notification_service = get_notification_service(db)
+            
+            # Get all customers with balance below threshold
+            customers_cursor = db.customers.find({
+                "balance": {"$lt": 5000}
+            })
+            
+            async for customer in customers_cursor:
+                try:
+                    # Get user data
+                    user = await db.users.find_one({"id": customer["user_id"]})
+                    if not user:
+                        continue
+                    
+                    # Check and create notification
+                    await notification_service.check_and_notify_low_balance(
+                        customer_id=customer["user_id"],
+                        customer_name=user.get("full_name", "Customer"),
+                        current_balance=customer.get("balance", 0)
+                    )
+                except Exception as e:
+                    print(f"Error checking balance for customer {customer.get('user_id')}: {e}")
+                    continue
+                    
+        except Exception as e:
+            print(f"Error in check_low_balances_task: {e}")
+            await asyncio.sleep(60)  # Wait a minute before retrying
+
+
+@app.on_event("startup")
+async def startup_event():
+    """Start background tasks on app startup"""
+    asyncio.create_task(check_low_balances_task())
 
 
 @app.on_event("shutdown")
