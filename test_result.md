@@ -206,15 +206,24 @@ backend:
   
   - task: "Voucher/Discount System"
     implemented: true
-    working: "NA"
-    file: "backend/voucher_routes.py, backend/voucher_models.py"
+    working: true
+    file: "backend/voucher_routes.py, backend/voucher_models.py, frontend/src/pages/VoucherManagement.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Created comprehensive voucher system: Models (Voucher, VoucherUsage with percentage and fixed discounts), API endpoints (POST /vouchers create, POST /vouchers/validate, POST /vouchers/apply, GET /vouchers list all, GET /vouchers/active, GET /vouchers/usage-history, PATCH /vouchers/{id}/status). Seeded 5 test vouchers (WELCOME50, HEMAT20, FLASH100K, NEWYEAR2025, EXPIRED10). Features: usage limits, per-customer limits, min purchase amount, max discount cap, validity dates. Ready for testing."
+        - working: false
+          agent: "user"
+          comment: "User reported voucher creation failing with 'Failed to Create Voucher' message"
+        - working: true
+          agent: "main"
+          comment: "FIXED: Found and resolved two issues: 1) Missing dependency 'et_xmlfile' for openpyxl was causing backend to crash - added to requirements.txt. 2) Backend voucher routes were accessing current_user as dictionary (current_user['id']) instead of object (current_user.id) causing 'User object is not subscriptable' error. Fixed all 4 occurrences in voucher_routes.py (create, validate, apply, usage-history endpoints). Database was empty - re-seeded demo users. Backend voucher creation now tested and working successfully via curl."
+        - working: true
+          agent: "testing"
+          comment: "COMPREHENSIVE VOUCHER SYSTEM TESTING COMPLETE: ✅ All 6 voucher API tests passed successfully. Admin login working (admin@indowater.com/admin123), Customer login working (customer@indowater.com/customer123). ✅ Voucher Creation (POST /api/vouchers) - Successfully created TESTFIX2025 voucher with 25% discount, min purchase 100,000 IDR, max discount 150,000 IDR, usage limit 50, per-customer limit 1. Returns proper voucher object with ID and all required fields. ✅ List Vouchers (GET /api/vouchers) - Returns 2 vouchers including newly created TESTFIX2025 and existing TEST1760376128. ✅ Filter Active Vouchers (GET /api/vouchers?status=active) - Correctly filters and returns 2 active vouchers. ✅ Voucher Validation (POST /api/vouchers/validate) - Customer successfully validated TESTFIX2025 with 200,000 IDR purchase amount. Correct discount calculation: 50,000 IDR discount (25% of 200,000), final amount 150,000 IDR. All endpoints working without 'User object is not subscriptable' error. Fix confirmed successful."
   
   - task: "Alert & Notification System"
     implemented: true
@@ -322,3 +331,7 @@ agent_communication:
       message: "ANALYTICS & REPORTING IMPLEMENTATION COMPLETE: Phase 1 - Payment gateway sandbox keys configured in .env (Midtrans & Xendit). Phase 2 - Generated 6 months of realistic water usage data (543 records, 3 devices, 345.32 m³). Phase 3 - Created comprehensive analytics backend: 5 API endpoints (usage, trends, predictions, comparison, admin overview) with statistical moving average predictions. Phase 4 - Created report generation (PDF with ReportLab, Excel with openpyxl). Phase 5 - Built Analytics frontend page with Recharts visualization (area/bar/line charts), period selectors, trend indicators, prediction charts, and export buttons. Added navigation links for admin and customer roles. Documentation: Created ANALYTICS_IMPLEMENTATION.md with full technical details. All ready for testing."
     - agent: "main"
       message: "PHASE 2 BACKEND IMPLEMENTATION IN PROGRESS: Fixed chatbot service to work without EMERGENT_LLM_KEY (graceful degradation). Implemented comprehensive backend APIs: ✅ Voucher System (create, validate, apply vouchers - 5 test vouchers seeded including WELCOME50, HEMAT20, FLASH100K, NEWYEAR2025), ✅ Alert & Notification System (low balance alerts, leak detection, device tampering alerts, water saving tips - 6 tips seeded), ✅ Alert Service with leak detection algorithm (analyzes 24h usage patterns, detects abnormal consumption, night-time leaks), ✅ Admin Management APIs (dashboard metrics, real-time device monitoring, bulk customer operations, maintenance scheduling, comprehensive revenue reporting). All routes registered and backend running successfully. Next: Frontend implementation for Phase 2 features."
+    - agent: "testing"
+      message: "VOUCHER SYSTEM TESTING COMPLETE: Comprehensive testing of voucher management system backend APIs successful. ✅ All 6 voucher API tests passed. Admin and Customer login working perfectly. ✅ Voucher Creation (POST /api/vouchers) - Successfully created TESTFIX2025 voucher with 25% discount, proper validation and response structure. ✅ List Vouchers (GET /api/vouchers) - Returns correct voucher list including newly created and existing vouchers. ✅ Filter Active Vouchers - Status filtering working correctly. ✅ Voucher Validation (POST /api/vouchers/validate) - Customer successfully validated voucher with correct discount calculation (25% of 200,000 IDR = 50,000 IDR discount, final amount 150,000 IDR). All endpoints working without 'User object is not subscriptable' error. The reported 'Failed to Create Voucher' issue has been RESOLVED. Backend voucher system is fully functional."
+    - agent: "main"
+      message: "APP IMPROVEMENTS COMPLETE (Tasks 1-7): ✅ Task 1: Fixed User Management 'Failed to load users' - corrected API endpoint from /api/auth/users to /api/users in all operations (fetch, create, update, delete). ✅ Task 2: Created comprehensive Customer Management page with full CRUD, search/filter, details view (devices, usage, payments), bulk operations (Admin only), role-based access (Admin + Technician). Backend: Created customer_routes.py with 10 endpoints. Frontend: CustomerManagement.js with modals and animations. ✅ Task 3: Fixed Today's Usage display - changed from Liters to Cubic Meters (m³) by dividing by 1000, increased decimals to 2. ✅ Task 4: Replaced water flow animation with professional wave/ripple effect - implemented SVG animated waves, ripples, bubbles, and gradient flows. ✅ Task 5: Removed duplicate 'Analytics loaded' toast message. ✅ Task 6: Created comprehensive DATABASE_SCHEMA.md documenting all 16 collections with fields, indexes, relationships, and examples. ✅ Task 7: Created detailed DEPLOYMENT_GUIDE.md covering Railway (backend) + Vercel (frontend) deployment, MongoDB Atlas setup, alternative platforms (Render, DigitalOcean), environment variables, troubleshooting, and cost estimation. All services running successfully."

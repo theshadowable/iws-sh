@@ -10,7 +10,7 @@ import sys
 from typing import Dict, Any, Optional
 
 # Backend URL from environment
-BACKEND_URL = "https://speedyapp-2.preview.emergentagent.com/api"
+BACKEND_URL = "https://app-improvement-11.preview.emergentagent.com/api"
 
 # Demo accounts to test
 DEMO_ACCOUNTS = [
@@ -751,6 +751,335 @@ def test_customer_payment_apis():
         return False
 
 
+def test_voucher_system_apis():
+    """Test voucher system APIs - focusing on the recently fixed voucher creation"""
+    print("=" * 80)
+    print("🎫 VOUCHER SYSTEM API TESTING - IndoWater Solution")
+    print("=" * 80)
+    print(f"Backend URL: {BACKEND_URL}")
+    
+    # Test accounts needed
+    admin_account = {
+        "name": "Admin",
+        "email": "admin@indowater.com",
+        "password": "admin123",
+        "expected_role": "admin"
+    }
+    
+    customer_account = {
+        "name": "Customer",
+        "email": "customer@indowater.com", 
+        "password": "customer123",
+        "expected_role": "customer"
+    }
+    
+    results = {
+        "admin_login": {"success": False, "error": None},
+        "customer_login": {"success": False, "error": None},
+        "voucher_creation": {"success": False, "error": None, "voucher_id": None},
+        "voucher_list": {"success": False, "error": None},
+        "voucher_list_filter": {"success": False, "error": None},
+        "voucher_validation": {"success": False, "error": None}
+    }
+    
+    # Step 1: Login as Admin
+    print(f"\n🔐 STEP 1: Admin Login...")
+    admin_login = test_login(
+        admin_account["email"],
+        admin_account["password"], 
+        admin_account["expected_role"],
+        admin_account["name"]
+    )
+    
+    if not admin_login["success"]:
+        print(f"❌ CRITICAL: Admin login failed - {admin_login['error']}")
+        results["admin_login"] = {"success": False, "error": admin_login["error"]}
+        return results
+    
+    admin_token = admin_login["token"]
+    results["admin_login"] = {"success": True, "error": None}
+    print(f"✅ Admin login successful")
+    
+    # Step 2: Login as Customer
+    print(f"\n🔐 STEP 2: Customer Login...")
+    customer_login = test_login(
+        customer_account["email"],
+        customer_account["password"], 
+        customer_account["expected_role"],
+        customer_account["name"]
+    )
+    
+    if not customer_login["success"]:
+        print(f"❌ CRITICAL: Customer login failed - {customer_login['error']}")
+        results["customer_login"] = {"success": False, "error": customer_login["error"]}
+        return results
+    
+    customer_token = customer_login["token"]
+    results["customer_login"] = {"success": True, "error": None}
+    print(f"✅ Customer login successful")
+    
+    # Step 3: Create Voucher (HIGH PRIORITY TEST)
+    print(f"\n🎫 STEP 3: Create Voucher (POST /api/vouchers) - HIGH PRIORITY...")
+    
+    from datetime import datetime, timedelta
+    now = datetime.utcnow()
+    valid_from = now
+    valid_until = now + timedelta(days=30)
+    
+    voucher_data = {
+        "code": "TESTFIX2025",
+        "description": "Test voucher after fix",
+        "discount_type": "percentage",
+        "discount_value": 25,
+        "min_purchase_amount": 100000,
+        "max_discount_amount": 150000,
+        "usage_limit": 50,
+        "per_customer_limit": 1,
+        "valid_from": valid_from.isoformat(),
+        "valid_until": valid_until.isoformat()
+    }
+    
+    headers = {
+        "Authorization": f"Bearer {admin_token}",
+        "Content-Type": "application/json"
+    }
+    
+    try:
+        print(f"   Creating voucher: {voucher_data['code']}")
+        print(f"   Discount: {voucher_data['discount_value']}% (max {voucher_data['max_discount_amount']:,} IDR)")
+        print(f"   Min purchase: {voucher_data['min_purchase_amount']:,} IDR")
+        
+        response = requests.post(
+            f"{BACKEND_URL}/vouchers/",
+            json=voucher_data,
+            headers=headers,
+            timeout=15
+        )
+        
+        print(f"   Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            voucher_response = response.json()
+            
+            # Validate response structure
+            required_fields = ["id", "code", "description", "discount_type", "discount_value", 
+                             "min_purchase_amount", "max_discount_amount", "usage_limit", 
+                             "per_customer_limit", "valid_from", "valid_until", "status"]
+            missing_fields = [field for field in required_fields if field not in voucher_response]
+            
+            if missing_fields:
+                error_msg = f"Missing required fields in response: {missing_fields}"
+                print(f"   ❌ {error_msg}")
+                results["voucher_creation"] = {"success": False, "error": error_msg}
+            else:
+                voucher_id = voucher_response["id"]
+                print(f"   ✅ SUCCESS - Voucher created with ID: {voucher_id}")
+                print(f"   ✅ Code: {voucher_response['code']}, Status: {voucher_response['status']}")
+                results["voucher_creation"] = {"success": True, "error": None, "voucher_id": voucher_id}
+        else:
+            error_msg = f"Voucher creation failed: {response.status_code}"
+            try:
+                error_data = response.json()
+                error_msg += f" - {error_data.get('detail', '')}"
+            except:
+                error_msg += f" - {response.text}"
+            print(f"   ❌ {error_msg}")
+            results["voucher_creation"] = {"success": False, "error": error_msg}
+            
+    except requests.exceptions.RequestException as e:
+        error_msg = f"Connection error: {str(e)}"
+        print(f"   ❌ {error_msg}")
+        results["voucher_creation"] = {"success": False, "error": error_msg}
+    except Exception as e:
+        error_msg = f"Unexpected error: {str(e)}"
+        print(f"   ❌ {error_msg}")
+        results["voucher_creation"] = {"success": False, "error": error_msg}
+    
+    # Step 4: List Vouchers (GET /api/vouchers)
+    print(f"\n📋 STEP 4: List Vouchers (GET /api/vouchers)...")
+    
+    try:
+        response = requests.get(
+            f"{BACKEND_URL}/vouchers/",
+            headers=headers,
+            timeout=15
+        )
+        
+        print(f"   Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            vouchers = response.json()
+            
+            if isinstance(vouchers, list):
+                print(f"   ✅ SUCCESS - Found {len(vouchers)} vouchers")
+                
+                # Check if our newly created voucher is in the list
+                testfix_voucher = next((v for v in vouchers if v.get("code") == "TESTFIX2025"), None)
+                if testfix_voucher:
+                    print(f"   ✅ TESTFIX2025 voucher found in list")
+                else:
+                    print(f"   ⚠️  TESTFIX2025 voucher not found in list")
+                
+                # Check for existing TEST1760376128 voucher mentioned in requirements
+                test_old_voucher = next((v for v in vouchers if v.get("code") == "TEST1760376128"), None)
+                if test_old_voucher:
+                    print(f"   ✅ TEST1760376128 voucher found in list")
+                else:
+                    print(f"   ⚠️  TEST1760376128 voucher not found in list")
+                
+                results["voucher_list"] = {"success": True, "error": None}
+            else:
+                error_msg = f"Expected list response, got: {type(vouchers)}"
+                print(f"   ❌ {error_msg}")
+                results["voucher_list"] = {"success": False, "error": error_msg}
+        else:
+            error_msg = f"List vouchers failed: {response.status_code}"
+            try:
+                error_data = response.json()
+                error_msg += f" - {error_data.get('detail', '')}"
+            except:
+                error_msg += f" - {response.text}"
+            print(f"   ❌ {error_msg}")
+            results["voucher_list"] = {"success": False, "error": error_msg}
+            
+    except requests.exceptions.RequestException as e:
+        error_msg = f"Connection error: {str(e)}"
+        print(f"   ❌ {error_msg}")
+        results["voucher_list"] = {"success": False, "error": error_msg}
+    except Exception as e:
+        error_msg = f"Unexpected error: {str(e)}"
+        print(f"   ❌ {error_msg}")
+        results["voucher_list"] = {"success": False, "error": error_msg}
+    
+    # Step 5: List Vouchers with Filter (GET /api/vouchers?status=active)
+    print(f"\n🔍 STEP 5: List Active Vouchers (GET /api/vouchers?status=active)...")
+    
+    try:
+        response = requests.get(
+            f"{BACKEND_URL}/vouchers/?status=active",
+            headers=headers,
+            timeout=15
+        )
+        
+        print(f"   Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            active_vouchers = response.json()
+            
+            if isinstance(active_vouchers, list):
+                active_count = len([v for v in active_vouchers if v.get("status") == "active"])
+                print(f"   ✅ SUCCESS - Found {len(active_vouchers)} vouchers ({active_count} active)")
+                results["voucher_list_filter"] = {"success": True, "error": None}
+            else:
+                error_msg = f"Expected list response, got: {type(active_vouchers)}"
+                print(f"   ❌ {error_msg}")
+                results["voucher_list_filter"] = {"success": False, "error": error_msg}
+        else:
+            error_msg = f"Filter vouchers failed: {response.status_code}"
+            try:
+                error_data = response.json()
+                error_msg += f" - {error_data.get('detail', '')}"
+            except:
+                error_msg += f" - {response.text}"
+            print(f"   ❌ {error_msg}")
+            results["voucher_list_filter"] = {"success": False, "error": error_msg}
+            
+    except requests.exceptions.RequestException as e:
+        error_msg = f"Connection error: {str(e)}"
+        print(f"   ❌ {error_msg}")
+        results["voucher_list_filter"] = {"success": False, "error": error_msg}
+    except Exception as e:
+        error_msg = f"Unexpected error: {str(e)}"
+        print(f"   ❌ {error_msg}")
+        results["voucher_list_filter"] = {"success": False, "error": error_msg}
+    
+    # Step 6: Validate Voucher as Customer (POST /api/vouchers/validate)
+    print(f"\n✅ STEP 6: Validate Voucher as Customer (POST /api/vouchers/validate)...")
+    
+    customer_headers = {
+        "Authorization": f"Bearer {customer_token}",
+        "Content-Type": "application/json"
+    }
+    
+    validation_data = {
+        "voucher_code": "TESTFIX2025",
+        "purchase_amount": 200000  # 200,000 IDR (above min purchase of 100,000)
+    }
+    
+    try:
+        print(f"   Validating voucher: {validation_data['voucher_code']}")
+        print(f"   Purchase amount: {validation_data['purchase_amount']:,} IDR")
+        
+        response = requests.post(
+            f"{BACKEND_URL}/vouchers/validate",
+            json=validation_data,
+            headers=customer_headers,
+            timeout=15
+        )
+        
+        print(f"   Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            validation_response = response.json()
+            
+            # Validate response structure
+            required_fields = ["valid", "message", "discount_amount", "final_amount"]
+            missing_fields = [field for field in required_fields if field not in validation_response]
+            
+            if missing_fields:
+                error_msg = f"Missing required fields in validation response: {missing_fields}"
+                print(f"   ❌ {error_msg}")
+                results["voucher_validation"] = {"success": False, "error": error_msg}
+            else:
+                is_valid = validation_response["valid"]
+                message = validation_response["message"]
+                discount_amount = validation_response["discount_amount"]
+                final_amount = validation_response["final_amount"]
+                
+                if is_valid:
+                    expected_discount = 200000 * 0.25  # 25% of 200,000 = 50,000
+                    expected_discount = min(expected_discount, 150000)  # Cap at max_discount_amount
+                    expected_final = 200000 - expected_discount
+                    
+                    print(f"   ✅ SUCCESS - Voucher is valid")
+                    print(f"   ✅ Message: {message}")
+                    print(f"   ✅ Discount: {discount_amount:,.0f} IDR (expected: {expected_discount:,.0f})")
+                    print(f"   ✅ Final amount: {final_amount:,.0f} IDR (expected: {expected_final:,.0f})")
+                    
+                    # Verify discount calculation
+                    if abs(discount_amount - expected_discount) < 1:  # Allow small floating point differences
+                        print(f"   ✅ Discount calculation correct")
+                        results["voucher_validation"] = {"success": True, "error": None}
+                    else:
+                        error_msg = f"Discount calculation incorrect. Expected: {expected_discount}, Got: {discount_amount}"
+                        print(f"   ❌ {error_msg}")
+                        results["voucher_validation"] = {"success": False, "error": error_msg}
+                else:
+                    error_msg = f"Voucher validation failed: {message}"
+                    print(f"   ❌ {error_msg}")
+                    results["voucher_validation"] = {"success": False, "error": error_msg}
+        else:
+            error_msg = f"Voucher validation failed: {response.status_code}"
+            try:
+                error_data = response.json()
+                error_msg += f" - {error_data.get('detail', '')}"
+            except:
+                error_msg += f" - {response.text}"
+            print(f"   ❌ {error_msg}")
+            results["voucher_validation"] = {"success": False, "error": error_msg}
+            
+    except requests.exceptions.RequestException as e:
+        error_msg = f"Connection error: {str(e)}"
+        print(f"   ❌ {error_msg}")
+        results["voucher_validation"] = {"success": False, "error": error_msg}
+    except Exception as e:
+        error_msg = f"Unexpected error: {str(e)}"
+        print(f"   ❌ {error_msg}")
+        results["voucher_validation"] = {"success": False, "error": error_msg}
+    
+    return results
+
+
 def main():
     """Run all tests"""
     print("=" * 60)
@@ -792,19 +1121,49 @@ def main():
     
     print(f"\nLogin Results: {success_count}/{len(DEMO_ACCOUNTS)} accounts working")
     
-    # Test 2: Analytics & Reporting APIs
-    print(f"\n📊 PHASE 2: Testing Analytics & Reporting APIs...")
+    # Test 2: Voucher System APIs (HIGH PRIORITY)
+    print(f"\n🎫 PHASE 2: Testing Voucher System APIs (HIGH PRIORITY)...")
+    voucher_results = test_voucher_system_apis()
+    
+    # Test 3: Analytics & Reporting APIs
+    print(f"\n📊 PHASE 3: Testing Analytics & Reporting APIs...")
     analytics_success = test_analytics_and_reports()
     
-    # Test 3: Payment APIs (only if customer login works)
+    # Test 4: Payment APIs (only if customer login works)
     customer_login_success = any(r["success"] and r["account_name"] == "Customer" for r in results)
     
     if customer_login_success:
-        print(f"\n💳 PHASE 3: Testing Payment History APIs...")
+        print(f"\n💳 PHASE 4: Testing Payment History APIs...")
         payment_success = test_customer_payment_apis()
     else:
         print(f"\n❌ SKIPPING Payment API tests - Customer login failed")
         payment_success = False
+    
+    # Voucher Test Summary
+    print("\n" + "=" * 80)
+    print("🎫 VOUCHER SYSTEM TEST SUMMARY")
+    print("=" * 80)
+    
+    voucher_test_cases = [
+        ("Admin Login", voucher_results["admin_login"]),
+        ("Customer Login", voucher_results["customer_login"]),
+        ("Voucher Creation (POST /api/vouchers)", voucher_results["voucher_creation"]),
+        ("List Vouchers (GET /api/vouchers)", voucher_results["voucher_list"]),
+        ("Filter Active Vouchers", voucher_results["voucher_list_filter"]),
+        ("Voucher Validation (POST /api/vouchers/validate)", voucher_results["voucher_validation"])
+    ]
+    
+    voucher_success_count = 0
+    for test_name, result in voucher_test_cases:
+        status = "✅ PASS" if result["success"] else "❌ FAIL"
+        print(f"{status} - {test_name}")
+        if not result["success"] and result["error"]:
+            print(f"      Error: {result['error']}")
+        
+        if result["success"]:
+            voucher_success_count += 1
+    
+    voucher_all_passed = voucher_success_count == len(voucher_test_cases)
     
     # Final Summary
     print("\n" + "=" * 60)
@@ -812,14 +1171,16 @@ def main():
     print("=" * 60)
     
     login_status = "✅ PASS" if success_count == len(DEMO_ACCOUNTS) else "❌ FAIL"
+    voucher_status = "✅ PASS" if voucher_all_passed else "❌ FAIL"
     analytics_status = "✅ PASS" if analytics_success else "❌ FAIL"
     payment_status = "✅ PASS" if payment_success else "❌ FAIL"
     
     print(f"{login_status} - Login Tests ({success_count}/{len(DEMO_ACCOUNTS)})")
+    print(f"{voucher_status} - Voucher System Tests ({voucher_success_count}/{len(voucher_test_cases)}) - HIGH PRIORITY")
     print(f"{analytics_status} - Analytics & Reporting Tests")
     print(f"{payment_status} - Payment API Tests")
     
-    overall_success = (success_count == len(DEMO_ACCOUNTS)) and analytics_success and payment_success
+    overall_success = (success_count == len(DEMO_ACCOUNTS)) and voucher_all_passed and analytics_success and payment_success
     
     if overall_success:
         print("\n🎉 ALL TESTS PASSED!")

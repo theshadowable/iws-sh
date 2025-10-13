@@ -94,8 +94,8 @@
 ### 🚀 How to Use
 
 1. **Access the Application:**
-   - Frontend: https://speedyapp-2.preview.emergentagent.com
-   - Backend API: https://speedyapp-2.preview.emergentagent.com/api
+   - Frontend: https://app-improvement-11.preview.emergentagent.com
+   - Backend API: https://app-improvement-11.preview.emergentagent.com/api
 
 2. **Login:**
    - Use one of the demo credentials above
