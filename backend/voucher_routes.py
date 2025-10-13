@@ -70,7 +70,7 @@ async def create_voucher(
             per_customer_limit=request.per_customer_limit,
             valid_from=request.valid_from,
             valid_until=request.valid_until,
-            created_by=current_user["id"]
+            created_by=current_user.id
         )
         
         await db.vouchers.insert_one(voucher.dict())
@@ -89,13 +89,13 @@ async def create_voucher(
 @router.post("/validate", response_model=VoucherValidationResponse)
 async def validate_voucher(
     request: VoucherValidationRequest,
-    current_user: dict = Depends(get_current_user)
+    current_user = Depends(get_current_user)
 ):
     """
     Validate a voucher code and calculate discount
     """
     try:
-        customer_id = current_user["id"]
+        customer_id = current_user.id
         
         # Find voucher
         voucher = await db.vouchers.find_one({"code": request.voucher_code.upper()})
@@ -194,13 +194,13 @@ async def validate_voucher(
 @router.post("/apply", response_model=VoucherValidationResponse)
 async def apply_voucher(
     request: ApplyVoucherRequest,
-    current_user: dict = Depends(get_current_user)
+    current_user = Depends(get_current_user)
 ):
     """
     Apply voucher and record usage (call this when payment is successful)
     """
     try:
-        customer_id = current_user["id"]
+        customer_id = current_user.id
         
         # Validate voucher first
         validation = await validate_voucher(
@@ -221,7 +221,7 @@ async def apply_voucher(
             voucher_id=voucher.id,
             voucher_code=voucher.code,
             customer_id=customer_id,
-            customer_email=current_user.get("email", ""),
+            customer_email=current_user.email,
             purchase_amount=request.purchase_amount,
             discount_amount=validation.discount_amount,
             final_amount=validation.final_amount
@@ -304,13 +304,13 @@ async def list_active_vouchers(
 
 @router.get("/usage-history", response_model=List[VoucherUsage])
 async def get_voucher_usage_history(
-    current_user: dict = Depends(get_current_user)
+    current_user = Depends(get_current_user)
 ):
     """
     Get customer's voucher usage history
     """
     try:
-        customer_id = current_user["id"]
+        customer_id = current_user.id
         
         usage = await db.voucher_usage.find(
             {"customer_id": customer_id}
