@@ -94,8 +94,8 @@
 ### 🚀 How to Use
 
 1. **Access the Application:**
-   - Frontend: https://continue-dev-16.preview.emergentagent.com
-   - Backend API: https://continue-dev-16.preview.emergentagent.com/api
+   - Frontend: https://project-evolution-2.preview.emergentagent.com
+   - Backend API: https://project-evolution-2.preview.emergentagent.com/api
 
 2. **Login:**
    - Use one of the demo credentials above
