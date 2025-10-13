@@ -203,6 +203,42 @@ backend:
         - working: "NA"
           agent: "main"
           comment: "Created report generation endpoints: POST /api/reports/export-pdf (generates PDF with ReportLab - includes summary, charts, daily usage table) and POST /api/reports/export-excel (generates Excel with openpyxl - includes summary sheet, daily usage sheet, optional charts). Both endpoints support date range filters and customer-specific or system-wide reports. Ready for testing."
+  
+  - task: "Voucher/Discount System"
+    implemented: true
+    working: "NA"
+    file: "backend/voucher_routes.py, backend/voucher_models.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Created comprehensive voucher system: Models (Voucher, VoucherUsage with percentage and fixed discounts), API endpoints (POST /vouchers create, POST /vouchers/validate, POST /vouchers/apply, GET /vouchers list all, GET /vouchers/active, GET /vouchers/usage-history, PATCH /vouchers/{id}/status). Seeded 5 test vouchers (WELCOME50, HEMAT20, FLASH100K, NEWYEAR2025, EXPIRED10). Features: usage limits, per-customer limits, min purchase amount, max discount cap, validity dates. Ready for testing."
+  
+  - task: "Alert & Notification System"
+    implemented: true
+    working: "NA"
+    file: "backend/alert_routes.py, backend/alert_models.py, backend/alert_service.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Created comprehensive alert system: Models (Alert, AlertPreferences, LeakDetectionEvent, DeviceTamperingEvent, WaterSavingTip), API endpoints (GET /alerts, GET /alerts/unread-count, PATCH /alerts/{id}/status, POST /alerts/mark-all-read, GET/PUT /alerts/preferences, GET /alerts/leaks, GET /alerts/tampering, GET /alerts/tips). AlertService with intelligent leak detection algorithm (analyzes 24h usage patterns, night consumption, compares with 30-day historical baseline, detects 200%+ spikes, continuous high flow). Seeded 6 water saving tips. Ready for testing."
+  
+  - task: "Admin Management APIs"
+    implemented: true
+    working: "NA"
+    file: "backend/admin_routes.py, backend/monitoring_models.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Created admin management system: GET /admin/dashboard/metrics (total customers, devices, revenue, consumption, alerts, maintenance), GET /admin/devices/monitoring (real-time device status, health, consumption, alerts per device), POST /admin/customers/bulk (bulk operations: activate, deactivate, update balance, send notifications), POST /admin/maintenance (create maintenance schedules with technician assignment), GET /admin/maintenance (list schedules with filters), GET /admin/revenue/report (comprehensive revenue reports with payment method breakdown, daily trends, top customers, water consumption). All endpoints role-protected (admin/technician). Ready for testing."
 
 frontend:
   - task: "Payment pages - BalancePurchase, PurchaseHistory, PurchaseReceipt"
@@ -284,3 +320,5 @@ agent_communication:
       message: "FRONTEND LOGIN TESTING COMPLETE: Comprehensive end-to-end testing of all 3 demo accounts successful. ✅ Admin account (admin@indowater.com/admin123) - login successful, proper redirect to Admin Dashboard, user info displayed correctly in sidebar and header, role-based navigation working. ✅ Technician account (technician@indowater.com/tech123) - login successful, proper redirect to Dashboard with technician-specific stats, navigation menu shows technician options. ✅ Customer account (customer@indowater.com/customer123) - login successful, proper redirect to Dashboard with customer-specific stats and navigation. All accounts show success toast messages, proper user information display (name, email, role badge), and logout functionality working. Frontend login flow is fully functional - user reported issue is RESOLVED."
     - agent: "main"
       message: "ANALYTICS & REPORTING IMPLEMENTATION COMPLETE: Phase 1 - Payment gateway sandbox keys configured in .env (Midtrans & Xendit). Phase 2 - Generated 6 months of realistic water usage data (543 records, 3 devices, 345.32 m³). Phase 3 - Created comprehensive analytics backend: 5 API endpoints (usage, trends, predictions, comparison, admin overview) with statistical moving average predictions. Phase 4 - Created report generation (PDF with ReportLab, Excel with openpyxl). Phase 5 - Built Analytics frontend page with Recharts visualization (area/bar/line charts), period selectors, trend indicators, prediction charts, and export buttons. Added navigation links for admin and customer roles. Documentation: Created ANALYTICS_IMPLEMENTATION.md with full technical details. All ready for testing."
+    - agent: "main"
+      message: "PHASE 2 BACKEND IMPLEMENTATION IN PROGRESS: Fixed chatbot service to work without EMERGENT_LLM_KEY (graceful degradation). Implemented comprehensive backend APIs: ✅ Voucher System (create, validate, apply vouchers - 5 test vouchers seeded including WELCOME50, HEMAT20, FLASH100K, NEWYEAR2025), ✅ Alert & Notification System (low balance alerts, leak detection, device tampering alerts, water saving tips - 6 tips seeded), ✅ Alert Service with leak detection algorithm (analyzes 24h usage patterns, detects abnormal consumption, night-time leaks), ✅ Admin Management APIs (dashboard metrics, real-time device monitoring, bulk customer operations, maintenance scheduling, comprehensive revenue reporting). All routes registered and backend running successfully. Next: Frontend implementation for Phase 2 features."
