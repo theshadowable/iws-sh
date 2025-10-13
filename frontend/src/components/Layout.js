@@ -21,7 +21,8 @@ import {
   ShoppingCart,
   History,
   BarChart3,
-  Target
+  Target,
+  Ticket
 } from 'lucide-react';
 
 export const Layout = ({ children }) => {
@@ -46,6 +47,7 @@ export const Layout = ({ children }) => {
         { path: '/customers', icon: Users, label: 'Customers', roles: ['admin'] },
         { path: '/properties', icon: Building2, label: 'Properties', roles: ['admin'] },
         { path: '/devices', icon: Gauge, label: 'Devices', roles: ['admin'] },
+        { path: '/vouchers', icon: Ticket, label: 'Vouchers', roles: ['admin'] },
         { path: '/payment-settings', icon: Settings, label: 'Payment Settings', roles: ['admin'] },
       );
     }
@@ -65,8 +67,7 @@ export const Layout = ({ children }) => {
       items.push(
         { path: '/my-devices', icon: Gauge, label: 'My Devices', roles: ['customer'] },
         { path: '/analytics', icon: BarChart3, label: 'Analytics', roles: ['customer'] },
-        { path: '/budget-goals', icon: Target, label: 'Budget Goals', roles: ['customer'] },
-        { path: '/balance-purchase', icon: ShoppingCart, label: 'Buy Balance', roles: ['customer'] },
+        { path: '/balance-purchase', icon: ShoppingCart, label: 'Top-Up Balance', roles: ['customer'] },
         { path: '/purchase-history', icon: History, label: 'Purchase History', roles: ['customer'] },
         { path: '/transactions', icon: CreditCard, label: 'Transactions', roles: ['customer'] },
       );

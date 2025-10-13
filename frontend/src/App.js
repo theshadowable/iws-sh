@@ -6,6 +6,7 @@ import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { Login } from '@/pages/Login';
 import { Register } from '@/pages/Register';
 import { Dashboard } from '@/pages/Dashboard';
+import CustomerDashboard from '@/pages/CustomerDashboard';
 import { Properties } from '@/pages/Properties';
 import { TechnicianTasks } from '@/pages/TechnicianTasks';
 import { MeterReading } from '@/pages/MeterReading';
@@ -19,6 +20,7 @@ import { AdminDashboard } from '@/pages/AdminDashboard';
 import { UserManagement } from '@/pages/UserManagement';
 import { Analytics } from '@/pages/Analytics';
 import BudgetGoals from '@/pages/BudgetGoals';
+import VoucherManagement from '@/pages/VoucherManagement';
 import "@/App.css";
 
 // Placeholder pages (will be created in next phases)
@@ -76,6 +78,10 @@ const DashboardRouter = () => {
   
   if (user?.role === 'admin') {
     return <AdminDashboard />;
+  }
+  
+  if (user?.role === 'customer') {
+    return <CustomerDashboard />;
   }
   
   return <Dashboard />;
@@ -237,6 +243,15 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute allowedRoles={['admin', 'customer']}>
             <Analytics />
+          </ProtectedRoute>
+        }
+      />
+      
+      <Route
+        path="/vouchers"
+        element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <VoucherManagement />
           </ProtectedRoute>
         }
       />

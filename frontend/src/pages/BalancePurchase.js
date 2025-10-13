@@ -22,16 +22,36 @@ export const BalancePurchase = () => {
   const [paymentMethod, setPaymentMethod] = useState('');
   const [paymentDetails, setPaymentDetails] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [activeGateway, setActiveGateway] = useState('midtrans'); // Default gateway
+  const [activeGateway, setActiveGateway] = useState('xendit'); // Default to Xendit
+  
+  // Voucher state
+  const [voucherCode, setVoucherCode] = useState('');
+  const [appliedVoucher, setAppliedVoucher] = useState(null);
+  const [voucherValidating, setVoucherValidating] = useState(false);
+  const [activeVouchers, setActiveVouchers] = useState([]);
+  const [finalAmount, setFinalAmount] = useState(0);
+  const [discountAmount, setDiscountAmount] = useState(0);
   
   // Xendit specific options
   const [vaBank, setVaBank] = useState('BCA');
   const [ewalletType, setEwalletType] = useState('OVO');
 
-  // Fetch active gateway on component mount
+  // Fetch active gateway and vouchers on component mount
   useEffect(() => {
     fetchActiveGateway();
+    fetchActiveVouchers();
   }, []);
+  
+  // Update final amount when amount or voucher changes
+  useEffect(() => {
+    if (appliedVoucher) {
+      setFinalAmount(appliedVoucher.final_amount);
+      setDiscountAmount(appliedVoucher.discount_amount);
+    } else {
+      setFinalAmount(parseFloat(amount) || 0);
+      setDiscountAmount(0);
+    }
+  }, [amount, appliedVoucher]);
 
   const fetchActiveGateway = async () => {
     try {
@@ -42,12 +62,82 @@ export const BalancePurchase = () => {
           headers: { Authorization: `Bearer ${token}` }
         }
       );
-      setActiveGateway(response.data.active_gateway || 'midtrans');
+      setActiveGateway(response.data.active_gateway || 'xendit');
     } catch (error) {
       console.error('Failed to fetch gateway settings:', error);
-      // Default to midtrans if fetch fails
-      setActiveGateway('midtrans');
+      // Default to xendit if fetch fails
+      setActiveGateway('xendit');
     }
+  };
+  
+  const fetchActiveVouchers = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get(
+        `${BACKEND_URL}/api/vouchers/active`,
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+      setActiveVouchers(response.data || []);
+    } catch (error) {
+      console.error('Failed to fetch vouchers:', error);
+    }
+  };
+  
+  const validateVoucher = async () => {
+    if (!voucherCode.trim()) {
+      toast.error('Please enter a voucher code');
+      return;
+    }
+    
+    if (!amount || parseFloat(amount) < 10000) {
+      toast.error('Please select an amount first');
+      return;
+    }
+    
+    setVoucherValidating(true);
+    
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.post(
+        `${BACKEND_URL}/api/vouchers/validate`,
+        {
+          voucher_code: voucherCode,
+          purchase_amount: parseFloat(amount)
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+      
+      if (response.data.valid) {
+        setAppliedVoucher(response.data);
+        toast.success(response.data.message);
+      } else {
+        toast.error(response.data.message);
+        setAppliedVoucher(null);
+      }
+    } catch (error) {
+      console.error('Failed to validate voucher:', error);
+      toast.error(error.response?.data?.detail || 'Failed to validate voucher');
+      setAppliedVoucher(null);
+    } finally {
+      setVoucherValidating(false);
+    }
+  };
+  
+  const removeVoucher = () => {
+    setAppliedVoucher(null);
+    setVoucherCode('');
+    toast.success('Voucher removed');
+  };
+  
+  const applyVoucherCode = (code) => {
+    setVoucherCode(code);
+    setTimeout(() => {
+      validateVoucher();
+    }, 100);
   };
 
   const predefinedAmounts = [
