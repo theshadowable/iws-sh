@@ -8,6 +8,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 import os
 
 from auth import get_current_user, require_role
+from models import User
 from alert_models import (
     Alert, AlertPreferences, AlertType, AlertSeverity, AlertStatus,
     CreateAlertRequest, UpdateAlertStatusRequest,
@@ -27,13 +28,13 @@ async def get_alerts(
     status: Optional[AlertStatus] = None,
     alert_type: Optional[AlertType] = None,
     limit: int = 50,
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Get customer's alerts
     """
     try:
-        customer_id = current_user["id"]
+        customer_id = current_user.id
         query = {"customer_id": customer_id}
         
         if status:
@@ -54,13 +55,13 @@ async def get_alerts(
 
 @router.get("/unread-count")
 async def get_unread_count(
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Get count of unread alerts
     """
     try:
-        customer_id = current_user["id"]
+        customer_id = current_user.id
         count = await db.alerts.count_documents({
             "customer_id": customer_id,
             "status": AlertStatus.UNREAD
@@ -80,13 +81,13 @@ async def get_unread_count(
 async def update_alert_status(
     alert_id: str,
     request: UpdateAlertStatusRequest,
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Update alert status (mark as read, dismissed, etc.)
     """
     try:
-        customer_id = current_user["id"]
+        customer_id = current_user.id
         
         update_data = {"status": request.status}
         
@@ -120,13 +121,13 @@ async def update_alert_status(
 
 @router.post("/mark-all-read")
 async def mark_all_alerts_read(
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Mark all unread alerts as read
     """
     try:
-        customer_id = current_user["id"]
+        customer_id = current_user.id
         
         result = await db.alerts.update_many(
             {"customer_id": customer_id, "status": AlertStatus.UNREAD},
@@ -145,13 +146,13 @@ async def mark_all_alerts_read(
 
 @router.get("/preferences", response_model=AlertPreferences)
 async def get_alert_preferences(
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Get customer's alert preferences
     """
     try:
-        customer_id = current_user["id"]
+        customer_id = current_user.id
         
         prefs = await db.alert_preferences.find_one({"customer_id": customer_id})
         
@@ -173,13 +174,13 @@ async def get_alert_preferences(
 @router.put("/preferences", response_model=AlertPreferences)
 async def update_alert_preferences(
     preferences: AlertPreferences,
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Update customer's alert preferences
     """
     try:
-        customer_id = current_user["id"]
+        customer_id = current_user.id
         preferences.customer_id = customer_id
         preferences.updated_at = datetime.utcnow()
         
@@ -202,7 +203,7 @@ async def update_alert_preferences(
 @router.post("/create", response_model=Alert)
 async def create_alert(
     request: CreateAlertRequest,
-    current_user: dict = Depends(require_role(["admin", "technician"]))
+    current_user: User = Depends(require_role(["admin", "technician"]))
 ):
     """
     Create a new alert (Admin/Technician only)
@@ -231,14 +232,14 @@ async def create_alert(
 @router.get("/leaks", response_model=List[LeakDetectionEvent])
 async def get_leak_events(
     resolved: Optional[bool] = None,
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Get leak detection events for customer
     """
     try:
-        customer_id = current_user["id"]
-        role = current_user.get("role")
+        customer_id = current_user.id
+        role = current_user.role
         
         query = {}
         if role == "customer":
@@ -261,14 +262,14 @@ async def get_leak_events(
 @router.get("/tampering", response_model=List[DeviceTamperingEvent])
 async def get_tampering_events(
     resolved: Optional[bool] = None,
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Get device tampering events
     """
     try:
-        customer_id = current_user["id"]
-        role = current_user.get("role")
+        customer_id = current_user.id
+        role = current_user.role
         
         query = {}
         if role == "customer":
@@ -292,13 +293,13 @@ async def get_tampering_events(
 async def get_water_saving_tips(
     viewed: Optional[bool] = None,
     limit: int = 10,
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Get personalized water saving tips
     """
     try:
-        customer_id = current_user["id"]
+        customer_id = current_user.id
         query = {"customer_id": customer_id}
         
         if viewed is not None:
@@ -318,13 +319,13 @@ async def get_water_saving_tips(
 @router.patch("/tips/{tip_id}/viewed")
 async def mark_tip_viewed(
     tip_id: str,
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Mark a tip as viewed
     """
     try:
-        customer_id = current_user["id"]
+        customer_id = current_user.id
         
         result = await db.water_saving_tips.update_one(
             {"id": tip_id, "customer_id": customer_id},

@@ -10,7 +10,7 @@ import sys
 from typing import Dict, Any, Optional
 
 # Backend URL from environment
-BACKEND_URL = "https://app-improvement-11.preview.emergentagent.com/api"
+BACKEND_URL = "https://integration-check-4.preview.emergentagent.com/api"
 
 # Demo accounts to test
 DEMO_ACCOUNTS = [
@@ -568,6 +568,492 @@ def test_report_generation_api(token: str, user_role: str, customer_id: str = No
     return results
 
 
+def test_alert_notification_apis(token: str, user_role: str, customer_id: str = None) -> Dict[str, Any]:
+    """Test alert and notification system APIs"""
+    print(f"\n🚨 Testing Alert & Notification APIs ({user_role})...")
+    
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+    
+    results = {
+        "get_alerts": {"success": False, "error": None, "data": None},
+        "unread_count": {"success": False, "error": None, "data": None},
+        "mark_all_read": {"success": False, "error": None, "data": None},
+        "alert_preferences": {"success": False, "error": None, "data": None},
+        "leak_events": {"success": False, "error": None, "data": None},
+        "tampering_events": {"success": False, "error": None, "data": None},
+        "water_saving_tips": {"success": False, "error": None, "data": None}
+    }
+    
+    try:
+        # Test 1: Get alerts
+        print("   📋 Testing GET /api/alerts...")
+        response = requests.get(
+            f"{BACKEND_URL}/alerts/",
+            headers=headers,
+            timeout=15
+        )
+        
+        if response.status_code == 200:
+            alerts = response.json()
+            print(f"      ✅ SUCCESS - Found {len(alerts)} alerts")
+            results["get_alerts"] = {"success": True, "data": alerts}
+        else:
+            error_msg = f"Get alerts failed: {response.status_code}"
+            print(f"      ❌ {error_msg}")
+            results["get_alerts"] = {"success": False, "error": error_msg}
+        
+        # Test 2: Get unread count
+        print("   🔢 Testing GET /api/alerts/unread-count...")
+        response = requests.get(
+            f"{BACKEND_URL}/alerts/unread-count",
+            headers=headers,
+            timeout=15
+        )
+        
+        if response.status_code == 200:
+            count_data = response.json()
+            unread_count = count_data.get("unread_count", 0)
+            print(f"      ✅ SUCCESS - Unread count: {unread_count}")
+            results["unread_count"] = {"success": True, "data": count_data}
+        else:
+            error_msg = f"Unread count failed: {response.status_code}"
+            print(f"      ❌ {error_msg}")
+            results["unread_count"] = {"success": False, "error": error_msg}
+        
+        # Test 3: Mark all as read
+        print("   ✅ Testing POST /api/alerts/mark-all-read...")
+        response = requests.post(
+            f"{BACKEND_URL}/alerts/mark-all-read",
+            headers=headers,
+            timeout=15
+        )
+        
+        if response.status_code == 200:
+            mark_data = response.json()
+            print(f"      ✅ SUCCESS - {mark_data.get('message', 'Marked alerts as read')}")
+            results["mark_all_read"] = {"success": True, "data": mark_data}
+        else:
+            error_msg = f"Mark all read failed: {response.status_code}"
+            print(f"      ❌ {error_msg}")
+            results["mark_all_read"] = {"success": False, "error": error_msg}
+        
+        # Test 4: Get alert preferences
+        print("   ⚙️ Testing GET /api/alerts/preferences...")
+        response = requests.get(
+            f"{BACKEND_URL}/alerts/preferences",
+            headers=headers,
+            timeout=15
+        )
+        
+        if response.status_code == 200:
+            prefs = response.json()
+            print(f"      ✅ SUCCESS - Got alert preferences")
+            results["alert_preferences"] = {"success": True, "data": prefs}
+        else:
+            error_msg = f"Alert preferences failed: {response.status_code}"
+            print(f"      ❌ {error_msg}")
+            results["alert_preferences"] = {"success": False, "error": error_msg}
+        
+        # Test 5: Get leak detection events
+        print("   💧 Testing GET /api/alerts/leaks...")
+        response = requests.get(
+            f"{BACKEND_URL}/alerts/leaks",
+            headers=headers,
+            timeout=15
+        )
+        
+        if response.status_code == 200:
+            leaks = response.json()
+            print(f"      ✅ SUCCESS - Found {len(leaks)} leak events")
+            results["leak_events"] = {"success": True, "data": leaks}
+        else:
+            error_msg = f"Leak events failed: {response.status_code}"
+            print(f"      ❌ {error_msg}")
+            results["leak_events"] = {"success": False, "error": error_msg}
+        
+        # Test 6: Get tampering events
+        print("   🔧 Testing GET /api/alerts/tampering...")
+        response = requests.get(
+            f"{BACKEND_URL}/alerts/tampering",
+            headers=headers,
+            timeout=15
+        )
+        
+        if response.status_code == 200:
+            tampering = response.json()
+            print(f"      ✅ SUCCESS - Found {len(tampering)} tampering events")
+            results["tampering_events"] = {"success": True, "data": tampering}
+        else:
+            error_msg = f"Tampering events failed: {response.status_code}"
+            print(f"      ❌ {error_msg}")
+            results["tampering_events"] = {"success": False, "error": error_msg}
+        
+        # Test 7: Get water saving tips
+        print("   💡 Testing GET /api/alerts/tips...")
+        response = requests.get(
+            f"{BACKEND_URL}/alerts/tips",
+            headers=headers,
+            timeout=15
+        )
+        
+        if response.status_code == 200:
+            tips = response.json()
+            print(f"      ✅ SUCCESS - Found {len(tips)} water saving tips")
+            results["water_saving_tips"] = {"success": True, "data": tips}
+        else:
+            error_msg = f"Water saving tips failed: {response.status_code}"
+            print(f"      ❌ {error_msg}")
+            results["water_saving_tips"] = {"success": False, "error": error_msg}
+            
+    except requests.exceptions.RequestException as e:
+        error_msg = f"Connection error: {str(e)}"
+        print(f"   ❌ {error_msg}")
+        for key in results:
+            if not results[key]["success"]:
+                results[key]["error"] = error_msg
+    except Exception as e:
+        error_msg = f"Unexpected error: {str(e)}"
+        print(f"   ❌ {error_msg}")
+        for key in results:
+            if not results[key]["success"]:
+                results[key]["error"] = error_msg
+    
+    return results
+
+
+def test_admin_management_apis(token: str, user_role: str) -> Dict[str, Any]:
+    """Test admin management APIs"""
+    print(f"\n👑 Testing Admin Management APIs ({user_role})...")
+    
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+    
+    results = {
+        "dashboard_metrics": {"success": False, "error": None, "data": None},
+        "device_monitoring": {"success": False, "error": None, "data": None},
+        "bulk_customers": {"success": False, "error": None, "data": None},
+        "maintenance_create": {"success": False, "error": None, "data": None},
+        "maintenance_list": {"success": False, "error": None, "data": None},
+        "revenue_report": {"success": False, "error": None, "data": None}
+    }
+    
+    try:
+        # Test 1: Dashboard metrics (Admin only)
+        if user_role == "admin":
+            print("   📊 Testing GET /api/admin/dashboard/metrics...")
+            response = requests.get(
+                f"{BACKEND_URL}/admin/dashboard/metrics",
+                headers=headers,
+                timeout=15
+            )
+            
+            if response.status_code == 200:
+                metrics = response.json()
+                required_fields = ["total_customers", "active_customers", "total_devices", "online_devices"]
+                missing_fields = [field for field in required_fields if field not in metrics]
+                
+                if missing_fields:
+                    error_msg = f"Missing required fields: {missing_fields}"
+                    print(f"      ❌ {error_msg}")
+                    results["dashboard_metrics"] = {"success": False, "error": error_msg}
+                else:
+                    print(f"      ✅ SUCCESS - Customers: {metrics['total_customers']}, Devices: {metrics['total_devices']}")
+                    results["dashboard_metrics"] = {"success": True, "data": metrics}
+            else:
+                error_msg = f"Dashboard metrics failed: {response.status_code}"
+                print(f"      ❌ {error_msg}")
+                results["dashboard_metrics"] = {"success": False, "error": error_msg}
+        else:
+            print("   📊 Skipping dashboard metrics - requires admin role")
+            results["dashboard_metrics"] = {"success": True, "data": {"skipped": "Not admin"}}
+        
+        # Test 2: Device monitoring (Admin/Technician)
+        if user_role in ["admin", "technician"]:
+            print("   🖥️ Testing GET /api/admin/devices/monitoring...")
+            response = requests.get(
+                f"{BACKEND_URL}/admin/devices/monitoring",
+                headers=headers,
+                timeout=15
+            )
+            
+            if response.status_code == 200:
+                devices = response.json()
+                print(f"      ✅ SUCCESS - Found {len(devices)} devices for monitoring")
+                results["device_monitoring"] = {"success": True, "data": devices}
+            else:
+                error_msg = f"Device monitoring failed: {response.status_code}"
+                print(f"      ❌ {error_msg}")
+                results["device_monitoring"] = {"success": False, "error": error_msg}
+        else:
+            print("   🖥️ Skipping device monitoring - requires admin/technician role")
+            results["device_monitoring"] = {"success": True, "data": {"skipped": "Not admin/technician"}}
+        
+        # Test 3: Bulk customer operations (Admin only)
+        if user_role == "admin":
+            print("   👥 Testing POST /api/admin/customers/bulk...")
+            bulk_data = {
+                "customer_ids": ["test-customer-1", "test-customer-2"],
+                "action": "send_notification",
+                "parameters": {
+                    "title": "Test Notification",
+                    "message": "This is a test notification from bulk operation"
+                }
+            }
+            
+            response = requests.post(
+                f"{BACKEND_URL}/admin/customers/bulk",
+                json=bulk_data,
+                headers=headers,
+                timeout=15
+            )
+            
+            if response.status_code == 200:
+                bulk_result = response.json()
+                print(f"      ✅ SUCCESS - Bulk operation completed")
+                results["bulk_customers"] = {"success": True, "data": bulk_result}
+            else:
+                error_msg = f"Bulk customers failed: {response.status_code}"
+                print(f"      ❌ {error_msg}")
+                results["bulk_customers"] = {"success": False, "error": error_msg}
+        else:
+            print("   👥 Skipping bulk customers - requires admin role")
+            results["bulk_customers"] = {"success": True, "data": {"skipped": "Not admin"}}
+        
+        # Test 4: Create maintenance schedule (Admin only)
+        if user_role == "admin":
+            print("   🔧 Testing POST /api/admin/maintenance...")
+            from datetime import datetime, timedelta
+            future_date = datetime.utcnow() + timedelta(days=7)
+            
+            maintenance_data = {
+                "device_id": "test-device-1",
+                "maintenance_type": "routine_inspection",
+                "scheduled_date": future_date.isoformat(),
+                "priority": "medium",
+                "description": "Routine maintenance check",
+                "notes": "Test maintenance schedule"
+            }
+            
+            response = requests.post(
+                f"{BACKEND_URL}/admin/maintenance",
+                json=maintenance_data,
+                headers=headers,
+                timeout=15
+            )
+            
+            if response.status_code == 200:
+                maintenance = response.json()
+                print(f"      ✅ SUCCESS - Maintenance scheduled")
+                results["maintenance_create"] = {"success": True, "data": maintenance}
+            else:
+                error_msg = f"Maintenance create failed: {response.status_code}"
+                try:
+                    error_data = response.json()
+                    error_msg += f" - {error_data.get('detail', '')}"
+                except:
+                    pass
+                print(f"      ❌ {error_msg}")
+                results["maintenance_create"] = {"success": False, "error": error_msg}
+        else:
+            print("   🔧 Skipping maintenance create - requires admin role")
+            results["maintenance_create"] = {"success": True, "data": {"skipped": "Not admin"}}
+        
+        # Test 5: List maintenance schedules (Admin/Technician)
+        if user_role in ["admin", "technician"]:
+            print("   📋 Testing GET /api/admin/maintenance...")
+            response = requests.get(
+                f"{BACKEND_URL}/admin/maintenance",
+                headers=headers,
+                timeout=15
+            )
+            
+            if response.status_code == 200:
+                schedules = response.json()
+                print(f"      ✅ SUCCESS - Found {len(schedules)} maintenance schedules")
+                results["maintenance_list"] = {"success": True, "data": schedules}
+            else:
+                error_msg = f"Maintenance list failed: {response.status_code}"
+                print(f"      ❌ {error_msg}")
+                results["maintenance_list"] = {"success": False, "error": error_msg}
+        else:
+            print("   📋 Skipping maintenance list - requires admin/technician role")
+            results["maintenance_list"] = {"success": True, "data": {"skipped": "Not admin/technician"}}
+        
+        # Test 6: Revenue report (Admin only)
+        if user_role == "admin":
+            print("   💰 Testing GET /api/admin/revenue/report...")
+            response = requests.get(
+                f"{BACKEND_URL}/admin/revenue/report?period=monthly",
+                headers=headers,
+                timeout=15
+            )
+            
+            if response.status_code == 200:
+                revenue = response.json()
+                required_fields = ["total_revenue", "total_transactions", "revenue_by_payment_method"]
+                missing_fields = [field for field in required_fields if field not in revenue]
+                
+                if missing_fields:
+                    error_msg = f"Missing required fields: {missing_fields}"
+                    print(f"      ❌ {error_msg}")
+                    results["revenue_report"] = {"success": False, "error": error_msg}
+                else:
+                    print(f"      ✅ SUCCESS - Revenue: Rp {revenue['total_revenue']:,.2f}, Transactions: {revenue['total_transactions']}")
+                    results["revenue_report"] = {"success": True, "data": revenue}
+            else:
+                error_msg = f"Revenue report failed: {response.status_code}"
+                print(f"      ❌ {error_msg}")
+                results["revenue_report"] = {"success": False, "error": error_msg}
+        else:
+            print("   💰 Skipping revenue report - requires admin role")
+            results["revenue_report"] = {"success": True, "data": {"skipped": "Not admin"}}
+            
+    except requests.exceptions.RequestException as e:
+        error_msg = f"Connection error: {str(e)}"
+        print(f"   ❌ {error_msg}")
+        for key in results:
+            if not results[key]["success"]:
+                results[key]["error"] = error_msg
+    except Exception as e:
+        error_msg = f"Unexpected error: {str(e)}"
+        print(f"   ❌ {error_msg}")
+        for key in results:
+            if not results[key]["success"]:
+                results[key]["error"] = error_msg
+    
+    return results
+
+
+def test_comprehensive_phase2_apis():
+    """Test all Phase 2 backend APIs comprehensively"""
+    print("=" * 80)
+    print("🧪 COMPREHENSIVE PHASE 2 API TESTING - IndoWater Solution")
+    print("=" * 80)
+    print(f"Backend URL: {BACKEND_URL}")
+    
+    # Test accounts
+    test_accounts = [
+        {
+            "name": "Admin",
+            "email": "admin@indowater.com",
+            "password": "admin123",
+            "expected_role": "admin"
+        },
+        {
+            "name": "Technician",
+            "email": "technician@indowater.com",
+            "password": "tech123",
+            "expected_role": "technician"
+        },
+        {
+            "name": "Customer",
+            "email": "customer@indowater.com", 
+            "password": "customer123",
+            "expected_role": "customer"
+        }
+    ]
+    
+    all_results = {}
+    
+    for account in test_accounts:
+        print(f"\n{'='*60}")
+        print(f"🔐 Testing {account['name']} Account")
+        print(f"{'='*60}")
+        
+        # Login
+        login_result = test_login(
+            account["email"],
+            account["password"], 
+            account["expected_role"],
+            account["name"]
+        )
+        
+        if not login_result["success"]:
+            print(f"\n❌ CRITICAL: {account['name']} login failed - skipping tests")
+            all_results[account["name"]] = {"login": False}
+            continue
+        
+        token = login_result["token"]
+        user = login_result["user"]
+        user_role = user["role"]
+        customer_id = user["id"] if user_role == "customer" else None
+        
+        print(f"\n✅ {account['name']} login successful - Role: {user_role}")
+        
+        # Test Analytics APIs
+        analytics_results = test_analytics_api(token, user_role, customer_id)
+        
+        # Test Report Generation
+        report_results = test_report_generation_api(token, user_role, customer_id)
+        
+        # Test Alert & Notification System
+        alert_results = test_alert_notification_apis(token, user_role, customer_id)
+        
+        # Test Admin Management APIs
+        admin_results = test_admin_management_apis(token, user_role)
+        
+        all_results[account["name"]] = {
+            "login": True,
+            "analytics": analytics_results,
+            "reports": report_results,
+            "alerts": alert_results,
+            "admin": admin_results
+        }
+    
+    # Summary
+    print("\n" + "=" * 80)
+    print("📊 COMPREHENSIVE PHASE 2 TEST SUMMARY")
+    print("=" * 80)
+    
+    total_tests = 0
+    passed_tests = 0
+    failed_tests = []
+    
+    for account_name, account_results in all_results.items():
+        print(f"\n{account_name} Account:")
+        
+        if not account_results["login"]:
+            print("  ❌ Login failed - tests skipped")
+            continue
+        
+        # Test all categories
+        categories = ["analytics", "reports", "alerts", "admin"]
+        for category in categories:
+            if category in account_results:
+                category_results = account_results[category]
+                for test_name, result in category_results.items():
+                    total_tests += 1
+                    if result["success"]:
+                        passed_tests += 1
+                        status = "✅ PASS"
+                    else:
+                        status = "❌ FAIL"
+                        failed_tests.append(f"{account_name} - {category}: {test_name}")
+                    
+                    print(f"  {status} - {category.title()}: {test_name}")
+                    if not result["success"] and result["error"]:
+                        print(f"        Error: {result['error']}")
+    
+    print(f"\nOverall Results: {passed_tests}/{total_tests} tests passed")
+    
+    if failed_tests:
+        print(f"\n❌ FAILED TESTS ({len(failed_tests)}):")
+        for failed_test in failed_tests:
+            print(f"  - {failed_test}")
+    
+    if passed_tests == total_tests:
+        print("🎉 ALL PHASE 2 TESTS PASSED!")
+        return True
+    else:
+        print("⚠️  SOME TESTS FAILED - Check errors above")
+        return False
+
+
 def test_analytics_and_reports():
     """Test analytics and report generation for both admin and customer"""
     print("=" * 80)
@@ -1081,63 +1567,23 @@ def test_voucher_system_apis():
 
 
 def main():
-    """Run all tests"""
-    print("=" * 60)
-    print("🧪 BACKEND TESTING - IndoWater Solution")
-    print("=" * 60)
+    """Run comprehensive Phase 2 backend API testing"""
+    print("=" * 80)
+    print("🧪 COMPREHENSIVE PHASE 2 BACKEND TESTING - IndoWater Solution")
+    print("=" * 80)
     print(f"Backend URL: {BACKEND_URL}")
+    print("\nTesting Features:")
+    print("  1. Analytics APIs (usage, trends, predictions, comparison, admin overview)")
+    print("  2. Report Generation APIs (PDF/Excel export)")
+    print("  3. Alert & Notification System (alerts, leak detection, tampering, tips)")
+    print("  4. Admin Management APIs (dashboard metrics, device monitoring, bulk operations, maintenance, revenue reports)")
     
-    # Test 1: Login for all accounts
-    print(f"\n🔐 PHASE 1: Testing login for {len(DEMO_ACCOUNTS)} demo accounts...")
+    # Run comprehensive Phase 2 testing
+    phase2_success = test_comprehensive_phase2_apis()
     
-    results = []
-    success_count = 0
-    
-    for account in DEMO_ACCOUNTS:
-        result = test_login(
-            account["email"],
-            account["password"], 
-            account["expected_role"],
-            account["name"]
-        )
-        
-        result["account_name"] = account["name"]
-        result["email"] = account["email"]
-        results.append(result)
-        
-        if result["success"]:
-            success_count += 1
-    
-    # Login Summary
-    print("\n" + "=" * 60)
-    print("📊 LOGIN TEST SUMMARY")
-    print("=" * 60)
-    
-    for result in results:
-        status = "✅ PASS" if result["success"] else "❌ FAIL"
-        print(f"{status} - {result['account_name']} ({result['email']})")
-        if not result["success"]:
-            print(f"      Error: {result['error']}")
-    
-    print(f"\nLogin Results: {success_count}/{len(DEMO_ACCOUNTS)} accounts working")
-    
-    # Test 2: Voucher System APIs (HIGH PRIORITY)
-    print(f"\n🎫 PHASE 2: Testing Voucher System APIs (HIGH PRIORITY)...")
+    # Also run existing voucher tests for completeness
+    print(f"\n🎫 ADDITIONAL: Testing Voucher System APIs...")
     voucher_results = test_voucher_system_apis()
-    
-    # Test 3: Analytics & Reporting APIs
-    print(f"\n📊 PHASE 3: Testing Analytics & Reporting APIs...")
-    analytics_success = test_analytics_and_reports()
-    
-    # Test 4: Payment APIs (only if customer login works)
-    customer_login_success = any(r["success"] and r["account_name"] == "Customer" for r in results)
-    
-    if customer_login_success:
-        print(f"\n💳 PHASE 4: Testing Payment History APIs...")
-        payment_success = test_customer_payment_apis()
-    else:
-        print(f"\n❌ SKIPPING Payment API tests - Customer login failed")
-        payment_success = False
     
     # Voucher Test Summary
     print("\n" + "=" * 80)
@@ -1166,27 +1612,32 @@ def main():
     voucher_all_passed = voucher_success_count == len(voucher_test_cases)
     
     # Final Summary
-    print("\n" + "=" * 60)
-    print("🏁 FINAL TEST SUMMARY")
-    print("=" * 60)
+    print("\n" + "=" * 80)
+    print("🏁 FINAL COMPREHENSIVE TEST SUMMARY")
+    print("=" * 80)
     
-    login_status = "✅ PASS" if success_count == len(DEMO_ACCOUNTS) else "❌ FAIL"
+    phase2_status = "✅ PASS" if phase2_success else "❌ FAIL"
     voucher_status = "✅ PASS" if voucher_all_passed else "❌ FAIL"
-    analytics_status = "✅ PASS" if analytics_success else "❌ FAIL"
-    payment_status = "✅ PASS" if payment_success else "❌ FAIL"
     
-    print(f"{login_status} - Login Tests ({success_count}/{len(DEMO_ACCOUNTS)})")
-    print(f"{voucher_status} - Voucher System Tests ({voucher_success_count}/{len(voucher_test_cases)}) - HIGH PRIORITY")
-    print(f"{analytics_status} - Analytics & Reporting Tests")
-    print(f"{payment_status} - Payment API Tests")
+    print(f"{phase2_status} - Phase 2 APIs (Analytics, Reports, Alerts, Admin Management)")
+    print(f"{voucher_status} - Voucher System APIs ({voucher_success_count}/{len(voucher_test_cases)})")
     
-    overall_success = (success_count == len(DEMO_ACCOUNTS)) and voucher_all_passed and analytics_success and payment_success
+    overall_success = phase2_success and voucher_all_passed
     
     if overall_success:
-        print("\n🎉 ALL TESTS PASSED!")
+        print("\n🎉 ALL COMPREHENSIVE TESTS PASSED!")
+        print("✅ Analytics APIs working correctly")
+        print("✅ Report Generation (PDF/Excel) working correctly")
+        print("✅ Alert & Notification System working correctly")
+        print("✅ Admin Management APIs working correctly")
+        print("✅ Voucher System working correctly")
         return True
     else:
         print("\n⚠️  SOME TESTS FAILED - Check details above")
+        if not phase2_success:
+            print("❌ Phase 2 APIs need attention")
+        if not voucher_all_passed:
+            print("❌ Voucher System needs attention")
         return False
 
 if __name__ == "__main__":

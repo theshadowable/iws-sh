@@ -8,6 +8,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 import os
 
 from auth import get_current_user, require_role
+from models import User
 from monitoring_models import (
     DeviceMonitoring, DeviceStatus, RealTimeConsumption, DashboardMetrics,
     BulkCustomerRequest, BulkCustomerResult, BulkCustomerAction,
@@ -25,7 +26,7 @@ db = client[os.environ.get('DB_NAME', 'indowater_db')]
 
 @router.get("/dashboard/metrics", response_model=DashboardMetrics)
 async def get_dashboard_metrics(
-    current_user: dict = Depends(require_role(["admin"]))
+    current_user: User = Depends(require_role(["admin"]))
 ):
     """
     Get real-time dashboard metrics for admin
@@ -81,11 +82,11 @@ async def get_dashboard_metrics(
         # Water consumption today
         consumption_today_pipeline = [
             {"$match": {
-                "timestamp": {"$gte": today_start}
+                "reading_date": {"$gte": today_start.isoformat()}
             }},
             {"$group": {
                 "_id": None,
-                "total": {"$sum": "$volume"}
+                "total": {"$sum": "$consumption"}
             }}
         ]
         consumption_today_result = await db.water_usage.aggregate(consumption_today_pipeline).to_list(1)
@@ -94,11 +95,11 @@ async def get_dashboard_metrics(
         # Water consumption this month
         consumption_month_pipeline = [
             {"$match": {
-                "timestamp": {"$gte": month_start}
+                "reading_date": {"$gte": month_start.isoformat()}
             }},
             {"$group": {
                 "_id": None,
-                "total": {"$sum": "$volume"}
+                "total": {"$sum": "$consumption"}
             }}
         ]
         consumption_month_result = await db.water_usage.aggregate(consumption_month_pipeline).to_list(1)
@@ -144,7 +145,7 @@ async def get_devices_monitoring(
     status_filter: Optional[DeviceStatus] = None,
     has_alerts: Optional[bool] = None,
     limit: int = 100,
-    current_user: dict = Depends(require_role(["admin", "technician"]))
+    current_user: User = Depends(require_role(["admin", "technician"]))
 ):
     """
     Get real-time monitoring data for all devices
@@ -175,22 +176,27 @@ async def get_devices_monitoring(
             today_start = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
             usage_today = await db.water_usage.find({
                 "device_id": device_id,
-                "timestamp": {"$gte": today_start}
+                "reading_date": {"$gte": today_start.isoformat()}
             }).to_list(length=None)
             
-            total_today = sum(u.get("volume", 0) for u in usage_today)
+            total_today = sum(u.get("consumption", 0) for u in usage_today)
             
             # Calculate current flow rate (last 2 readings)
             recent_usage = await db.water_usage.find({
                 "device_id": device_id
-            }).sort("timestamp", -1).limit(2).to_list(2)
+            }).sort("reading_date", -1).limit(2).to_list(2)
             
             flow_rate = 0
             if len(recent_usage) == 2:
-                time_diff = (recent_usage[0]["timestamp"] - recent_usage[1]["timestamp"]).total_seconds() / 3600
-                if time_diff > 0:
-                    volume_diff = recent_usage[0].get("consumption", 0) - recent_usage[1].get("consumption", 0)
-                    flow_rate = volume_diff / time_diff
+                try:
+                    date1 = datetime.fromisoformat(recent_usage[0]["reading_date"])
+                    date2 = datetime.fromisoformat(recent_usage[1]["reading_date"])
+                    time_diff = (date1 - date2).total_seconds() / 3600
+                    if time_diff > 0:
+                        volume_diff = recent_usage[0].get("consumption", 0) - recent_usage[1].get("consumption", 0)
+                        flow_rate = volume_diff / time_diff
+                except:
+                    flow_rate = 0
             
             # Get alerts count
             alerts_count = await db.alerts.count_documents({
@@ -238,7 +244,7 @@ async def get_devices_monitoring(
 async def bulk_customer_action(
     request: BulkCustomerRequest,
     background_tasks: BackgroundTasks,
-    current_user: dict = Depends(require_role(["admin"]))
+    current_user: User = Depends(require_role(["admin"]))
 ):
     """
     Perform bulk actions on multiple customers
@@ -336,7 +342,7 @@ async def bulk_customer_action(
 @router.post("/maintenance", response_model=MaintenanceSchedule)
 async def create_maintenance_schedule(
     request: CreateMaintenanceRequest,
-    current_user: dict = Depends(require_role(["admin"]))
+    current_user: User = Depends(require_role(["admin"]))
 ):
     """
     Create a maintenance schedule
@@ -377,7 +383,7 @@ async def create_maintenance_schedule(
             priority=request.priority,
             description=request.description,
             notes=request.notes,
-            created_by=current_user["id"]
+            created_by=current_user.id
         )
         
         await db.maintenance_schedules.insert_one(schedule.dict())
@@ -413,7 +419,7 @@ async def get_maintenance_schedules(
     status_filter: Optional[str] = None,
     start_date: Optional[datetime] = None,
     end_date: Optional[datetime] = None,
-    current_user: dict = Depends(require_role(["admin", "technician"]))
+    current_user: User = Depends(require_role(["admin", "technician"]))
 ):
     """
     Get maintenance schedules
@@ -432,8 +438,8 @@ async def get_maintenance_schedules(
             query["scheduled_date"] = {"$lte": end_date}
         
         # If technician, only show their assigned schedules
-        if current_user.get("role") == "technician":
-            query["assigned_technician_id"] = current_user["id"]
+        if current_user.role == "technician":
+            query["assigned_technician_id"] = current_user.id
         
         schedules = await db.maintenance_schedules.find(query).sort("scheduled_date", 1).to_list(length=100)
         
@@ -452,7 +458,7 @@ async def generate_revenue_report(
     period: str = "monthly",
     start_date: Optional[datetime] = None,
     end_date: Optional[datetime] = None,
-    current_user: dict = Depends(require_role(["admin"]))
+    current_user: User = Depends(require_role(["admin"]))
 ):
     """
     Generate comprehensive revenue report
@@ -554,11 +560,11 @@ async def generate_revenue_report(
         # Total water consumption
         consumption_pipeline = [
             {"$match": {
-                "timestamp": {"$gte": start_date, "$lte": end_date}
+                "reading_date": {"$gte": start_date.isoformat(), "$lte": end_date.isoformat()}
             }},
             {"$group": {
                 "_id": None,
-                "total": {"$sum": "$volume"}
+                "total": {"$sum": "$consumption"}
             }}
         ]
         
