@@ -652,6 +652,9 @@ from report_routes import router as report_router
 from chatbot_routes import router as chatbot_router
 from notification_routes import router as notification_router
 from budget_routes import router as budget_router
+from voucher_routes import router as voucher_router
+from alert_routes import router as alert_router
+from admin_routes import router as admin_router
 
 # Include routers - include technician routes in api_router first
 api_router.include_router(technician_router)
@@ -662,6 +665,9 @@ api_router.include_router(report_router)
 api_router.include_router(chatbot_router)
 api_router.include_router(notification_router)
 api_router.include_router(budget_router)
+api_router.include_router(voucher_router)
+api_router.include_router(alert_router)
+api_router.include_router(admin_router)
 app.include_router(upload_router)
 
 # Then include api_router in app

@@ -16,8 +16,11 @@ class ChatbotService:
     def __init__(self):
         self.api_key = os.getenv("EMERGENT_LLM_KEY")
         if not self.api_key:
-            raise ValueError("EMERGENT_LLM_KEY not found in environment variables")
+            print("Warning: EMERGENT_LLM_KEY not found. Chatbot service will be disabled.")
+            self.enabled = False
+            return
         
+        self.enabled = True
         # Knowledge base for FAQs
         self.knowledge_base = self._build_knowledge_base()
         self.system_message = self._build_system_message()
@@ -197,6 +200,15 @@ Current date: {datetime.now().strftime('%Y-%m-%d')}
         Returns:
             Dict with response and suggested actions
         """
+        # Check if service is enabled
+        if not self.enabled:
+            return {
+                "response": "I apologize, but the chatbot service is currently unavailable. Please contact support directly for assistance.",
+                "suggested_actions": [
+                    {"label": "Create Support Ticket", "action": "create_ticket"}
+                ]
+            }
+        
         try:
             # Initialize chat with session
             chat = LlmChat(
