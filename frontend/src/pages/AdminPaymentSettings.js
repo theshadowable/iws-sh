@@ -42,7 +42,7 @@ export const AdminPaymentSettings = () => {
       setMode(response.data.mode || 'sandbox');
     } catch (error) {
       console.error('Failed to fetch settings:', error);
-      toast.error('Failed to load payment settings');
+      toast.error('Failed to load payment settings', { id: 'payment-settings-error' });
     } finally {
       setLoading(false);
     }
