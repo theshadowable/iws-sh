@@ -40,7 +40,7 @@ export const TaskMap = () => {
       setProperties(propsResponse.data);
     } catch (error) {
       console.error('Failed to fetch data:', error);
-      toast.error('Failed to load map data');
+      toast.error('Failed to load map data', { id: 'map-data-error' });
     } finally {
       setLoading(false);
     }
