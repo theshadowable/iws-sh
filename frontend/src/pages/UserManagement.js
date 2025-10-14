@@ -53,7 +53,7 @@ export const UserManagement = () => {
       setUsers(response.data || []);
     } catch (error) {
       console.error('Failed to fetch users:', error);
-      toast.error('Failed to load users');
+      toast.error('Failed to load users', { id: 'user-load-error' });
     } finally {
       setLoading(false);
     }
