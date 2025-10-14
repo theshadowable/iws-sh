@@ -79,7 +79,7 @@ export const Analytics = () => {
 
     } catch (error) {
       console.error('Failed to fetch analytics:', error);
-      toast.error('Failed to load analytics');
+      toast.error('Failed to load analytics', { id: 'analytics-load-error' });
     } finally {
       setLoading(false);
     }
