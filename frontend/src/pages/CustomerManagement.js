@@ -70,7 +70,7 @@ const CustomerManagement = () => {
       setCustomers(response.data || []);
     } catch (error) {
       console.error('Failed to fetch customers:', error);
-      toast.error('Failed to load customers');
+      toast.error('Failed to load customers', { id: 'customer-load-error' });
     } finally {
       setLoading(false);
     }
