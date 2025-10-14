@@ -2034,5 +2034,6 @@ def test_voucher_and_customer_apis():
 
 
 if __name__ == "__main__":
-    success = main()
+    # Run the specific tests requested for voucher and customer management APIs
+    success = test_voucher_and_customer_apis()
     sys.exit(0 if success else 1)
