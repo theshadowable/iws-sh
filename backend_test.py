@@ -1640,6 +1640,399 @@ def main():
             print("❌ Voucher System needs attention")
         return False
 
+
+def test_customer_management_apis():
+    """Test customer management APIs after litellm dependency fix"""
+    print("=" * 80)
+    print("👥 CUSTOMER MANAGEMENT API TESTING - IndoWater Solution")
+    print("=" * 80)
+    print(f"Backend URL: {BACKEND_URL}")
+    
+    # Test accounts needed
+    admin_account = {
+        "name": "Admin",
+        "email": "admin@indowater.com",
+        "password": "admin123",
+        "expected_role": "admin"
+    }
+    
+    technician_account = {
+        "name": "Technician",
+        "email": "technician@indowater.com",
+        "password": "tech123",
+        "expected_role": "technician"
+    }
+    
+    results = {
+        "admin_login": {"success": False, "error": None},
+        "technician_login": {"success": False, "error": None},
+        "list_customers": {"success": False, "error": None},
+        "create_customer": {"success": False, "error": None, "customer_id": None},
+        "customer_devices": {"success": False, "error": None},
+        "customer_usage": {"success": False, "error": None},
+        "customer_payments": {"success": False, "error": None}
+    }
+    
+    # Step 1: Login as Admin
+    print(f"\n🔐 STEP 1: Admin Login...")
+    admin_login = test_login(
+        admin_account["email"],
+        admin_account["password"], 
+        admin_account["expected_role"],
+        admin_account["name"]
+    )
+    
+    if not admin_login["success"]:
+        print(f"❌ CRITICAL: Admin login failed - {admin_login['error']}")
+        results["admin_login"] = {"success": False, "error": admin_login["error"]}
+        return results
+    
+    admin_token = admin_login["token"]
+    results["admin_login"] = {"success": True, "error": None}
+    print(f"✅ Admin login successful")
+    
+    # Step 2: Login as Technician
+    print(f"\n🔐 STEP 2: Technician Login...")
+    technician_login = test_login(
+        technician_account["email"],
+        technician_account["password"], 
+        technician_account["expected_role"],
+        technician_account["name"]
+    )
+    
+    if not technician_login["success"]:
+        print(f"❌ CRITICAL: Technician login failed - {technician_login['error']}")
+        results["technician_login"] = {"success": False, "error": technician_login["error"]}
+        return results
+    
+    technician_token = technician_login["token"]
+    results["technician_login"] = {"success": True, "error": None}
+    print(f"✅ Technician login successful")
+    
+    admin_headers = {
+        "Authorization": f"Bearer {admin_token}",
+        "Content-Type": "application/json"
+    }
+    
+    technician_headers = {
+        "Authorization": f"Bearer {technician_token}",
+        "Content-Type": "application/json"
+    }
+    
+    # Step 3: List Customers (GET /api/customers)
+    print(f"\n👥 STEP 3: List Customers (GET /api/customers)...")
+    
+    try:
+        response = requests.get(
+            f"{BACKEND_URL}/customers/",
+            headers=admin_headers,
+            timeout=15
+        )
+        
+        print(f"   Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            customers = response.json()
+            
+            if isinstance(customers, list):
+                print(f"   ✅ SUCCESS - Found {len(customers)} customers")
+                results["list_customers"] = {"success": True, "error": None}
+            else:
+                error_msg = f"Expected list response, got: {type(customers)}"
+                print(f"   ❌ {error_msg}")
+                results["list_customers"] = {"success": False, "error": error_msg}
+        else:
+            error_msg = f"List customers failed: {response.status_code}"
+            try:
+                error_data = response.json()
+                error_msg += f" - {error_data.get('detail', '')}"
+            except:
+                error_msg += f" - {response.text}"
+            print(f"   ❌ {error_msg}")
+            results["list_customers"] = {"success": False, "error": error_msg}
+            
+    except requests.exceptions.RequestException as e:
+        error_msg = f"Connection error: {str(e)}"
+        print(f"   ❌ {error_msg}")
+        results["list_customers"] = {"success": False, "error": error_msg}
+    except Exception as e:
+        error_msg = f"Unexpected error: {str(e)}"
+        print(f"   ❌ {error_msg}")
+        results["list_customers"] = {"success": False, "error": error_msg}
+    
+    # Step 4: Create Customer (POST /api/customers) - Admin only
+    print(f"\n👤 STEP 4: Create Customer (POST /api/customers) - Admin Only...")
+    
+    import time
+    timestamp = int(time.time())
+    customer_data = {
+        "id": f"test-customer-{timestamp}",
+        "email": f"testcustomer{timestamp}@indowater.com",
+        "full_name": f"Test Customer {timestamp}",
+        "password": "testpass123",
+        "phone": "+62812345678",
+        "address": "Test Address, Jakarta",
+        "is_active": True
+    }
+    
+    try:
+        print(f"   Creating customer: {customer_data['email']}")
+        
+        response = requests.post(
+            f"{BACKEND_URL}/customers/",
+            json=customer_data,
+            headers=admin_headers,
+            timeout=15
+        )
+        
+        print(f"   Status Code: {response.status_code}")
+        
+        if response.status_code == 201:
+            customer_response = response.json()
+            
+            # Validate response structure
+            required_fields = ["id", "email", "full_name", "role"]
+            missing_fields = [field for field in required_fields if field not in customer_response]
+            
+            if missing_fields:
+                error_msg = f"Missing required fields in response: {missing_fields}"
+                print(f"   ❌ {error_msg}")
+                results["create_customer"] = {"success": False, "error": error_msg}
+            else:
+                customer_id = customer_response["id"]
+                print(f"   ✅ SUCCESS - Customer created with ID: {customer_id}")
+                print(f"   ✅ Email: {customer_response['email']}, Role: {customer_response['role']}")
+                results["create_customer"] = {"success": True, "error": None, "customer_id": customer_id}
+        else:
+            error_msg = f"Customer creation failed: {response.status_code}"
+            try:
+                error_data = response.json()
+                error_msg += f" - {error_data.get('detail', '')}"
+            except:
+                error_msg += f" - {response.text}"
+            print(f"   ❌ {error_msg}")
+            results["create_customer"] = {"success": False, "error": error_msg}
+            
+    except requests.exceptions.RequestException as e:
+        error_msg = f"Connection error: {str(e)}"
+        print(f"   ❌ {error_msg}")
+        results["create_customer"] = {"success": False, "error": error_msg}
+    except Exception as e:
+        error_msg = f"Unexpected error: {str(e)}"
+        print(f"   ❌ {error_msg}")
+        results["create_customer"] = {"success": False, "error": error_msg}
+    
+    # Get a customer ID for testing (use existing customer or newly created one)
+    test_customer_id = results["create_customer"].get("customer_id")
+    if not test_customer_id:
+        # Try to get existing customer ID from the demo customer
+        test_customer_id = "customer-demo-id"  # This should be the demo customer ID
+    
+    # Step 5: Get Customer Devices (GET /api/customers/{customer_id}/devices)
+    print(f"\n📱 STEP 5: Get Customer Devices (GET /api/customers/{{customer_id}}/devices)...")
+    
+    try:
+        response = requests.get(
+            f"{BACKEND_URL}/customers/{test_customer_id}/devices",
+            headers=technician_headers,  # Test with technician access
+            timeout=15
+        )
+        
+        print(f"   Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            devices = response.json()
+            
+            if isinstance(devices, list):
+                print(f"   ✅ SUCCESS - Found {len(devices)} devices for customer")
+                results["customer_devices"] = {"success": True, "error": None}
+            else:
+                error_msg = f"Expected list response, got: {type(devices)}"
+                print(f"   ❌ {error_msg}")
+                results["customer_devices"] = {"success": False, "error": error_msg}
+        else:
+            error_msg = f"Get customer devices failed: {response.status_code}"
+            try:
+                error_data = response.json()
+                error_msg += f" - {error_data.get('detail', '')}"
+            except:
+                error_msg += f" - {response.text}"
+            print(f"   ❌ {error_msg}")
+            results["customer_devices"] = {"success": False, "error": error_msg}
+            
+    except requests.exceptions.RequestException as e:
+        error_msg = f"Connection error: {str(e)}"
+        print(f"   ❌ {error_msg}")
+        results["customer_devices"] = {"success": False, "error": error_msg}
+    except Exception as e:
+        error_msg = f"Unexpected error: {str(e)}"
+        print(f"   ❌ {error_msg}")
+        results["customer_devices"] = {"success": False, "error": error_msg}
+    
+    # Step 6: Get Customer Usage (GET /api/customers/{customer_id}/usage)
+    print(f"\n📊 STEP 6: Get Customer Usage (GET /api/customers/{{customer_id}}/usage)...")
+    
+    try:
+        response = requests.get(
+            f"{BACKEND_URL}/customers/{test_customer_id}/usage",
+            headers=admin_headers,  # Test with admin access
+            timeout=15
+        )
+        
+        print(f"   Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            usage = response.json()
+            
+            if isinstance(usage, list):
+                print(f"   ✅ SUCCESS - Found {len(usage)} usage records for customer")
+                results["customer_usage"] = {"success": True, "error": None}
+            else:
+                error_msg = f"Expected list response, got: {type(usage)}"
+                print(f"   ❌ {error_msg}")
+                results["customer_usage"] = {"success": False, "error": error_msg}
+        else:
+            error_msg = f"Get customer usage failed: {response.status_code}"
+            try:
+                error_data = response.json()
+                error_msg += f" - {error_data.get('detail', '')}"
+            except:
+                error_msg += f" - {response.text}"
+            print(f"   ❌ {error_msg}")
+            results["customer_usage"] = {"success": False, "error": error_msg}
+            
+    except requests.exceptions.RequestException as e:
+        error_msg = f"Connection error: {str(e)}"
+        print(f"   ❌ {error_msg}")
+        results["customer_usage"] = {"success": False, "error": error_msg}
+    except Exception as e:
+        error_msg = f"Unexpected error: {str(e)}"
+        print(f"   ❌ {error_msg}")
+        results["customer_usage"] = {"success": False, "error": error_msg}
+    
+    # Step 7: Get Customer Payments (GET /api/customers/{customer_id}/payments)
+    print(f"\n💳 STEP 7: Get Customer Payments (GET /api/customers/{{customer_id}}/payments)...")
+    
+    try:
+        response = requests.get(
+            f"{BACKEND_URL}/customers/{test_customer_id}/payments",
+            headers=technician_headers,  # Test with technician access
+            timeout=15
+        )
+        
+        print(f"   Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            payments = response.json()
+            
+            if isinstance(payments, list):
+                print(f"   ✅ SUCCESS - Found {len(payments)} payment records for customer")
+                results["customer_payments"] = {"success": True, "error": None}
+            else:
+                error_msg = f"Expected list response, got: {type(payments)}"
+                print(f"   ❌ {error_msg}")
+                results["customer_payments"] = {"success": False, "error": error_msg}
+        else:
+            error_msg = f"Get customer payments failed: {response.status_code}"
+            try:
+                error_data = response.json()
+                error_msg += f" - {error_data.get('detail', '')}"
+            except:
+                error_msg += f" - {response.text}"
+            print(f"   ❌ {error_msg}")
+            results["customer_payments"] = {"success": False, "error": error_msg}
+            
+    except requests.exceptions.RequestException as e:
+        error_msg = f"Connection error: {str(e)}"
+        print(f"   ❌ {error_msg}")
+        results["customer_payments"] = {"success": False, "error": error_msg}
+    except Exception as e:
+        error_msg = f"Unexpected error: {str(e)}"
+        print(f"   ❌ {error_msg}")
+        results["customer_payments"] = {"success": False, "error": error_msg}
+    
+    return results
+
+
+def test_voucher_and_customer_apis():
+    """Test both voucher and customer management APIs as requested"""
+    print("=" * 100)
+    print("🧪 COMPREHENSIVE VOUCHER & CUSTOMER MANAGEMENT API TESTING")
+    print("=" * 100)
+    print("Testing after litellm dependency fix")
+    print(f"Backend URL: {BACKEND_URL}")
+    
+    # Test voucher management APIs
+    print("\n" + "🎫" * 20 + " VOUCHER MANAGEMENT TESTS " + "🎫" * 20)
+    voucher_results = test_voucher_management_apis()
+    
+    # Test customer management APIs  
+    print("\n" + "👥" * 20 + " CUSTOMER MANAGEMENT TESTS " + "👥" * 20)
+    customer_results = test_customer_management_apis()
+    
+    # Overall summary
+    print("\n" + "=" * 100)
+    print("🏆 OVERALL TEST RESULTS SUMMARY")
+    print("=" * 100)
+    
+    # Voucher test summary
+    voucher_test_cases = [
+        ("Admin Login", voucher_results["admin_login"]),
+        ("Customer Login", voucher_results["customer_login"]),
+        ("Voucher Creation", voucher_results["voucher_creation"]),
+        ("List Vouchers", voucher_results["voucher_list"]),
+        ("Filter Active Vouchers", voucher_results["voucher_list_filter"]),
+        ("Voucher Validation", voucher_results["voucher_validation"])
+    ]
+    
+    voucher_success = sum(1 for _, result in voucher_test_cases if result["success"])
+    voucher_total = len(voucher_test_cases)
+    
+    # Customer test summary
+    customer_test_cases = [
+        ("Admin Login", customer_results["admin_login"]),
+        ("Technician Login", customer_results["technician_login"]),
+        ("List Customers", customer_results["list_customers"]),
+        ("Create Customer", customer_results["create_customer"]),
+        ("Customer Devices", customer_results["customer_devices"]),
+        ("Customer Usage", customer_results["customer_usage"]),
+        ("Customer Payments", customer_results["customer_payments"])
+    ]
+    
+    customer_success = sum(1 for _, result in customer_test_cases if result["success"])
+    customer_total = len(customer_test_cases)
+    
+    total_success = voucher_success + customer_success
+    total_tests = voucher_total + customer_total
+    
+    print(f"Voucher Management APIs: {voucher_success}/{voucher_total} passed")
+    print(f"Customer Management APIs: {customer_success}/{customer_total} passed")
+    print(f"Overall: {total_success}/{total_tests} tests passed")
+    
+    # Detailed results
+    print("\n📋 DETAILED RESULTS:")
+    print("\n🎫 Voucher Management:")
+    for test_name, result in voucher_test_cases:
+        status = "✅ PASS" if result["success"] else "❌ FAIL"
+        print(f"  {status} - {test_name}")
+        if not result["success"] and result["error"]:
+            print(f"        Error: {result['error']}")
+    
+    print("\n👥 Customer Management:")
+    for test_name, result in customer_test_cases:
+        status = "✅ PASS" if result["success"] else "❌ FAIL"
+        print(f"  {status} - {test_name}")
+        if not result["success"] and result["error"]:
+            print(f"        Error: {result['error']}")
+    
+    if total_success == total_tests:
+        print("\n🎉 ALL TESTS PASSED! Backend APIs are working correctly after litellm fix.")
+        return True
+    else:
+        print("\n⚠️  SOME TESTS FAILED - Check detailed results above")
+        return False
+
+
 if __name__ == "__main__":
     success = main()
     sys.exit(0 if success else 1)
