@@ -94,8 +94,8 @@
 ### 🚀 How to Use
 
 1. **Access the Application:**
-   - Frontend: https://integration-check-4.preview.emergentagent.com
-   - Backend API: https://integration-check-4.preview.emergentagent.com/api
+   - Frontend: https://smooth-sailing-1.preview.emergentagent.com
+   - Backend API: https://smooth-sailing-1.preview.emergentagent.com/api
 
 2. **Login:**
    - Use one of the demo credentials above
