@@ -54,7 +54,7 @@ export const AdminDashboard = () => {
       setRecentTransactions(transactionsResponse.data.transactions || []);
     } catch (error) {
       console.error('Failed to fetch dashboard data:', error);
-      toast.error('Failed to load dashboard data');
+      toast.error('Failed to load dashboard data', { id: 'dashboard-load-error' });
     } finally {
       setLoading(false);
     }
