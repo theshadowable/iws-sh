@@ -1237,10 +1237,10 @@ def test_customer_payment_apis():
         return False
 
 
-def test_voucher_system_apis():
-    """Test voucher system APIs - focusing on the recently fixed voucher creation"""
+def test_voucher_management_apis():
+    """Test voucher management APIs after litellm dependency fix"""
     print("=" * 80)
-    print("🎫 VOUCHER SYSTEM API TESTING - IndoWater Solution")
+    print("🎫 VOUCHER MANAGEMENT API TESTING - IndoWater Solution")
     print("=" * 80)
     print(f"Backend URL: {BACKEND_URL}")
     
