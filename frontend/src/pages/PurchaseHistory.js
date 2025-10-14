@@ -55,7 +55,7 @@ export const PurchaseHistory = () => {
       setTotalCount(response.data.total || 0);
     } catch (error) {
       console.error('Failed to fetch transactions:', error);
-      toast.error('Failed to load purchase history');
+      toast.error('Failed to load purchase history', { id: 'purchase-history-error' });
     } finally {
       setLoading(false);
     }
