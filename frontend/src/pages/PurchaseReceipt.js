@@ -45,7 +45,7 @@ export const PurchaseReceipt = () => {
       setTransaction(response.data);
     } catch (error) {
       console.error('Failed to fetch transaction:', error);
-      toast.error('Failed to load receipt');
+      toast.error('Failed to load receipt', { id: 'receipt-load-error' });
       navigate('/purchase-history');
     } finally {
       setLoading(false);
