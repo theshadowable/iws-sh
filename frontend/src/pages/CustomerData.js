@@ -104,7 +104,7 @@ export const CustomerData = () => {
       setCustomers(response.data);
     } catch (error) {
       console.error('Failed to fetch customers:', error);
-      toast.error('Failed to load customer data');
+      toast.error('Failed to load customer data', { id: 'customer-data-error' });
     } finally {
       setLoading(false);
     }
