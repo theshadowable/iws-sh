@@ -124,7 +124,7 @@ const CustomerManagement = () => {
       });
     } catch (error) {
       console.error('Failed to fetch customer details:', error);
-      toast.error('Failed to load customer details');
+      toast.error('Failed to load customer details', { id: 'customer-details-error' });
     }
   };
 
