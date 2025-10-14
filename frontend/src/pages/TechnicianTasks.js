@@ -84,7 +84,7 @@ export const TechnicianTasks = () => {
       setTasks(filteredTasks);
     } catch (error) {
       console.error('Failed to fetch tasks:', error);
-      toast.error('Failed to load tasks');
+      toast.error('Failed to load tasks', { id: 'tasks-load-error' });
     } finally {
       setLoading(false);
     }
