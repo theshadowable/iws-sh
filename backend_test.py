@@ -1873,13 +1873,12 @@ def test_voucher_and_customer_management_fixes():
             print(f"   ➕ Testing POST /api/customers (create customer) - Admin...")
             
             customer_data = {
-                "customer_number": f"CUST{int(now.timestamp())}",
                 "full_name": "Test Customer Fix Verification",
                 "email": f"testcustomer{int(now.timestamp())}@example.com",
+                "password": "testpass123",
                 "phone": "+62812345678",
                 "address": "Test Address 123",
-                "balance": 100000,
-                "status": "active"
+                "is_active": True
             }
             
             try:
