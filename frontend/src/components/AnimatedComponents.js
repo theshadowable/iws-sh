@@ -2,144 +2,249 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 export const WaterFlowAnimation = ({ isFlowing = true, flowRate = 50 }) => {
-  const speed = isFlowing ? Math.max(0.8, 2.5 - (flowRate / 100) * 1.5) : 0;
+  const speed = isFlowing ? Math.max(1, 3 - (flowRate / 100) * 1.5) : 0;
+  const intensity = flowRate / 100;
   
   return (
-    <div className="relative w-full h-32 rounded-2xl overflow-hidden shadow-2xl border border-blue-200">
-      {/* Animated mesh gradient background - ultra modern */}
-      <motion.div
+    <div className="relative w-full h-32 rounded-2xl overflow-hidden shadow-2xl" style={{
+      background: 'linear-gradient(180deg, rgba(14, 116, 144, 0.1) 0%, rgba(6, 182, 212, 0.2) 100%)',
+      perspective: '1000px',
+    }}>
+      {/* 3D Water Surface Base */}
+      <div 
         className="absolute inset-0"
         style={{
-          background: 'radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.3), transparent 50%), radial-gradient(circle at 80% 50%, rgba(14, 165, 233, 0.3), transparent 50%)',
-        }}
-        animate={isFlowing ? {
-          opacity: [0.4, 0.7, 0.4],
-        } : {}}
-        transition={{
-          duration: 3,
-          repeat: Infinity,
-          ease: "easeInOut"
+          background: 'radial-gradient(ellipse at center, rgba(6, 182, 212, 0.15) 0%, rgba(14, 165, 233, 0.25) 50%, rgba(59, 130, 246, 0.2) 100%)',
+          transformStyle: 'preserve-3d',
         }}
       />
 
-      {/* Glassmorphism base */}
-      <div className="absolute inset-0 bg-gradient-to-br from-cyan-50 via-blue-50 to-indigo-50" />
-
-      {/* Dynamic liquid blob animation */}
-      <motion.div
-        className="absolute inset-0"
-        style={{
-          background: 'radial-gradient(ellipse at 50% 120%, rgba(59, 130, 246, 0.6) 0%, rgba(96, 165, 250, 0.4) 40%, transparent 70%)',
-          filter: 'blur(20px)',
-        }}
-        animate={isFlowing ? {
-          scale: [1, 1.2, 1],
-          y: [0, -10, 0],
-        } : {}}
-        transition={{
-          duration: speed * 1.5,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-      />
-
-      {/* Fluid wave layers - smooth organic movement */}
-      {isFlowing && [0, 1, 2].map((i) => (
+      {/* 3D Liquid Layers with Depth */}
+      {isFlowing && [0, 1, 2, 3].map((i) => (
         <motion.div
-          key={`wave-layer-${i}`}
-          className="absolute left-0 right-0 bottom-0 h-20"
+          key={`liquid-layer-${i}`}
+          className="absolute inset-0"
           style={{
-            background: `linear-gradient(to top, rgba(59, 130, 246, ${0.5 - i * 0.15}), transparent)`,
-            borderRadius: '50% 50% 0 0 / 20% 20% 0 0',
+            background: `radial-gradient(ellipse at 50% ${100 + i * 10}%, 
+              rgba(59, 130, 246, ${0.3 - i * 0.06}) 0%, 
+              rgba(14, 165, 233, ${0.25 - i * 0.05}) 40%, 
+              transparent 70%)`,
+            transform: `translateZ(${-i * 15}px) rotateX(${i * 2}deg)`,
+            transformStyle: 'preserve-3d',
+            filter: `blur(${i * 3}px)`,
           }}
           animate={{
-            y: [-5, 5, -5],
-            scaleX: [1, 1.05, 1],
+            y: [i * -2, i * 2, i * -2],
+            scale: [1, 1 + i * 0.02, 1],
+            rotateX: [i * 2, i * 2 + 1, i * 2],
           }}
           transition={{
-            duration: speed * (1.2 + i * 0.3),
+            duration: speed * (1.5 + i * 0.3),
             repeat: Infinity,
             ease: "easeInOut",
-            delay: i * 0.2,
+            delay: i * 0.15,
           }}
         />
       ))}
 
-      {/* Energetic particles stream */}
-      {isFlowing && [0, 1, 2, 3, 4].map((i) => (
-        <motion.div
-          key={`energy-particle-${i}`}
-          className="absolute rounded-full"
-          style={{
-            width: `${4 + Math.random() * 6}px`,
-            height: `${4 + Math.random() * 6}px`,
-            left: `${10 + i * 20}%`,
-            background: 'radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(147, 197, 253, 0.8) 100%)',
-            boxShadow: '0 0 10px rgba(59, 130, 246, 0.5)',
-          }}
-          animate={{
-            y: [140, -20],
-            opacity: [0, 1, 1, 0],
-            scale: [0.3, 1, 1.2, 0.5],
-            x: [0, (Math.random() - 0.5) * 40],
-          }}
-          transition={{
-            duration: speed * 2,
-            repeat: Infinity,
-            delay: i * 0.4,
-            ease: "easeOut"
-          }}
-        />
-      ))}
-
-      {/* Concentric pulse rings - sci-fi effect */}
+      {/* 3D Water Waves - Multiple Layers */}
       {isFlowing && [0, 1, 2].map((i) => (
         <motion.div
-          key={`pulse-ring-${i}`}
-          className="absolute left-1/2 bottom-4 w-20 h-20 border-2 rounded-full"
+          key={`wave-3d-${i}`}
+          className="absolute left-0 right-0"
           style={{
-            borderColor: 'rgba(59, 130, 246, 0.6)',
-            transform: 'translateX(-50%)',
+            bottom: `${10 + i * 5}%`,
+            height: '40%',
+            background: `linear-gradient(to top, 
+              rgba(59, 130, 246, ${0.4 - i * 0.1}), 
+              rgba(96, 165, 250, ${0.3 - i * 0.08}), 
+              transparent)`,
+            borderRadius: '50% 50% 0 0 / 30% 30% 0 0',
+            transform: `translateZ(${-i * 20}px) rotateX(${5 + i * 3}deg)`,
+            transformStyle: 'preserve-3d',
+            boxShadow: `0 ${-4 - i * 2}px ${20 + i * 5}px rgba(59, 130, 246, 0.3)`,
           }}
           animate={{
-            scale: [0.5, 3],
-            opacity: [0.8, 0],
-            borderWidth: ['2px', '0px'],
+            y: [-8 + i * 2, 8 - i * 2, -8 + i * 2],
+            scaleX: [1, 1.03 + i * 0.01, 1],
+            rotateX: [5 + i * 3, 6 + i * 3, 5 + i * 3],
           }}
           transition={{
-            duration: 2.5,
+            duration: speed * (1.8 + i * 0.4),
             repeat: Infinity,
-            delay: i * 0.8,
+            ease: "easeInOut",
+            delay: i * 0.25,
+          }}
+        />
+      ))}
+
+      {/* 3D Bubbles Rising */}
+      {isFlowing && [0, 1, 2, 3, 4, 5, 6].map((i) => {
+        const size = 8 + Math.random() * 12;
+        const leftPos = 10 + i * 13;
+        return (
+          <motion.div
+            key={`bubble-3d-${i}`}
+            className="absolute rounded-full"
+            style={{
+              width: `${size}px`,
+              height: `${size}px`,
+              left: `${leftPos}%`,
+              background: 'radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.9), rgba(147, 197, 253, 0.6))',
+              boxShadow: `
+                inset -2px -2px 4px rgba(59, 130, 246, 0.3),
+                0 0 ${size}px rgba(147, 197, 253, 0.4),
+                0 ${size/2}px ${size}px rgba(59, 130, 246, 0.2)
+              `,
+              transform: `translateZ(${Math.random() * 30}px)`,
+              transformStyle: 'preserve-3d',
+            }}
+            animate={{
+              y: [150, -30],
+              opacity: [0, 0.9, 1, 0.8, 0],
+              scale: [0.3, 1, 1.1, 1.2, 0.8],
+              x: [0, (Math.random() - 0.5) * 50],
+              z: [0, Math.random() * 20],
+            }}
+            transition={{
+              duration: speed * (2 + Math.random()),
+              repeat: Infinity,
+              delay: i * 0.5,
+              ease: "easeOut"
+            }}
+          />
+        );
+      })}
+
+      {/* 3D Ripple Rings - Perspective Effect */}
+      {isFlowing && [0, 1, 2, 3].map((i) => (
+        <motion.div
+          key={`ripple-3d-${i}`}
+          className="absolute left-1/2"
+          style={{
+            bottom: '20%',
+            width: '80px',
+            height: '40px',
+            border: '2px solid rgba(59, 130, 246, 0.4)',
+            borderRadius: '50%',
+            transform: `translateX(-50%) translateZ(${-i * 10}px) rotateX(75deg)`,
+            transformStyle: 'preserve-3d',
+          }}
+          animate={{
+            scale: [0.5, 3.5],
+            opacity: [0.7, 0],
+            borderWidth: ['2px', '0px'],
+            rotateX: [75, 70],
+          }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            delay: i * 0.75,
             ease: "easeOut"
           }}
         />
       ))}
 
-      {/* Shimmer light effect */}
+      {/* 3D Light Rays from Depth */}
+      {isFlowing && [0, 1, 2].map((i) => (
+        <motion.div
+          key={`light-ray-${i}`}
+          className="absolute"
+          style={{
+            bottom: '0',
+            left: `${20 + i * 30}%`,
+            width: '2px',
+            height: '100%',
+            background: `linear-gradient(to top, 
+              rgba(147, 197, 253, 0.6), 
+              transparent)`,
+            transform: `translateZ(${-20 - i * 10}px) rotateX(10deg)`,
+            transformStyle: 'preserve-3d',
+            filter: 'blur(2px)',
+          }}
+          animate={{
+            opacity: [0.3, 0.7, 0.3],
+            scaleY: [0.8, 1.2, 0.8],
+          }}
+          transition={{
+            duration: speed * 1.5,
+            repeat: Infinity,
+            delay: i * 0.5,
+            ease: "easeInOut"
+          }}
+        />
+      ))}
+
+      {/* 3D Caustic Light Effect */}
       <motion.div
         className="absolute inset-0"
         style={{
-          background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%)',
-          width: '50%',
+          background: `
+            radial-gradient(ellipse at 30% 40%, rgba(147, 197, 253, 0.3) 0%, transparent 50%),
+            radial-gradient(ellipse at 70% 60%, rgba(59, 130, 246, 0.25) 0%, transparent 50%)
+          `,
+          transform: 'translateZ(-30px)',
+          transformStyle: 'preserve-3d',
+          mixBlendMode: 'screen',
         }}
         animate={isFlowing ? {
-          x: ['-100%', '250%'],
+          x: ['-5%', '5%', '-5%'],
+          y: ['-3%', '3%', '-3%'],
+          scale: [1, 1.05, 1],
         } : {}}
         transition={{
-          duration: 3,
+          duration: speed * 2,
           repeat: Infinity,
           ease: "easeInOut"
         }}
       />
 
-      {/* Modern status badge with glow */}
+      {/* 3D Water Droplets */}
+      {isFlowing && [0, 1, 2, 3].map((i) => (
+        <motion.div
+          key={`droplet-${i}`}
+          className="absolute rounded-full"
+          style={{
+            width: '6px',
+            height: '8px',
+            left: `${25 + i * 20}%`,
+            background: 'radial-gradient(ellipse at 30% 30%, rgba(255, 255, 255, 0.8), rgba(96, 165, 250, 0.6))',
+            boxShadow: '0 2px 4px rgba(59, 130, 246, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.5)',
+            transform: `translateZ(${10 + i * 5}px)`,
+            transformStyle: 'preserve-3d',
+          }}
+          animate={{
+            y: [120, -10],
+            opacity: [0, 0.9, 0],
+            scaleY: [1.2, 1, 1.2],
+          }}
+          transition={{
+            duration: speed * 1.2,
+            repeat: Infinity,
+            delay: i * 0.3,
+            ease: "easeIn"
+          }}
+        />
+      ))}
+
+      {/* Status Badge - 3D Effect */}
       <motion.div 
-        className="absolute top-4 right-4 flex items-center space-x-2 bg-white/90 backdrop-blur-md px-4 py-2 rounded-full shadow-xl border border-blue-200"
+        className="absolute top-4 right-4 flex items-center space-x-2 backdrop-blur-lg px-4 py-2 rounded-full border shadow-xl"
+        style={{
+          background: 'rgba(255, 255, 255, 0.85)',
+          borderColor: 'rgba(59, 130, 246, 0.3)',
+          transform: 'translateZ(50px)',
+          transformStyle: 'preserve-3d',
+          boxShadow: `
+            0 8px 32px rgba(59, 130, 246, 0.25),
+            inset 0 1px 0 rgba(255, 255, 255, 0.8)
+          `,
+        }}
         animate={isFlowing ? {
           boxShadow: [
-            '0 4px 20px rgba(59, 130, 246, 0.3)',
-            '0 4px 30px rgba(59, 130, 246, 0.5)',
-            '0 4px 20px rgba(59, 130, 246, 0.3)',
+            '0 8px 32px rgba(59, 130, 246, 0.25)',
+            '0 12px 40px rgba(59, 130, 246, 0.4)',
+            '0 8px 32px rgba(59, 130, 246, 0.25)',
           ],
         } : {}}
         transition={{
@@ -150,13 +255,11 @@ export const WaterFlowAnimation = ({ isFlowing = true, flowRate = 50 }) => {
       >
         <motion.div
           className={`w-2.5 h-2.5 rounded-full ${isFlowing ? 'bg-green-500' : 'bg-gray-400'}`}
+          style={{
+            boxShadow: isFlowing ? '0 0 10px rgba(34, 197, 94, 0.6), 0 0 20px rgba(34, 197, 94, 0.3)' : 'none',
+          }}
           animate={isFlowing ? {
-            scale: [1, 1.3, 1],
-            boxShadow: [
-              '0 0 5px rgba(34, 197, 94, 0.5)',
-              '0 0 15px rgba(34, 197, 94, 0.8)',
-              '0 0 5px rgba(34, 197, 94, 0.5)',
-            ],
+            scale: [1, 1.4, 1],
           } : {}}
           transition={{
             duration: 1.5,
@@ -164,68 +267,22 @@ export const WaterFlowAnimation = ({ isFlowing = true, flowRate = 50 }) => {
           }}
         />
         <span className={`text-xs font-bold ${isFlowing ? 'text-blue-600' : 'text-gray-500'}`}>
-          {isFlowing ? 'ACTIVE' : 'IDLE'}
+          {isFlowing ? 'FLOWING' : 'IDLE'}
+        </span>
+        <span className="text-xs font-semibold text-blue-500">
+          {Math.round(flowRate)}%
         </span>
       </motion.div>
 
-      {/* Flow rate visualization - modern progress bar */}
-      <div className="absolute bottom-4 left-4 right-4">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-semibold text-blue-600">Flow Rate</span>
-          <span className="text-xs font-bold text-blue-700">{Math.round(flowRate)}%</span>
-        </div>
-        <div className="relative h-2.5 bg-white/60 backdrop-blur-sm rounded-full overflow-hidden shadow-inner">
-          <motion.div
-            className="absolute inset-y-0 left-0 rounded-full"
-            style={{
-              background: 'linear-gradient(90deg, #3b82f6 0%, #06b6d4 50%, #8b5cf6 100%)',
-              boxShadow: '0 0 10px rgba(59, 130, 246, 0.5)',
-            }}
-            initial={{ width: '0%' }}
-            animate={{ width: `${flowRate}%` }}
-            transition={{
-              duration: 0.6,
-              ease: "easeOut"
-            }}
-          />
-          {/* Animated shimmer on progress bar */}
-          {isFlowing && (
-            <motion.div
-              className="absolute inset-0 rounded-full"
-              style={{
-                background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.6) 50%, transparent 100%)',
-                width: '30%',
-              }}
-              animate={{
-                x: ['-30%', '130%'],
-              }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                ease: "linear"
-              }}
-            />
-          )}
-        </div>
-      </div>
-
-      {/* Ambient glow effect */}
-      {isFlowing && (
-        <motion.div
-          className="absolute inset-0 rounded-2xl"
-          style={{
-            boxShadow: 'inset 0 0 50px rgba(59, 130, 246, 0.2)',
-          }}
-          animate={{
-            opacity: [0.5, 1, 0.5],
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-      )}
+      {/* 3D Depth Overlay */}
+      <div 
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: 'linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.05) 100%)',
+          transform: 'translateZ(40px)',
+          transformStyle: 'preserve-3d',
+        }}
+      />
     </div>
   );
 };
