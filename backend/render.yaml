@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: indowater-backend
+    env: python
+    region: singapore
+    plan: free
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "uvicorn server:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: MONGO_URL
+        sync: false
+      - key: DB_NAME
+        value: indowater_db
+      - key: CORS_ORIGINS
+        value: "*"
