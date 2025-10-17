@@ -36,6 +36,7 @@ def get_mongo_url():
     """
     Get MongoDB URL with proper URL encoding for username and password.
     Handles both mongodb:// and mongodb+srv:// connection strings with credentials.
+    Uses proper URL parsing to handle passwords with @ symbols.
     """
     mongo_url = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
     
@@ -56,19 +57,26 @@ def get_mongo_url():
         # Remove protocol to parse credentials
         url_without_protocol = mongo_url.replace(protocol, '', 1)
         
-        # Split credentials from host/database part
-        if '@' not in url_without_protocol:
-            # No credentials present
+        # Find the LAST @ symbol (which separates credentials from host)
+        # This handles passwords that contain @ symbols
+        last_at_index = url_without_protocol.rfind('@')
+        
+        if last_at_index == -1:
+            # No @ found, no credentials
             return mongo_url
         
-        credentials_part, host_part = url_without_protocol.split('@', 1)
+        # Split at the last @ to separate credentials from host
+        credentials_part = url_without_protocol[:last_at_index]
+        host_part = url_without_protocol[last_at_index + 1:]
         
-        # Split credentials into username and password
+        # Split credentials into username and password at the FIRST :
         if ':' not in credentials_part:
             # No password, only username - shouldn't happen but handle it
             return mongo_url
         
-        username, password = credentials_part.split(':', 1)
+        first_colon_index = credentials_part.find(':')
+        username = credentials_part[:first_colon_index]
+        password = credentials_part[first_colon_index + 1:]
         
         # URL encode username and password
         encoded_username = quote_plus(username)
