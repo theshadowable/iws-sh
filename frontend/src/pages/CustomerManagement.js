@@ -24,8 +24,8 @@ import {
   X
 } from 'lucide-react';
 
-// Use relative API path to avoid mixed content issues
-const API = '/api';
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+const API = `${BACKEND_URL}/api`;
 
 const CustomerManagement = () => {
   const { user } = useAuth();
