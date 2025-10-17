@@ -94,8 +94,8 @@
 ### 🚀 How to Use
 
 1. **Access the Application:**
-   - Frontend: https://codebase-repair-2.preview.emergentagent.com
-   - Backend API: https://codebase-repair-2.preview.emergentagent.com/api
+   - Frontend: https://app-enhancement-12.preview.emergentagent.com
+   - Backend API: https://app-enhancement-12.preview.emergentagent.com/api
 
 2. **Login:**
    - Use one of the demo credentials above
