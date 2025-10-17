@@ -26,19 +26,26 @@ def get_mongo_url_test(mongo_url):
         # Remove protocol to parse credentials
         url_without_protocol = mongo_url.replace(protocol, '', 1)
         
-        # Split credentials from host/database part
-        if '@' not in url_without_protocol:
-            # No credentials present
+        # Find the LAST @ symbol (which separates credentials from host)
+        # This handles passwords that contain @ symbols
+        last_at_index = url_without_protocol.rfind('@')
+        
+        if last_at_index == -1:
+            # No @ found, no credentials
             return mongo_url
         
-        credentials_part, host_part = url_without_protocol.split('@', 1)
+        # Split at the last @ to separate credentials from host
+        credentials_part = url_without_protocol[:last_at_index]
+        host_part = url_without_protocol[last_at_index + 1:]
         
-        # Split credentials into username and password
+        # Split credentials into username and password at the FIRST :
         if ':' not in credentials_part:
             # No password, only username - shouldn't happen but handle it
             return mongo_url
         
-        username, password = credentials_part.split(':', 1)
+        first_colon_index = credentials_part.find(':')
+        username = credentials_part[:first_colon_index]
+        password = credentials_part[first_colon_index + 1:]
         
         # URL encode username and password
         encoded_username = quote_plus(username)
@@ -47,7 +54,10 @@ def get_mongo_url_test(mongo_url):
         # Reconstruct the URL with encoded credentials
         encoded_url = f"{protocol}{encoded_username}:{encoded_password}@{host_part}"
         
-        print(f"✅ Encoded successfully (username: {username})")
+        print(f"✅ Encoded successfully")
+        print(f"   Username: {username}")
+        print(f"   Password: {password}")
+        print(f"   Encoded password: {encoded_password}")
         return encoded_url
         
     except Exception as e:
