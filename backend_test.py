@@ -1598,6 +1598,319 @@ def main():
     
     # Voucher Test Summary
     print("\n" + "=" * 80)
+
+def test_voucher_and_customer_management_fixes():
+    """Test voucher and customer management APIs to verify the fixes"""
+    print("=" * 80)
+    print("🎫 VOUCHER & CUSTOMER MANAGEMENT API TESTING - Fix Verification")
+    print("=" * 80)
+    print(f"Backend URL: {BACKEND_URL}")
+    
+    # Test accounts needed
+    admin_account = {
+        "name": "Admin",
+        "email": "admin@indowater.com",
+        "password": "admin123",
+        "expected_role": "admin"
+    }
+    
+    technician_account = {
+        "name": "Technician",
+        "email": "technician@indowater.com",
+        "password": "tech123",
+        "expected_role": "technician"
+    }
+    
+    customer_account = {
+        "name": "Customer",
+        "email": "customer@indowater.com", 
+        "password": "customer123",
+        "expected_role": "customer"
+    }
+    
+    results = {
+        "admin_login": {"success": False, "error": None},
+        "technician_login": {"success": False, "error": None},
+        "customer_login": {"success": False, "error": None},
+        "voucher_get_no_slash": {"success": False, "error": None},
+        "voucher_get_with_slash": {"success": False, "error": None},
+        "voucher_get_status_filter": {"success": False, "error": None},
+        "voucher_post": {"success": False, "error": None},
+        "customer_get_no_slash": {"success": False, "error": None},
+        "customer_get_with_slash": {"success": False, "error": None},
+        "customer_post": {"success": False, "error": None}
+    }
+    
+    # Step 1: Login as all three roles
+    print(f"\n🔐 STEP 1: Testing Login for All Roles...")
+    
+    # Admin login
+    admin_login = test_login(
+        admin_account["email"],
+        admin_account["password"], 
+        admin_account["expected_role"],
+        admin_account["name"]
+    )
+    
+    if admin_login["success"]:
+        admin_token = admin_login["token"]
+        results["admin_login"] = {"success": True, "error": None}
+        print(f"✅ Admin login successful")
+    else:
+        results["admin_login"] = {"success": False, "error": admin_login["error"]}
+        print(f"❌ Admin login failed: {admin_login['error']}")
+    
+    # Technician login
+    technician_login = test_login(
+        technician_account["email"],
+        technician_account["password"], 
+        technician_account["expected_role"],
+        technician_account["name"]
+    )
+    
+    if technician_login["success"]:
+        technician_token = technician_login["token"]
+        results["technician_login"] = {"success": True, "error": None}
+        print(f"✅ Technician login successful")
+    else:
+        results["technician_login"] = {"success": False, "error": technician_login["error"]}
+        print(f"❌ Technician login failed: {technician_login['error']}")
+    
+    # Customer login
+    customer_login = test_login(
+        customer_account["email"],
+        customer_account["password"], 
+        customer_account["expected_role"],
+        customer_account["name"]
+    )
+    
+    if customer_login["success"]:
+        customer_token = customer_login["token"]
+        results["customer_login"] = {"success": True, "error": None}
+        print(f"✅ Customer login successful")
+    else:
+        results["customer_login"] = {"success": False, "error": customer_login["error"]}
+        print(f"❌ Customer login failed: {customer_login['error']}")
+    
+    # Step 2: Test Voucher Management APIs (Admin only)
+    if admin_login["success"]:
+        print(f"\n🎫 STEP 2: Testing Voucher Management APIs (Admin)...")
+        
+        admin_headers = {
+            "Authorization": f"Bearer {admin_token}",
+            "Content-Type": "application/json"
+        }
+        
+        # Test GET /api/vouchers (without trailing slash)
+        print(f"   📋 Testing GET /api/vouchers (no trailing slash)...")
+        try:
+            response = requests.get(f"{BACKEND_URL}/vouchers", headers=admin_headers, timeout=15)
+            print(f"      Status Code: {response.status_code}")
+            
+            if response.status_code == 200:
+                vouchers = response.json()
+                print(f"      ✅ SUCCESS - Found {len(vouchers)} vouchers")
+                results["voucher_get_no_slash"] = {"success": True, "error": None}
+            elif response.status_code == 307:
+                print(f"      ❌ REDIRECT ERROR (307) - This should be fixed")
+                results["voucher_get_no_slash"] = {"success": False, "error": "307 redirect error"}
+            else:
+                error_msg = f"Failed with status {response.status_code}"
+                print(f"      ❌ {error_msg}")
+                results["voucher_get_no_slash"] = {"success": False, "error": error_msg}
+        except Exception as e:
+            error_msg = f"Exception: {str(e)}"
+            print(f"      ❌ {error_msg}")
+            results["voucher_get_no_slash"] = {"success": False, "error": error_msg}
+        
+        # Test GET /api/vouchers/ (with trailing slash)
+        print(f"   📋 Testing GET /api/vouchers/ (with trailing slash)...")
+        try:
+            response = requests.get(f"{BACKEND_URL}/vouchers/", headers=admin_headers, timeout=15)
+            print(f"      Status Code: {response.status_code}")
+            
+            if response.status_code == 200:
+                vouchers = response.json()
+                print(f"      ✅ SUCCESS - Found {len(vouchers)} vouchers")
+                results["voucher_get_with_slash"] = {"success": True, "error": None}
+            elif response.status_code == 307:
+                print(f"      ❌ REDIRECT ERROR (307) - This should be fixed")
+                results["voucher_get_with_slash"] = {"success": False, "error": "307 redirect error"}
+            else:
+                error_msg = f"Failed with status {response.status_code}"
+                print(f"      ❌ {error_msg}")
+                results["voucher_get_with_slash"] = {"success": False, "error": error_msg}
+        except Exception as e:
+            error_msg = f"Exception: {str(e)}"
+            print(f"      ❌ {error_msg}")
+            results["voucher_get_with_slash"] = {"success": False, "error": error_msg}
+        
+        # Test GET /api/vouchers?status=active (status parameter)
+        print(f"   🔍 Testing GET /api/vouchers?status=active (status filter)...")
+        try:
+            response = requests.get(f"{BACKEND_URL}/vouchers?status=active", headers=admin_headers, timeout=15)
+            print(f"      Status Code: {response.status_code}")
+            
+            if response.status_code == 200:
+                vouchers = response.json()
+                active_count = len([v for v in vouchers if v.get("status") == "active"])
+                print(f"      ✅ SUCCESS - Found {len(vouchers)} vouchers ({active_count} active)")
+                results["voucher_get_status_filter"] = {"success": True, "error": None}
+            elif response.status_code == 500:
+                print(f"      ❌ INTERNAL SERVER ERROR (500) - Status parameter conflict should be fixed")
+                results["voucher_get_status_filter"] = {"success": False, "error": "500 internal server error - status parameter conflict"}
+            else:
+                error_msg = f"Failed with status {response.status_code}"
+                print(f"      ❌ {error_msg}")
+                results["voucher_get_status_filter"] = {"success": False, "error": error_msg}
+        except Exception as e:
+            error_msg = f"Exception: {str(e)}"
+            print(f"      ❌ {error_msg}")
+            results["voucher_get_status_filter"] = {"success": False, "error": error_msg}
+        
+        # Test POST /api/vouchers (create new voucher)
+        print(f"   ➕ Testing POST /api/vouchers (create voucher)...")
+        from datetime import datetime, timedelta
+        now = datetime.utcnow()
+        
+        voucher_data = {
+            "code": f"TESTFIX{int(now.timestamp())}",
+            "description": "Test voucher for fix verification",
+            "discount_type": "percentage",
+            "discount_value": 15,
+            "min_purchase_amount": 50000,
+            "max_discount_amount": 75000,
+            "usage_limit": 100,
+            "per_customer_limit": 2,
+            "valid_from": now.isoformat(),
+            "valid_until": (now + timedelta(days=30)).isoformat()
+        }
+        
+        try:
+            response = requests.post(f"{BACKEND_URL}/vouchers", json=voucher_data, headers=admin_headers, timeout=15)
+            print(f"      Status Code: {response.status_code}")
+            
+            if response.status_code == 200:
+                voucher = response.json()
+                print(f"      ✅ SUCCESS - Created voucher: {voucher.get('code')}")
+                results["voucher_post"] = {"success": True, "error": None}
+            elif response.status_code == 500:
+                print(f"      ❌ INTERNAL SERVER ERROR (500) - This should be fixed")
+                results["voucher_post"] = {"success": False, "error": "500 internal server error"}
+            else:
+                error_msg = f"Failed with status {response.status_code}"
+                try:
+                    error_data = response.json()
+                    error_msg += f" - {error_data.get('detail', '')}"
+                except:
+                    pass
+                print(f"      ❌ {error_msg}")
+                results["voucher_post"] = {"success": False, "error": error_msg}
+        except Exception as e:
+            error_msg = f"Exception: {str(e)}"
+            print(f"      ❌ {error_msg}")
+            results["voucher_post"] = {"success": False, "error": error_msg}
+    
+    # Step 3: Test Customer Management APIs (Admin and Technician)
+    if admin_login["success"] or technician_login["success"]:
+        print(f"\n👥 STEP 3: Testing Customer Management APIs...")
+        
+        # Use admin token if available, otherwise technician
+        test_token = admin_token if admin_login["success"] else technician_token
+        test_role = "Admin" if admin_login["success"] else "Technician"
+        
+        test_headers = {
+            "Authorization": f"Bearer {test_token}",
+            "Content-Type": "application/json"
+        }
+        
+        # Test GET /api/customers (without trailing slash)
+        print(f"   👤 Testing GET /api/customers (no trailing slash) - {test_role}...")
+        try:
+            response = requests.get(f"{BACKEND_URL}/customers", headers=test_headers, timeout=15)
+            print(f"      Status Code: {response.status_code}")
+            
+            if response.status_code == 200:
+                customers = response.json()
+                print(f"      ✅ SUCCESS - Found {len(customers)} customers")
+                results["customer_get_no_slash"] = {"success": True, "error": None}
+            elif response.status_code == 307:
+                print(f"      ❌ REDIRECT ERROR (307) - This should be fixed")
+                results["customer_get_no_slash"] = {"success": False, "error": "307 redirect error"}
+            else:
+                error_msg = f"Failed with status {response.status_code}"
+                print(f"      ❌ {error_msg}")
+                results["customer_get_no_slash"] = {"success": False, "error": error_msg}
+        except Exception as e:
+            error_msg = f"Exception: {str(e)}"
+            print(f"      ❌ {error_msg}")
+            results["customer_get_no_slash"] = {"success": False, "error": error_msg}
+        
+        # Test GET /api/customers/ (with trailing slash)
+        print(f"   👤 Testing GET /api/customers/ (with trailing slash) - {test_role}...")
+        try:
+            response = requests.get(f"{BACKEND_URL}/customers/", headers=test_headers, timeout=15)
+            print(f"      Status Code: {response.status_code}")
+            
+            if response.status_code == 200:
+                customers = response.json()
+                print(f"      ✅ SUCCESS - Found {len(customers)} customers")
+                results["customer_get_with_slash"] = {"success": True, "error": None}
+            elif response.status_code == 307:
+                print(f"      ❌ REDIRECT ERROR (307) - This should be fixed")
+                results["customer_get_with_slash"] = {"success": False, "error": "307 redirect error"}
+            else:
+                error_msg = f"Failed with status {response.status_code}"
+                print(f"      ❌ {error_msg}")
+                results["customer_get_with_slash"] = {"success": False, "error": error_msg}
+        except Exception as e:
+            error_msg = f"Exception: {str(e)}"
+            print(f"      ❌ {error_msg}")
+            results["customer_get_with_slash"] = {"success": False, "error": error_msg}
+        
+        # Test POST /api/customers (create new customer) - Admin only
+        if admin_login["success"]:
+            print(f"   ➕ Testing POST /api/customers (create customer) - Admin...")
+            
+            customer_data = {
+                "customer_number": f"CUST{int(now.timestamp())}",
+                "full_name": "Test Customer Fix Verification",
+                "email": f"testcustomer{int(now.timestamp())}@example.com",
+                "phone": "+62812345678",
+                "address": "Test Address 123",
+                "balance": 100000,
+                "status": "active"
+            }
+            
+            try:
+                response = requests.post(f"{BACKEND_URL}/customers", json=customer_data, headers=admin_headers, timeout=15)
+                print(f"      Status Code: {response.status_code}")
+                
+                if response.status_code == 201:
+                    customer = response.json()
+                    print(f"      ✅ SUCCESS - Created customer: {customer.get('customer_number')}")
+                    results["customer_post"] = {"success": True, "error": None}
+                elif response.status_code == 500:
+                    print(f"      ❌ INTERNAL SERVER ERROR (500) - This should be fixed")
+                    results["customer_post"] = {"success": False, "error": "500 internal server error"}
+                else:
+                    error_msg = f"Failed with status {response.status_code}"
+                    try:
+                        error_data = response.json()
+                        error_msg += f" - {error_data.get('detail', '')}"
+                    except:
+                        pass
+                    print(f"      ❌ {error_msg}")
+                    results["customer_post"] = {"success": False, "error": error_msg}
+            except Exception as e:
+                error_msg = f"Exception: {str(e)}"
+                print(f"      ❌ {error_msg}")
+                results["customer_post"] = {"success": False, "error": error_msg}
+        else:
+            print(f"   ⏭️  Skipping POST /api/customers - Admin login required")
+            results["customer_post"] = {"success": True, "error": "Skipped - Admin required"}
+    
+    return results
     print("🎫 VOUCHER SYSTEM TEST SUMMARY")
     print("=" * 80)
     
