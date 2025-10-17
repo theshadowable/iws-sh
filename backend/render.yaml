@@ -17,3 +17,5 @@ services:
         value: indowater_db
       - key: CORS_ORIGINS
         value: "*"
+      - key: UPLOAD_DIR
+        value: /tmp/uploads
