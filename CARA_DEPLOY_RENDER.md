@@ -118,6 +118,9 @@ SECRET_KEY=ganti-dengan-random-string-panjang-untuk-production
 
 # 4. CORS Origins (ganti dengan domain frontend Anda)
 CORS_ORIGINS=https://your-frontend-domain.com
+
+# 5. Upload Directory (default: /tmp/uploads, tidak perlu diubah)
+UPLOAD_DIR=/tmp/uploads
 ```
 
 **PENTING**: 
