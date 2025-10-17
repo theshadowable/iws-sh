@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from pathlib import Path
 from datetime import datetime
 from typing import List, Optional
+from urllib.parse import quote_plus
 import os
 import logging
 
