@@ -36,7 +36,11 @@ client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ.get('DB_NAME', 'indowater_db')]
 
 # Create FastAPI app
-app = FastAPI(title="IndoWater Solution API", version="1.0.0")
+app = FastAPI(
+    title="IndoWater Solution API", 
+    version="1.0.0",
+    redirect_slashes=True
+)
 
 # Create API router with /api prefix
 api_router = APIRouter(prefix="/api")
