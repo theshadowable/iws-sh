@@ -9,11 +9,15 @@ import re
 
 
 # File upload configuration
-UPLOAD_DIR = Path("/app/backend/uploads")
-UPLOAD_DIR.mkdir(exist_ok=True)
-
-METER_PHOTOS_DIR = UPLOAD_DIR / "meter_photos"
-METER_PHOTOS_DIR.mkdir(exist_ok=True)
+# Use /tmp for Render compatibility
+UPLOAD_DIR = Path(os.environ.get('UPLOAD_DIR', '/tmp/uploads'))
+try:
+    UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+    
+    METER_PHOTOS_DIR = UPLOAD_DIR / "meter_photos"
+    METER_PHOTOS_DIR.mkdir(parents=True, exist_ok=True)
+except Exception as e:
+    print(f"Warning: Could not create upload directories: {e}")
 
 ALLOWED_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.gif', '.bmp'}
 MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB
