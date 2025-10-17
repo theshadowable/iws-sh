@@ -254,7 +254,7 @@ async def apply_voucher(
 
 @router.get("/", response_model=List[Voucher])
 async def list_vouchers(
-    status: Optional[VoucherStatus] = None,
+    voucher_status: Optional[VoucherStatus] = None,
     current_user: dict = Depends(require_role(["admin"]))
 ):
     """
@@ -262,8 +262,8 @@ async def list_vouchers(
     """
     try:
         query = {}
-        if status:
-            query["status"] = status
+        if voucher_status:
+            query["status"] = voucher_status
         
         vouchers = await db.vouchers.find(query).sort("created_at", -1).to_list(length=100)
         return [Voucher(**v) for v in vouchers]
