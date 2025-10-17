@@ -35,51 +35,54 @@ load_dotenv(ROOT_DIR / '.env')
 def get_mongo_url():
     """
     Get MongoDB URL with proper URL encoding for username and password.
-    Handles both simple URLs and connection strings with credentials.
+    Handles both mongodb:// and mongodb+srv:// connection strings with credentials.
     """
     mongo_url = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
     
-    # If the URL contains @ symbol, it has credentials that might need encoding
-    if '@' in mongo_url and not mongo_url.startswith('mongodb+srv://'):
-        # For standard mongodb:// URLs with credentials
-        try:
-            # Extract the protocol
-            protocol = 'mongodb://'
-            url_without_protocol = mongo_url.replace(protocol, '')
-            
-            # Check if there are credentials (before @)
-            if '@' in url_without_protocol:
-                credentials_part, host_part = url_without_protocol.split('@', 1)
-                
-                # Split credentials into username and password
-                if ':' in credentials_part:
-                    username, password = credentials_part.split(':', 1)
-                    # URL encode username and password
-                    encoded_username = quote_plus(username)
-                    encoded_password = quote_plus(password)
-                    # Reconstruct the URL with encoded credentials
-                    mongo_url = f"{protocol}{encoded_username}:{encoded_password}@{host_part}"
-        except Exception as e:
-            logging.warning(f"Could not parse MongoDB URL for encoding: {e}. Using original URL.")
+    # Skip encoding if no @ symbol (no credentials)
+    if '@' not in mongo_url:
+        return mongo_url
     
-    elif '@' in mongo_url and mongo_url.startswith('mongodb+srv://'):
-        # For mongodb+srv:// URLs with credentials
-        try:
+    try:
+        # Determine protocol
+        if mongo_url.startswith('mongodb+srv://'):
             protocol = 'mongodb+srv://'
-            url_without_protocol = mongo_url.replace(protocol, '')
-            
-            if '@' in url_without_protocol:
-                credentials_part, host_part = url_without_protocol.split('@', 1)
-                
-                if ':' in credentials_part:
-                    username, password = credentials_part.split(':', 1)
-                    encoded_username = quote_plus(username)
-                    encoded_password = quote_plus(password)
-                    mongo_url = f"{protocol}{encoded_username}:{encoded_password}@{host_part}"
-        except Exception as e:
-            logging.warning(f"Could not parse MongoDB SRV URL for encoding: {e}. Using original URL.")
-    
-    return mongo_url
+        elif mongo_url.startswith('mongodb://'):
+            protocol = 'mongodb://'
+        else:
+            # Unknown protocol, return as-is
+            return mongo_url
+        
+        # Remove protocol to parse credentials
+        url_without_protocol = mongo_url.replace(protocol, '', 1)
+        
+        # Split credentials from host/database part
+        if '@' not in url_without_protocol:
+            # No credentials present
+            return mongo_url
+        
+        credentials_part, host_part = url_without_protocol.split('@', 1)
+        
+        # Split credentials into username and password
+        if ':' not in credentials_part:
+            # No password, only username - shouldn't happen but handle it
+            return mongo_url
+        
+        username, password = credentials_part.split(':', 1)
+        
+        # URL encode username and password
+        encoded_username = quote_plus(username)
+        encoded_password = quote_plus(password)
+        
+        # Reconstruct the URL with encoded credentials
+        encoded_url = f"{protocol}{encoded_username}:{encoded_password}@{host_part}"
+        
+        logging.info(f"MongoDB URL encoded successfully (username: {username})")
+        return encoded_url
+        
+    except Exception as e:
+        logging.error(f"Error encoding MongoDB URL: {e}. Using original URL - this may fail!")
+        return mongo_url
 
 mongo_url = get_mongo_url()
 client = AsyncIOMotorClient(mongo_url)
