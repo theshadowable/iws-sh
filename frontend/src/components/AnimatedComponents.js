@@ -227,7 +227,7 @@ export const WaterFlowAnimation = ({ isFlowing = true, flowRate = 50 }) => {
         />
       ))}
 
-      {/* Status Badge - 3D Effect */}
+      {/* Status Badge - 3D Effect (No Progress Bar) */}
       <motion.div 
         className="absolute top-4 right-4 flex items-center space-x-2 backdrop-blur-lg px-4 py-2 rounded-full border shadow-xl"
         style={{
@@ -268,9 +268,6 @@ export const WaterFlowAnimation = ({ isFlowing = true, flowRate = 50 }) => {
         />
         <span className={`text-xs font-bold ${isFlowing ? 'text-blue-600' : 'text-gray-500'}`}>
           {isFlowing ? 'FLOWING' : 'IDLE'}
-        </span>
-        <span className="text-xs font-semibold text-blue-500">
-          {Math.round(flowRate)}%
         </span>
       </motion.div>
 
