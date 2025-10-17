@@ -1745,10 +1745,10 @@ def test_voucher_and_customer_management_fixes():
             print(f"      ❌ {error_msg}")
             results["voucher_get_with_slash"] = {"success": False, "error": error_msg}
         
-        # Test GET /api/vouchers?status=active (status parameter)
-        print(f"   🔍 Testing GET /api/vouchers?status=active (status filter)...")
+        # Test GET /api/vouchers?voucher_status=active (status parameter)
+        print(f"   🔍 Testing GET /api/vouchers?voucher_status=active (status filter)...")
         try:
-            response = requests.get(f"{BACKEND_URL}/vouchers?status=active", headers=admin_headers, timeout=15)
+            response = requests.get(f"{BACKEND_URL}/vouchers?voucher_status=active", headers=admin_headers, timeout=15)
             print(f"      Status Code: {response.status_code}")
             
             if response.status_code == 200:
