@@ -123,9 +123,14 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Mount static files for uploads
-upload_dir = Path("/app/uploads")
-upload_dir.mkdir(parents=True, exist_ok=True)
-app.mount("/uploads", StaticFiles(directory=str(upload_dir)), name="uploads")
+# Use /tmp for Render compatibility (writable directory)
+upload_dir = Path(os.environ.get('UPLOAD_DIR', '/tmp/uploads'))
+try:
+    upload_dir.mkdir(parents=True, exist_ok=True)
+    app.mount("/uploads", StaticFiles(directory=str(upload_dir)), name="uploads")
+    logger.info(f"Upload directory created at: {upload_dir}")
+except Exception as e:
+    logger.warning(f"Could not create upload directory: {e}. File uploads may not work.")
 
 
 # ==================== AUTHENTICATION ROUTES ====================
