@@ -19,8 +19,12 @@ from models import User, UserRole
 router = APIRouter(prefix="/api/upload", tags=["Upload"])
 
 # Upload directory configuration
-UPLOAD_DIR = Path("/app/uploads/meter_photos")
-UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+# Use /tmp for Render compatibility
+UPLOAD_DIR = Path(os.environ.get('UPLOAD_DIR', '/tmp/uploads')) / "meter_photos"
+try:
+    UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+except Exception as e:
+    print(f"Warning: Could not create upload directory: {e}")
 
 # Allowed file extensions
 ALLOWED_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.gif', '.bmp'}
