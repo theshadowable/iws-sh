@@ -1237,10 +1237,10 @@ def test_customer_payment_apis():
         return False
 
 
-def test_voucher_management_apis():
-    """Test voucher management APIs after litellm dependency fix"""
+def test_voucher_and_customer_management_fixes():
+    """Test voucher and customer management APIs to verify the fixes"""
     print("=" * 80)
-    print("🎫 VOUCHER MANAGEMENT API TESTING - IndoWater Solution")
+    print("🎫 VOUCHER & CUSTOMER MANAGEMENT API TESTING - Fix Verification")
     print("=" * 80)
     print(f"Backend URL: {BACKEND_URL}")
     
@@ -1252,6 +1252,13 @@ def test_voucher_management_apis():
         "expected_role": "admin"
     }
     
+    technician_account = {
+        "name": "Technician",
+        "email": "technician@indowater.com",
+        "password": "tech123",
+        "expected_role": "technician"
+    }
+    
     customer_account = {
         "name": "Customer",
         "email": "customer@indowater.com", 
@@ -1261,11 +1268,15 @@ def test_voucher_management_apis():
     
     results = {
         "admin_login": {"success": False, "error": None},
+        "technician_login": {"success": False, "error": None},
         "customer_login": {"success": False, "error": None},
-        "voucher_creation": {"success": False, "error": None, "voucher_id": None},
-        "voucher_list": {"success": False, "error": None},
-        "voucher_list_filter": {"success": False, "error": None},
-        "voucher_validation": {"success": False, "error": None}
+        "voucher_get_no_slash": {"success": False, "error": None},
+        "voucher_get_with_slash": {"success": False, "error": None},
+        "voucher_get_status_filter": {"success": False, "error": None},
+        "voucher_post": {"success": False, "error": None},
+        "customer_get_no_slash": {"success": False, "error": None},
+        "customer_get_with_slash": {"success": False, "error": None},
+        "customer_post": {"success": False, "error": None}
     }
     
     # Step 1: Login as Admin
