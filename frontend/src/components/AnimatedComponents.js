@@ -2,143 +2,150 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 export const WaterFlowAnimation = ({ isFlowing = true, flowRate = 50 }) => {
-  // Calculate animation speed based on flow rate (0-100)
-  const animationDuration = Math.max(1, 3 - (flowRate / 100) * 2);
+  // Calculate animation speed - faster and more responsive
+  const speed = isFlowing ? Math.max(0.5, 2 - (flowRate / 100) * 1.5) : 0;
   
   return (
-    <div className="relative w-full h-32 bg-gradient-to-b from-blue-50 via-blue-100 to-blue-200 rounded-lg overflow-hidden shadow-inner">
-      {/* Multiple wave layers for ripple effect */}
+    <div className="relative w-full h-32 bg-gradient-to-b from-blue-50 to-blue-100 rounded-lg overflow-hidden shadow-inner border-2 border-blue-200">
+      {/* Animated gradient background - smooth color shift */}
       <motion.div
-        className="absolute bottom-0 left-0 right-0 h-20"
-        style={{
-          background: 'linear-gradient(to top, rgba(59, 130, 246, 0.8), rgba(96, 165, 250, 0.6))',
-        }}
-      >
-        {/* First wave layer */}
-        <motion.div
-          className="absolute inset-0"
-          animate={isFlowing ? {
-            backgroundPosition: ['0% 0%', '100% 0%'],
-          } : {}}
-          transition={{
-            duration: animationDuration * 1.5,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-          style={{
-            background: 'repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(255,255,255,0.1) 40px, rgba(255,255,255,0.1) 80px)',
-            backgroundSize: '80px 100%',
-          }}
-        />
-        
-        {/* Animated ripple waves */}
-        {isFlowing && [...Array(3)].map((_, i) => (
-          <motion.div
-            key={`ripple-${i}`}
-            className="absolute inset-0"
-            initial={{ 
-              y: '100%',
-              opacity: 0.4
-            }}
-            animate={{
-              y: ['-100%', '-100%'],
-              opacity: [0.4, 0]
-            }}
-            transition={{
-              duration: animationDuration,
-              repeat: Infinity,
-              delay: i * (animationDuration / 3),
-              ease: "linear"
-            }}
-            style={{
-              background: `radial-gradient(ellipse at 50% 50%, rgba(147, 197, 253, 0.4) 0%, transparent 60%)`,
-              transform: `scaleX(${1 + i * 0.3})`
-            }}
-          />
-        ))}
-      </motion.div>
-      
-      {/* Top wave border with organic movement */}
-      <svg className="absolute bottom-16 left-0 right-0 w-full" style={{ height: '40px' }} preserveAspectRatio="none">
-        <motion.path
-          d="M0,20 Q25,10 50,20 T100,20 T150,20 T200,20 T250,20 T300,20 T350,20 T400,20 V40 H0 Z"
-          fill="rgba(59, 130, 246, 0.9)"
-          animate={isFlowing ? {
-            d: [
-              "M0,20 Q25,10 50,20 T100,20 T150,20 T200,20 T250,20 T300,20 T350,20 T400,20 V40 H0 Z",
-              "M0,20 Q25,30 50,20 T100,20 T150,20 T200,20 T250,20 T300,20 T350,20 T400,20 V40 H0 Z",
-              "M0,20 Q25,10 50,20 T100,20 T150,20 T200,20 T250,20 T300,20 T350,20 T400,20 V40 H0 Z"
-            ]
-          } : {}}
-          transition={{
-            duration: animationDuration,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-      </svg>
-      
-      {/* Secondary wave for depth */}
-      <svg className="absolute bottom-16 left-0 right-0 w-full opacity-60" style={{ height: '40px' }} preserveAspectRatio="none">
-        <motion.path
-          d="M0,25 Q30,15 60,25 T120,25 T180,25 T240,25 T300,25 T360,25 T420,25 V40 H0 Z"
-          fill="rgba(96, 165, 250, 0.7)"
-          animate={isFlowing ? {
-            d: [
-              "M0,25 Q30,15 60,25 T120,25 T180,25 T240,25 T300,25 T360,25 T420,25 V40 H0 Z",
-              "M0,25 Q30,35 60,25 T120,25 T180,25 T240,25 T300,25 T360,25 T420,25 V40 H0 Z",
-              "M0,25 Q30,15 60,25 T120,25 T180,25 T240,25 T300,25 T360,25 T420,25 V40 H0 Z"
-            ]
-          } : {}}
-          transition={{
-            duration: animationDuration * 1.2,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 0.3
-          }}
-        />
-      </svg>
-      
-      {/* Animated water droplets/bubbles rising */}
-      {isFlowing && [...Array(5)].map((_, i) => (
-        <motion.div
-          key={`bubble-${i}`}
-          className="absolute rounded-full bg-white opacity-30"
-          style={{
-            width: `${6 + Math.random() * 8}px`,
-            height: `${6 + Math.random() * 8}px`,
-            left: `${15 + i * 18}%`,
-          }}
-          animate={{
-            y: [130, -10],
-            opacity: [0, 0.4, 0.6, 0],
-            scale: [0.8, 1, 1.2, 0.8]
-          }}
-          transition={{
-            duration: animationDuration * 0.8,
-            repeat: Infinity,
-            delay: i * (animationDuration / 5),
-            ease: "easeOut"
-          }}
-        />
-      ))}
-      
-      {/* Flow rate indicator with pulsing effect */}
-      <motion.div 
-        className="absolute top-4 right-4 bg-white bg-opacity-95 px-4 py-2 rounded-full text-sm font-bold shadow-md"
+        className="absolute inset-0"
         animate={isFlowing ? {
-          scale: [1, 1.05, 1],
+          background: [
+            'linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(96, 165, 250, 0.4) 50%, rgba(59, 130, 246, 0.3) 100%)',
+            'linear-gradient(135deg, rgba(96, 165, 250, 0.4) 0%, rgba(59, 130, 246, 0.3) 50%, rgba(96, 165, 250, 0.4) 100%)',
+          ]
         } : {}}
         transition={{
           duration: 2,
           repeat: Infinity,
           ease: "easeInOut"
         }}
+      />
+
+      {/* Animated water level bar - smooth rise and fall */}
+      <motion.div
+        className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-blue-500 to-blue-400"
+        initial={{ height: '40%' }}
+        animate={isFlowing ? {
+          height: ['40%', `${45 + flowRate / 5}%`, '40%'],
+        } : { height: '30%' }}
+        transition={{
+          duration: speed * 2,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+        style={{
+          boxShadow: '0 -4px 20px rgba(59, 130, 246, 0.3)',
+        }}
+      />
+
+      {/* Smooth wave overlay using CSS animation */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 overflow-hidden">
+        <motion.div
+          className="absolute inset-0"
+          style={{
+            background: 'repeating-linear-gradient(90deg, transparent 0px, rgba(255,255,255,0.15) 20px, transparent 40px)',
+            backgroundSize: '80px 100%',
+          }}
+          animate={isFlowing ? {
+            x: [0, 80],
+          } : {}}
+          transition={{
+            duration: speed,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+        />
+      </div>
+
+      {/* Modern floating particles */}
+      {isFlowing && [0, 1, 2].map((i) => (
+        <motion.div
+          key={`particle-${i}`}
+          className="absolute w-2 h-2 bg-white rounded-full"
+          style={{
+            left: `${20 + i * 30}%`,
+            filter: 'blur(1px)',
+          }}
+          animate={{
+            y: [128, -10],
+            opacity: [0, 0.8, 0],
+            scale: [0.5, 1, 0.5],
+          }}
+          transition={{
+            duration: speed * 1.5,
+            repeat: Infinity,
+            delay: i * 0.3,
+            ease: "easeOut"
+          }}
+        />
+      ))}
+
+      {/* Ripple effects - cleaner circles */}
+      {isFlowing && [0, 1].map((i) => (
+        <motion.div
+          key={`ripple-${i}`}
+          className="absolute left-1/2 top-1/2 w-16 h-16 border-2 border-white rounded-full"
+          style={{
+            transform: 'translate(-50%, -50%)',
+          }}
+          animate={{
+            scale: [1, 2.5],
+            opacity: [0.6, 0],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            delay: i * 1,
+            ease: "easeOut"
+          }}
+        />
+      ))}
+
+      {/* Status indicator - more prominent */}
+      <motion.div 
+        className="absolute top-3 right-3 flex items-center space-x-2 bg-white px-3 py-2 rounded-full shadow-lg"
+        animate={isFlowing ? {
+          scale: [1, 1.08, 1],
+        } : {}}
+        transition={{
+          duration: 1.5,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
       >
-        <span className={`${isFlowing ? 'text-blue-600' : 'text-gray-500'}`}>
-          {isFlowing ? `${flowRate}% Flow` : 'No Flow'}
+        <motion.div
+          className={`w-2 h-2 rounded-full ${isFlowing ? 'bg-green-500' : 'bg-gray-400'}`}
+          animate={isFlowing ? {
+            opacity: [1, 0.5, 1],
+          } : {}}
+          transition={{
+            duration: 1,
+            repeat: Infinity,
+          }}
+        />
+        <span className={`text-xs font-semibold ${isFlowing ? 'text-blue-600' : 'text-gray-500'}`}>
+          {isFlowing ? `${Math.round(flowRate)}% Active` : 'Idle'}
         </span>
       </motion.div>
+
+      {/* Flow rate bar indicator */}
+      {isFlowing && (
+        <div className="absolute bottom-3 left-3 right-3">
+          <div className="bg-white bg-opacity-40 h-2 rounded-full overflow-hidden backdrop-blur-sm">
+            <motion.div
+              className="h-full bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full"
+              initial={{ width: '0%' }}
+              animate={{ width: `${flowRate}%` }}
+              transition={{
+                duration: 0.5,
+                ease: "easeOut"
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
