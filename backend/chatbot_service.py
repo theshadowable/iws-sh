@@ -5,7 +5,14 @@ import os
 from typing import Dict, List, Optional
 from datetime import datetime
 from dotenv import load_dotenv
-from emergentintegrations.llm.chat import LlmChat, UserMessage
+
+# Try to import emergentintegrations, but make it optional
+try:
+    from emergentintegrations.llm.chat import LlmChat, UserMessage
+    EMERGENT_AVAILABLE = True
+except ImportError:
+    EMERGENT_AVAILABLE = False
+    print("Warning: emergentintegrations not installed. Chatbot service will be disabled.")
 
 load_dotenv()
 
