@@ -21,6 +21,12 @@ class ChatbotService:
     """AI Chatbot service for customer support"""
     
     def __init__(self):
+        # Check if emergentintegrations is available
+        if not EMERGENT_AVAILABLE:
+            print("Warning: emergentintegrations not installed. Chatbot service disabled.")
+            self.enabled = False
+            return
+            
         self.api_key = os.getenv("EMERGENT_LLM_KEY")
         if not self.api_key:
             print("Warning: EMERGENT_LLM_KEY not found. Chatbot service will be disabled.")
