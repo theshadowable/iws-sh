@@ -52,16 +52,22 @@ const VoucherManagement = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
+      
+      // Use relative path to ensure same protocol (https)
       const url = filter === 'all' 
-        ? `${API}/vouchers` 
-        : `${API}/vouchers?status=${filter}`;
+        ? `/api/vouchers` 
+        : `/api/vouchers?status=${filter}`;
+      
+      console.log('[Voucher Debug] Fetching from URL:', url);
+      console.log('[Voucher Debug] Protocol:', window.location.protocol);
       
       const response = await axios.get(url, {
         headers: { Authorization: `Bearer ${token}` }
       });
+      console.log('[Voucher Debug] Response received:', response.data);
       setVouchers(response.data || []);
     } catch (error) {
-      console.error('Failed to fetch vouchers:', error);
+      console.error('[Voucher Debug] Failed to fetch vouchers:', error);
       toast.error('Failed to load vouchers', { id: 'voucher-load-error' });
     } finally {
       setLoading(false);
