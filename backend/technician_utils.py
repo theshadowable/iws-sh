@@ -57,6 +57,11 @@ def process_ocr(image_path: str) -> Tuple[Optional[float], float]:
     Process image with OCR to extract meter reading
     Returns: (reading_value, confidence_score)
     """
+    # Check if Tesseract is available
+    if not TESSERACT_AVAILABLE:
+        logging.warning("OCR requested but pytesseract is not available")
+        return None, 0.0
+    
     try:
         # Open image
         image = Image.open(image_path)
