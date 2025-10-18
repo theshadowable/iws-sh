@@ -3,9 +3,17 @@ import uuid
 from pathlib import Path
 from datetime import datetime, timedelta
 from typing import Optional, Tuple
-import pytesseract
 from PIL import Image
 import re
+import logging
+
+# Try to import pytesseract - gracefully handle if not available
+try:
+    import pytesseract
+    TESSERACT_AVAILABLE = True
+except ImportError:
+    TESSERACT_AVAILABLE = False
+    logging.warning("pytesseract not available. OCR functionality will be disabled.")
 
 
 # File upload configuration
