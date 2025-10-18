@@ -9,9 +9,17 @@ import uuid
 from pathlib import Path
 import shutil
 from PIL import Image
-import pytesseract
 import re
 from datetime import datetime
+import logging
+
+# Try to import pytesseract - gracefully handle if not available
+try:
+    import pytesseract
+    TESSERACT_AVAILABLE = True
+except ImportError:
+    TESSERACT_AVAILABLE = False
+    logging.warning("pytesseract not available. OCR functionality will be disabled.")
 
 from auth import get_current_user
 from models import User, UserRole
