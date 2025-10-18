@@ -6,15 +6,16 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from datetime import datetime, timedelta
 import os
 from dotenv import load_dotenv
-import sys
+from pathlib import Path
 
-# Add backend directory to path
-sys.path.append('/app/backend')
+# Get backend directory dynamically
+BACKEND_DIR = Path(__file__).parent.resolve()
 
 from voucher_models import Voucher, VoucherStatus, DiscountType
 from alert_models import Alert, AlertType, AlertSeverity, AlertStatus, WaterSavingTip
 
-load_dotenv('/app/backend/.env')
+# Load environment variables from backend directory
+load_dotenv(BACKEND_DIR / '.env')
 
 
 async def seed_phase2_data():
