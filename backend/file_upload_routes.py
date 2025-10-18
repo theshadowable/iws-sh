@@ -72,6 +72,16 @@ def extract_meter_reading(image_path: str) -> dict:
     Extract meter reading from image using OCR
     Returns: dict with reading value and confidence
     """
+    # Check if Tesseract is available
+    if not TESSERACT_AVAILABLE:
+        return {
+            "success": False,
+            "reading_value": None,
+            "confidence": 0.0,
+            "extracted_text": "",
+            "error": "OCR functionality not available. Tesseract is not installed on this system."
+        }
+    
     try:
         # Open image
         image = Image.open(image_path)
