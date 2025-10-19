@@ -32,13 +32,14 @@ db = client[os.environ.get('DB_NAME', 'indowater_db')]
 @router.post("/message", response_model=SendMessageResponse)
 async def send_chat_message(
     request: SendMessageRequest,
-    current_user: dict = Depends(get_current_user)
+    current_user = Depends(get_current_user)
 ):
     """
     Send a message to the AI chatbot
     """
     try:
-        customer_id = current_user["id"]
+        # current_user is a User object, not dict
+        customer_id = current_user.id
         
         # Get or create session
         if request.session_id:
@@ -58,8 +59,8 @@ async def send_chat_message(
             # Create new session
             session = ChatSession(
                 customer_id=customer_id,
-                customer_name=current_user.get("full_name"),
-                customer_email=current_user.get("email")
+                customer_name=current_user.full_name,
+                customer_email=current_user.email
             )
             session_id = session.id
             await db.chat_sessions.insert_one(session.dict())
@@ -75,12 +76,12 @@ async def send_chat_message(
         
         # Get customer context for better responses
         customer_context = {
-            "name": current_user.get("full_name"),
-            "email": current_user.get("email"),
+            "name": current_user.full_name,
+            "email": current_user.email,
         }
         
         # Get current balance if customer role
-        if current_user.get("role") == "customer":
+        if current_user.role == "customer":
             customer_doc = await db.customers.find_one({"user_id": customer_id})
             if customer_doc:
                 customer_context["balance"] = customer_doc.get("balance", 0)
