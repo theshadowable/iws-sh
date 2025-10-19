@@ -14,7 +14,7 @@ services:
       - key: MONGO_URL
         sync: false
       - key: DB_NAME
-        value: indowater_db
+        value: indowater
       - key: CORS_ORIGINS
         value: "*"
       - key: UPLOAD_DIR
