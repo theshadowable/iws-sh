@@ -130,8 +130,8 @@ git push origin main
 ### Step 4: Set Environment Variables (5 minutes)
 ```env
 PYTHON_VERSION=3.11.0
-MONGO_URL=mongodb+srv://user:pass@cluster.mongodb.net/indowater_db
-DB_NAME=indowater_db
+MONGO_URL=mongodb+srv://user:pass@cluster.mongodb.net/indowater
+DB_NAME=indowater
 SECRET_KEY=[generate 32+ random chars]
 CORS_ORIGINS=*
 UPLOAD_DIR=/tmp/uploads
@@ -203,7 +203,7 @@ python seed_water_usage.py
 |----------|-------|----------|
 | PYTHON_VERSION | 3.11.0 | ✅ Yes |
 | MONGO_URL | mongodb+srv://... | ✅ Yes |
-| DB_NAME | indowater_db | ✅ Yes |
+| DB_NAME | indowater | ✅ Yes |
 | SECRET_KEY | random 32+ chars | ✅ Yes |
 | CORS_ORIGINS | * | ⚠️ Recommended |
 | UPLOAD_DIR | /tmp/uploads | ⚠️ Recommended |

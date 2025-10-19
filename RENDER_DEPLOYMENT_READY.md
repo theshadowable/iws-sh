@@ -71,7 +71,7 @@
 5. Replace `<password>` with your actual password
 6. Add database name at the end:
    ```
-   mongodb+srv://indowater_admin:xK9mP@7nQ!2wR$5tY@cluster0.xxxxx.mongodb.net/indowater_db?retryWrites=true&w=majority
+   mongodb+srv://indowater_admin:xK9mP@7nQ!2wR$5tY@cluster0.xxxxx.mongodb.net/indowater?retryWrites=true&w=majority
    ```
 
 ---
@@ -104,7 +104,7 @@ In Render Dashboard → Your Service → **Environment** tab, add:
 |-----|-------|-------|
 | `PYTHON_VERSION` | `3.11.0` | ⚠️ Must include .0 |
 | `MONGO_URL` | `mongodb+srv://user:pass@...` | Your MongoDB Atlas connection string |
-| `DB_NAME` | `indowater_db` | Database name |
+| `DB_NAME` | `indowater` | Database name |
 | `SECRET_KEY` | `[generate random 32+ chars]` | Use: https://randomkeygen.com/ |
 | `CORS_ORIGINS` | `*` | Or your frontend domain |
 | `UPLOAD_DIR` | `/tmp/uploads` | Already set in render.yaml |
@@ -292,7 +292,7 @@ vercel
 |----------|----------|---------|-------------|
 | `PYTHON_VERSION` | Yes | - | Must be `3.11.0` |
 | `MONGO_URL` | Yes | - | MongoDB Atlas connection string |
-| `DB_NAME` | Yes | `indowater_db` | Database name |
+| `DB_NAME` | Yes | `indowater` | Database name |
 | `SECRET_KEY` | Yes | - | JWT secret (32+ random chars) |
 | `CORS_ORIGINS` | No | `*` | Allowed origins (comma-separated) |
 | `UPLOAD_DIR` | No | `/tmp/uploads` | Upload directory (use /tmp) |

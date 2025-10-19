@@ -21,7 +21,7 @@
 - **Description:** Full MongoDB Atlas connection string with credentials
 - **Example:** 
   ```
-  mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/indowater_db?retryWrites=true&w=majority
+  mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/indowater?retryWrites=true&w=majority
   ```
 - **Important:** 
   - Passwords with special characters (@, !, $, etc) are automatically URL-encoded by the code
@@ -29,10 +29,10 @@
   - Use MongoDB Atlas FREE M0 tier for testing
 
 #### 3. DB_NAME
-- **Value:** `indowater_db`
+- **Value:** `indowater`
 - **Required:** Yes
 - **Description:** MongoDB database name
-- **Example:** `indowater_db`
+- **Example:** `indowater`
 - **Note:** Can be different if you prefer another name
 
 #### 4. SECRET_KEY
@@ -132,8 +132,8 @@
 ```bash
 # Can be copy-pasted in Render UI
 PYTHON_VERSION=3.11.0
-MONGO_URL=mongodb+srv://user:pass@cluster.mongodb.net/indowater_db
-DB_NAME=indowater_db
+MONGO_URL=mongodb+srv://user:pass@cluster.mongodb.net/indowater
+DB_NAME=indowater
 SECRET_KEY=your-random-secret-key-here
 CORS_ORIGINS=*
 UPLOAD_DIR=/tmp/uploads
@@ -144,7 +144,7 @@ UPLOAD_DIR=/tmp/uploads
 Create `backend/.env` file:
 ```env
 MONGO_URL=mongodb://localhost:27017
-DB_NAME=indowater_db
+DB_NAME=indowater
 CORS_ORIGINS=*
 SECRET_KEY=dev-secret-key-change-in-production
 ```
@@ -209,8 +209,8 @@ XENDIT_API_KEY=xnd_production_xxxxx
 ```env
 # Required only
 PYTHON_VERSION=3.11.0
-MONGO_URL=mongodb+srv://user:pass@cluster.mongodb.net/indowater_db
-DB_NAME=indowater_db
+MONGO_URL=mongodb+srv://user:pass@cluster.mongodb.net/indowater
+DB_NAME=indowater
 SECRET_KEY=generate-random-32-char-string
 CORS_ORIGINS=*
 ```
@@ -219,8 +219,8 @@ CORS_ORIGINS=*
 ```env
 # Core
 PYTHON_VERSION=3.11.0
-MONGO_URL=mongodb+srv://user:pass@cluster.mongodb.net/indowater_db
-DB_NAME=indowater_db
+MONGO_URL=mongodb+srv://user:pass@cluster.mongodb.net/indowater
+DB_NAME=indowater
 SECRET_KEY=production-secret-key-32-chars-min
 CORS_ORIGINS=https://app.yourdomain.com
 
