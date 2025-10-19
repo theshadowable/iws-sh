@@ -1,42 +1,26 @@
 """
-AI-powered Chatbot Service using OpenAI via emergentintegrations
+Independent AI-powered Chatbot Service
+Intelligent rule-based chatbot with FAQ matching and context awareness
 """
-import os
+import re
 from typing import Dict, List, Optional
 from datetime import datetime
-from dotenv import load_dotenv
-
-# Try to import emergentintegrations, but make it optional
-try:
-    from emergentintegrations.llm.chat import LlmChat, UserMessage
-    EMERGENT_AVAILABLE = True
-except ImportError:
-    EMERGENT_AVAILABLE = False
-    print("Warning: emergentintegrations not installed. Chatbot service will be disabled.")
-
-load_dotenv()
+from collections import defaultdict
 
 
 class ChatbotService:
-    """AI Chatbot service for customer support"""
+    """Independent AI Chatbot service for customer support"""
     
     def __init__(self):
-        # Check if emergentintegrations is available
-        if not EMERGENT_AVAILABLE:
-            print("Warning: emergentintegrations not installed. Chatbot service disabled.")
-            self.enabled = False
-            return
-            
-        self.api_key = os.getenv("EMERGENT_LLM_KEY")
-        if not self.api_key:
-            print("Warning: EMERGENT_LLM_KEY not found. Chatbot service will be disabled.")
-            self.enabled = False
-            return
-        
+        # Always enabled - no external dependencies
         self.enabled = True
-        # Knowledge base for FAQs
-        self.knowledge_base = self._build_knowledge_base()
-        self.system_message = self._build_system_message()
+        
+        # Session storage for conversation context
+        self.sessions = defaultdict(list)
+        
+        # Build FAQ database
+        self.faq_database = self._build_faq_database()
+        self.patterns = self._build_patterns()
     
     def _build_knowledge_base(self) -> str:
         """Build comprehensive FAQ knowledge base"""
