@@ -206,6 +206,134 @@ const IoTMonitoring = () => {
 
   const chartData = prepareChartData();
 
+  // CRUD Operations
+  const handleAddDevice = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${API}/iot/devices/register`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'X-Device-Secret': formData.device_secret
+        },
+        body: JSON.stringify({
+          device_id: formData.device_id,
+          device_name: formData.device_name,
+          firmware_version: formData.firmware_version,
+          hardware_version: formData.hardware_version,
+          mac_address: formData.mac_address,
+          device_type: 'smart_meter'
+        })
+      });
+
+      if (response.ok) {
+        setShowAddModal(false);
+        setFormData({
+          device_id: '',
+          device_name: '',
+          firmware_version: '',
+          hardware_version: '',
+          mac_address: '',
+          device_secret: ''
+        });
+        fetchDevices(); // Refresh devices list
+        alert('Device added successfully!');
+      } else {
+        const data = await response.json();
+        alert(`Failed to add device: ${data.detail || 'Unknown error'}`);
+      }
+    } catch (err) {
+      console.error('Error adding device:', err);
+      alert('Failed to add device. Please try again.');
+    }
+  };
+
+  const handleEditDevice = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${API}/iot/devices/${editingDevice.device_id}`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          device_name: formData.device_name,
+          firmware_version: formData.firmware_version,
+          hardware_version: formData.hardware_version,
+          mac_address: formData.mac_address
+        })
+      });
+
+      if (response.ok) {
+        setShowEditModal(false);
+        setEditingDevice(null);
+        setFormData({
+          device_id: '',
+          device_name: '',
+          firmware_version: '',
+          hardware_version: '',
+          mac_address: '',
+          device_secret: ''
+        });
+        fetchDevices();
+        alert('Device updated successfully!');
+      } else {
+        const data = await response.json();
+        alert(`Failed to update device: ${data.detail || 'Unknown error'}`);
+      }
+    } catch (err) {
+      console.error('Error updating device:', err);
+      alert('Failed to update device. Please try again.');
+    }
+  };
+
+  const handleDeleteDevice = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${API}/iot/devices/${deletingDevice.device_id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        setShowDeleteModal(false);
+        setDeletingDevice(null);
+        fetchDevices();
+        alert('Device deleted successfully!');
+      } else {
+        const data = await response.json();
+        alert(`Failed to delete device: ${data.detail || 'Unknown error'}`);
+      }
+    } catch (err) {
+      console.error('Error deleting device:', err);
+      alert('Failed to delete device. Please try again.');
+    }
+  };
+
+  const openEditModal = (device) => {
+    setEditingDevice(device);
+    setFormData({
+      device_id: device.device_id,
+      device_name: device.device_name || '',
+      firmware_version: device.firmware_version || '',
+      hardware_version: device.hardware_version || '',
+      mac_address: device.mac_address || '',
+      device_secret: ''
+    });
+    setShowEditModal(true);
+  };
+
+  const openDeleteModal = (device) => {
+    setDeletingDevice(device);
+    setShowDeleteModal(true);
+  };
+
   if (loading) {
     return (
       <div className="p-6">
