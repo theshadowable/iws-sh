@@ -132,6 +132,7 @@ export const useWebSocket = (sessionId) => {
     sendMessage,
     subscribe,
     unsubscribe,
-    reconnect: connect
+    reconnect: connect,
+    disconnect
   };
 };
