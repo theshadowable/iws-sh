@@ -62,17 +62,24 @@ export const Properties = () => {
     e.preventDefault();
     
     try {
+      const token = localStorage.getItem('token');
+      const headers = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      };
+      
       if (editingProperty) {
-        await axios.put(`${API}/properties/${editingProperty.id}`, formData);
+        await axios.put(`${API}/properties/${editingProperty.id}`, formData, { headers });
         toast.success('Property updated successfully');
       } else {
-        await axios.post(`${API}/properties`, formData);
+        await axios.post(`${API}/properties`, formData, { headers });
         toast.success('Property created successfully');
       }
       
       fetchProperties();
       closeModal();
     } catch (error) {
+      console.error('Error submitting property:', error);
       toast.error(error.response?.data?.detail || 'Operation failed');
     }
   };
