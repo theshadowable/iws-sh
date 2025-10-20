@@ -730,6 +730,7 @@ from seed_routes import router as seed_router
 from device_routes import router as device_router
 from pricing_routes import router as pricing_router
 from iot_routes import router as iot_router
+from iot_realtime_routes import router as iot_realtime_router
 
 # Include routers - include technician routes in api_router first
 api_router.include_router(technician_router)
