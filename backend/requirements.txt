@@ -74,3 +74,5 @@ reportlab==4.4.4
 openpyxl==3.1.5
 et_xmlfile==2.0.0
 litellm==1.55.8
+websockets==14.1
+paho-mqtt==2.1.0
