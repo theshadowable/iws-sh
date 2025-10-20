@@ -588,7 +588,8 @@ const Devices = () => {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </Layout>
   );
 };
 
