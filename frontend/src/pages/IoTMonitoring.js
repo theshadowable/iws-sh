@@ -337,42 +337,46 @@ const IoTMonitoring = () => {
 
   if (loading) {
     return (
-      <div className="p-6">
-        <div className="flex items-center justify-center h-96">
-          <div className="text-center">
-            <RefreshCw className="w-12 h-12 text-blue-600 animate-spin mx-auto mb-4" />
-            <p className="text-gray-600">Loading IoT devices...</p>
+      <Layout>
+        <div className="p-6">
+          <div className="flex items-center justify-center h-96">
+            <div className="text-center">
+              <RefreshCw className="w-12 h-12 text-blue-600 animate-spin mx-auto mb-4" />
+              <p className="text-gray-600">Loading IoT devices...</p>
+            </div>
           </div>
         </div>
-      </div>
+      </Layout>
     );
   }
 
   if (error) {
     return (
-      <div className="p-6">
-        <div className="flex items-center justify-center h-96">
-          <div className="text-center">
-            <AlertTriangle className="w-12 h-12 text-red-600 mx-auto mb-4" />
-            <p className="text-red-600 text-lg font-semibold mb-2">{error}</p>
-            <button
-              onClick={() => {
-                setError(null);
-                setLoading(true);
-                fetchDevices();
-              }}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-            >
-              Retry
-            </button>
+      <Layout>
+        <div className="p-6">
+          <div className="flex items-center justify-center h-96">
+            <div className="text-center">
+              <AlertTriangle className="w-12 h-12 text-red-600 mx-auto mb-4" />
+              <p className="text-red-600 text-lg font-semibold mb-2">{error}</p>
+              <button
+                onClick={() => {
+                  setError(null);
+                  setLoading(true);
+                  fetchDevices();
+                }}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              >
+                Retry
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      </Layout>
     );
   }
 
   return (
-    <div className="p-6">
+    <Layout>
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
