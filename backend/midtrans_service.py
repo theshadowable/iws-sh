@@ -30,7 +30,8 @@ class MidtransService:
         self.enabled = bool(self.server_key and self.client_key)
         
         if not self.enabled:
-            print("Warning: Midtrans API keys not configured. Payment gateway disabled.")
+            # Optional feature - log as INFO instead of WARNING
+            # Users can enable by setting MIDTRANS_SERVER_KEY and MIDTRANS_CLIENT_KEY
             self.snap = None
             self.core_api = None
             return
