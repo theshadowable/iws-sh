@@ -556,6 +556,265 @@ const IoTMonitoring = () => {
           )}
         </div>
       </div>
+
+      {/* Add Device Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <h2 className="text-2xl font-bold mb-4">Add New IoT Device</h2>
+            <form onSubmit={handleAddDevice}>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Device ID (Serial Number) *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.device_id}
+                    onChange={(e) => setFormData({...formData, device_id: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="e.g., ESP32-001"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Device Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.device_name}
+                    onChange={(e) => setFormData({...formData, device_name: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="e.g., Water Meter - Building A"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Device Secret *
+                  </label>
+                  <input
+                    type="password"
+                    required
+                    value={formData.device_secret}
+                    onChange={(e) => setFormData({...formData, device_secret: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Pre-shared secret key"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Firmware Version *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.firmware_version}
+                      onChange={(e) => setFormData({...formData, firmware_version: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="v1.0.0"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Hardware Version *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.hardware_version}
+                      onChange={(e) => setFormData({...formData, hardware_version: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="v1.0"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    MAC Address (Optional)
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.mac_address}
+                    onChange={(e) => setFormData({...formData, mac_address: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="AA:BB:CC:DD:EE:FF"
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-3 mt-6">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowAddModal(false);
+                    setFormData({
+                      device_id: '',
+                      device_name: '',
+                      firmware_version: '',
+                      hardware_version: '',
+                      mac_address: '',
+                      device_secret: ''
+                    });
+                  }}
+                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                >
+                  Add Device
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Device Modal */}
+      {showEditModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <h2 className="text-2xl font-bold mb-4">Edit IoT Device</h2>
+            <form onSubmit={handleEditDevice}>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Device ID
+                  </label>
+                  <input
+                    type="text"
+                    disabled
+                    value={formData.device_id}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Device ID cannot be changed</p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Device Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.device_name}
+                    onChange={(e) => setFormData({...formData, device_name: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Firmware Version *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.firmware_version}
+                      onChange={(e) => setFormData({...formData, firmware_version: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Hardware Version *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.hardware_version}
+                      onChange={(e) => setFormData({...formData, hardware_version: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    MAC Address
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.mac_address}
+                    onChange={(e) => setFormData({...formData, mac_address: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-3 mt-6">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowEditModal(false);
+                    setEditingDevice(null);
+                    setFormData({
+                      device_id: '',
+                      device_name: '',
+                      firmware_version: '',
+                      hardware_version: '',
+                      mac_address: '',
+                      device_secret: ''
+                    });
+                  }}
+                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                >
+                  Update Device
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <h2 className="text-2xl font-bold mb-4 text-red-600">Delete Device</h2>
+            <p className="text-gray-700 mb-6">
+              Are you sure you want to delete device <strong>{deletingDevice?.device_name}</strong> ({deletingDevice?.device_id})? 
+              This action cannot be undone and will remove all associated data.
+            </p>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setShowDeleteModal(false);
+                  setDeletingDevice(null);
+                }}
+                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteDevice}
+                className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+              >
+                Delete Device
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
