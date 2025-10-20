@@ -476,6 +476,8 @@ const IoTMonitoring = () => {
                   device={device}
                   metrics={deviceMetrics[device.device_id]}
                   onClick={() => handleDeviceSelect(device.device_id)}
+                  onEdit={openEditModal}
+                  onDelete={openDeleteModal}
                 />
               ))}
               
