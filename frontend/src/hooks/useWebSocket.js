@@ -10,6 +10,7 @@ export const useWebSocket = (sessionId) => {
   const ws = useRef(null);
   const reconnectTimeout = useRef(null);
   const reconnectAttempts = useRef(0);
+  const pingIntervalRef = useRef(null);
   const maxReconnectAttempts = 5;
 
   const connect = useCallback(() => {
@@ -25,13 +26,15 @@ export const useWebSocket = (sessionId) => {
         reconnectAttempts.current = 0;
         
         // Send ping every 30 seconds to keep connection alive
-        const pingInterval = setInterval(() => {
+        if (pingIntervalRef.current) {
+          clearInterval(pingIntervalRef.current);
+        }
+        
+        pingIntervalRef.current = setInterval(() => {
           if (ws.current?.readyState === WebSocket.OPEN) {
             sendMessage({ type: 'ping' });
           }
         }, 30000);
-        
-        ws.current.pingInterval = pingInterval;
       };
 
       ws.current.onmessage = (event) => {
@@ -54,8 +57,9 @@ export const useWebSocket = (sessionId) => {
         setIsConnected(false);
         
         // Clear ping interval
-        if (ws.current?.pingInterval) {
-          clearInterval(ws.current.pingInterval);
+        if (pingIntervalRef.current) {
+          clearInterval(pingIntervalRef.current);
+          pingIntervalRef.current = null;
         }
         
         // Attempt to reconnect
