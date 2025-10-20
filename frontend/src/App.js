@@ -22,15 +22,10 @@ import { Analytics } from '@/pages/Analytics';
 import BudgetGoals from '@/pages/BudgetGoals';
 import VoucherManagement from '@/pages/VoucherManagement';
 import CustomerManagement from '@/pages/CustomerManagement';
+import Devices from '@/pages/Devices';
 import "@/App.css";
 
 // Placeholder pages (will be created in next phases)
-const Devices = () => (
-  <div className="p-6">
-    <h1 className="text-2xl font-bold">Devices Page</h1>
-    <p>Coming in Phase 2...</p>
-  </div>
-);
 
 const Users = () => (
   <div className="p-6">
