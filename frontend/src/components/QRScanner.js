@@ -4,7 +4,7 @@ import { QrCode, X } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
 
 export const QRScanner = ({ onScanSuccess, token, onClose }) => {
   const [scanning, setScanning] = useState(false);
