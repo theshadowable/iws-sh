@@ -23,6 +23,7 @@ import BudgetGoals from '@/pages/BudgetGoals';
 import VoucherManagement from '@/pages/VoucherManagement';
 import CustomerManagement from '@/pages/CustomerManagement';
 import Devices from '@/pages/Devices';
+import PricingManagement from '@/pages/PricingManagement';
 import "@/App.css";
 
 // Placeholder pages (will be created in next phases)
