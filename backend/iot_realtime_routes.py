@@ -219,10 +219,7 @@ async def get_iot_device(
 @router.patch("/devices/{device_id}")
 async def update_iot_device(
     device_id: str,
-    device_name: Optional[str] = None,
-    firmware_version: Optional[str] = None,
-    hardware_version: Optional[str] = None,
-    mac_address: Optional[str] = None,
+    update_data: dict,
     current_user: dict = Depends(get_current_user)
 ):
     """
@@ -242,21 +239,21 @@ async def update_iot_device(
         raise HTTPException(status_code=404, detail="Device not found")
     
     # Build update data
-    update_data = {"updated_at": datetime.utcnow()}
+    update_fields = {"updated_at": datetime.utcnow()}
     
-    if device_name is not None:
-        update_data["device_name"] = device_name
-    if firmware_version is not None:
-        update_data["firmware_version"] = firmware_version
-    if hardware_version is not None:
-        update_data["hardware_version"] = hardware_version
-    if mac_address is not None:
-        update_data["mac_address"] = mac_address
+    if "device_name" in update_data and update_data["device_name"]:
+        update_fields["device_name"] = update_data["device_name"]
+    if "firmware_version" in update_data and update_data["firmware_version"]:
+        update_fields["firmware_version"] = update_data["firmware_version"]
+    if "hardware_version" in update_data and update_data["hardware_version"]:
+        update_fields["hardware_version"] = update_data["hardware_version"]
+    if "mac_address" in update_data:
+        update_fields["mac_address"] = update_data["mac_address"]
     
     # Update device
     await db.iot_devices.update_one(
         {"device_id": device_id},
-        {"$set": update_data}
+        {"$set": update_fields}
     )
     
     return {
