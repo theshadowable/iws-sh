@@ -21,6 +21,21 @@ const IoTMonitoring = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [subscribedDevices, setSubscribedDevices] = useState(new Set());
+  
+  // CRUD states
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [editingDevice, setEditingDevice] = useState(null);
+  const [deletingDevice, setDeletingDevice] = useState(null);
+  const [formData, setFormData] = useState({
+    device_id: '',
+    device_name: '',
+    firmware_version: '',
+    hardware_version: '',
+    mac_address: '',
+    device_secret: ''
+  });
 
   // WebSocket connection
   const sessionId = `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
