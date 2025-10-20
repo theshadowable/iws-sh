@@ -14,6 +14,12 @@ export const useWebSocket = (sessionId) => {
   const maxReconnectAttempts = 5;
 
   const connect = useCallback(() => {
+    // Don't connect if sessionId is invalid
+    if (!sessionId || sessionId === 'undefined' || sessionId === 'null') {
+      console.warn('Invalid sessionId, skipping WebSocket connection');
+      return;
+    }
+
     try {
       const wsUrl = `${WS_URL}/api/iot/ws/${sessionId}`;
       console.log('Connecting to WebSocket:', wsUrl);
