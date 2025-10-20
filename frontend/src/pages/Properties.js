@@ -88,10 +88,16 @@ export const Properties = () => {
     if (!window.confirm('Are you sure you want to delete this property?')) return;
     
     try {
-      await axios.delete(`${API}/properties/${id}`);
+      const token = localStorage.getItem('token');
+      await axios.delete(`${API}/properties/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       toast.success('Property deleted successfully');
       fetchProperties();
     } catch (error) {
+      console.error('Error deleting property:', error);
       toast.error('Failed to delete property');
     }
   };
