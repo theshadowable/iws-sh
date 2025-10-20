@@ -35,9 +35,20 @@ export const AuthProvider = ({ children }) => {
         try {
           const response = await axios.get(`${API}/auth/me`);
           setUser(response.data);
+          localStorage.setItem('user', JSON.stringify(response.data));
         } catch (error) {
           console.error('Auth check failed:', error);
-          logout();
+          // Try to restore user from localStorage
+          const savedUser = localStorage.getItem('user');
+          if (savedUser) {
+            try {
+              setUser(JSON.parse(savedUser));
+            } catch (e) {
+              logout();
+            }
+          } else {
+            logout();
+          }
         }
       }
       setLoading(false);
