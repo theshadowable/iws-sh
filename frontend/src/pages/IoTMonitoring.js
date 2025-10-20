@@ -38,8 +38,11 @@ const IoTMonitoring = () => {
     device_secret: ''
   });
 
-  // WebSocket connection
-  const sessionId = `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  // WebSocket connection - use useMemo to keep sessionId stable
+  const sessionId = React.useMemo(() => 
+    `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    [] // Empty deps array means this only runs once
+  );
   const { isConnected, lastMessage, subscribe, unsubscribe } = useWebSocket(sessionId);
 
   // Fetch devices list
