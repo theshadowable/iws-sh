@@ -216,6 +216,90 @@ async def get_iot_device(
     }
 
 
+@router.patch("/devices/{device_id}")
+async def update_iot_device(
+    device_id: str,
+    device_name: Optional[str] = None,
+    firmware_version: Optional[str] = None,
+    hardware_version: Optional[str] = None,
+    mac_address: Optional[str] = None,
+    current_user: dict = Depends(get_current_user)
+):
+    """
+    Update IoT device information
+    Admin/Technician can update device details
+    """
+    from server import db
+    
+    # Check permissions
+    if current_user.role not in ["admin", "technician"]:
+        raise HTTPException(status_code=403, detail="Insufficient permissions")
+    
+    # Check if device exists
+    device = await db.iot_devices.find_one({"device_id": device_id})
+    
+    if not device:
+        raise HTTPException(status_code=404, detail="Device not found")
+    
+    # Build update data
+    update_data = {"updated_at": datetime.utcnow()}
+    
+    if device_name is not None:
+        update_data["device_name"] = device_name
+    if firmware_version is not None:
+        update_data["firmware_version"] = firmware_version
+    if hardware_version is not None:
+        update_data["hardware_version"] = hardware_version
+    if mac_address is not None:
+        update_data["mac_address"] = mac_address
+    
+    # Update device
+    await db.iot_devices.update_one(
+        {"device_id": device_id},
+        {"$set": update_data}
+    )
+    
+    return {
+        "success": True,
+        "message": "Device updated successfully",
+        "device_id": device_id
+    }
+
+
+@router.delete("/devices/{device_id}")
+async def delete_iot_device(
+    device_id: str,
+    current_user: dict = Depends(get_current_user)
+):
+    """
+    Delete IoT device
+    Admin only - removes device and all associated data
+    """
+    from server import db
+    
+    # Check permissions - only admin can delete
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Only administrators can delete devices")
+    
+    # Check if device exists
+    device = await db.iot_devices.find_one({"device_id": device_id})
+    
+    if not device:
+        raise HTTPException(status_code=404, detail="Device not found")
+    
+    # Delete device and all associated data
+    await db.iot_devices.delete_one({"device_id": device_id})
+    await db.iot_readings.delete_many({"device_id": device_id})
+    await db.iot_connections.delete_many({"device_id": device_id})
+    await db.iot_commands.delete_many({"device_id": device_id})
+    
+    return {
+        "success": True,
+        "message": "Device and all associated data deleted successfully",
+        "device_id": device_id
+    }
+
+
 # ============================================================================
 # Device Data Ingestion (HTTP)
 # ============================================================================
