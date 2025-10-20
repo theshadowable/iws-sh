@@ -139,11 +139,41 @@ const IoTDeviceCard = ({ device, metrics, onClick, onEdit, onDelete }) => {
 
       {/* Last Update */}
       <div className="mt-3 pt-3 border-t border-gray-200">
-        <div className="flex items-center gap-2 text-xs text-gray-500">
-          <Activity className="w-3 h-3" />
-          <span>
-            Last update: {metrics?.last_updated ? new Date(metrics.last_updated).toLocaleTimeString() : 'Never'}
-          </span>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 text-xs text-gray-500">
+            <Activity className="w-3 h-3" />
+            <span>
+              Last update: {metrics?.last_updated ? new Date(metrics.last_updated).toLocaleTimeString() : 'Never'}
+            </span>
+          </div>
+          {(onEdit || onDelete) && (
+            <div className="flex items-center gap-2">
+              {onEdit && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onEdit(device);
+                  }}
+                  className="p-1 text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                  title="Edit Device"
+                >
+                  <Edit2 className="w-4 h-4" />
+                </button>
+              )}
+              {onDelete && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDelete(device);
+                  }}
+                  className="p-1 text-red-600 hover:bg-red-50 rounded transition-colors"
+                  title="Delete Device"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
