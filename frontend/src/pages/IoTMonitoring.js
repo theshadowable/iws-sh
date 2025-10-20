@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Layout } from '@/components/Layout';
 import { useWebSocket } from '../hooks/useWebSocket';
 import IoTDeviceCard from '../components/IoTDeviceCard';
 import {
