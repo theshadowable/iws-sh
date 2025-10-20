@@ -34,7 +34,8 @@ class XenditService:
         self.enabled = bool(self.secret_key)
         
         if not self.enabled:
-            print("Warning: Xendit API keys not configured. Payment gateway disabled.")
+            # Optional feature - log as INFO instead of WARNING
+            # Users can enable by setting XENDIT_SECRET_KEY
             self.base_url = None
             self.headers = {}
             return
