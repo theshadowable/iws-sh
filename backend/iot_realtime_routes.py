@@ -162,8 +162,8 @@ async def list_iot_devices(
     # Build filter
     filter_query = {}
     
-    if current_user["role"] == "customer":
-        filter_query["customer_id"] = current_user["id"]
+    if current_user.role == "customer":
+        filter_query["customer_id"] = current_user.id
     
     if status:
         filter_query["status"] = status
