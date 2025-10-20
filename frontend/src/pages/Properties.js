@@ -43,9 +43,15 @@ export const Properties = () => {
 
   const fetchProperties = async () => {
     try {
-      const response = await axios.get(`${API}/properties`);
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${API}/properties`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       setProperties(response.data);
     } catch (error) {
+      console.error('Error fetching properties:', error);
       toast.error('Failed to fetch properties');
     } finally {
       setLoading(false);
