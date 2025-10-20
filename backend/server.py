@@ -726,6 +726,7 @@ from voucher_routes import router as voucher_router
 from alert_routes import router as alert_router
 from admin_routes import router as admin_router
 from customer_routes import router as customer_router
+from seed_routes import router as seed_router
 
 # Include routers - include technician routes in api_router first
 api_router.include_router(technician_router)
@@ -740,6 +741,7 @@ api_router.include_router(voucher_router)
 api_router.include_router(alert_router)
 api_router.include_router(admin_router)
 api_router.include_router(customer_router)
+api_router.include_router(seed_router)  # ⚠️ TEMPORARY: Remove after initial seeding
 app.include_router(upload_router)
 
 # Then include api_router in app
