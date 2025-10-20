@@ -195,7 +195,7 @@ async def get_iot_device(
         raise HTTPException(status_code=404, detail="Device not found")
     
     # Check permissions
-    if current_user["role"] == "customer" and device.get("customer_id") != current_user["id"]:
+    if current_user.role == "customer" and device.get("customer_id") != current_user.id:
         raise HTTPException(status_code=403, detail="Access denied")
     
     # Get connection info
@@ -321,7 +321,7 @@ async def get_realtime_metrics(
         raise HTTPException(status_code=404, detail="Device not found")
     
     # Check permissions
-    if current_user["role"] == "customer" and device.get("customer_id") != current_user["id"]:
+    if current_user.role == "customer" and device.get("customer_id") != current_user.id:
         raise HTTPException(status_code=403, detail="Access denied")
     
     # Get latest reading
@@ -391,7 +391,7 @@ async def get_device_history(
         raise HTTPException(status_code=404, detail="Device not found")
     
     # Check permissions
-    if current_user["role"] == "customer" and device.get("customer_id") != current_user["id"]:
+    if current_user.role == "customer" and device.get("customer_id") != current_user.id:
         raise HTTPException(status_code=403, detail="Access denied")
     
     # Get readings from last N hours
