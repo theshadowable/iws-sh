@@ -265,6 +265,15 @@ const AppRoutes = () => {
         }
       />
       
+      <Route
+        path="/iot-monitoring"
+        element={
+          <ProtectedRoute allowedRoles={['admin', 'technician', 'customer']}>
+            <IoTMonitoring />
+          </ProtectedRoute>
+        }
+      />
+      
       <Route path="/unauthorized" element={<Unauthorized />} />
       
       {/* Redirect root to dashboard or login */}
