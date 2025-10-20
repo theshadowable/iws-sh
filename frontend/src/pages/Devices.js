@@ -167,12 +167,13 @@ const Devices = () => {
   };
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Device Management</h1>
-        <p className="text-gray-600">Comprehensive view of all water meters and devices</p>
-      </div>
+    <Layout>
+      <div className="p-6 max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Device Management</h1>
+          <p className="text-gray-600">Comprehensive view of all water meters and devices</p>
+        </div>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
