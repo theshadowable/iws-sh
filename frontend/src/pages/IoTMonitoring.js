@@ -821,6 +821,7 @@ const IoTMonitoring = () => {
         </div>
       )}
     </div>
+    </Layout>
   );
 };
 
