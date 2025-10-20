@@ -432,7 +432,7 @@ async def send_device_command(
     from server import db
     
     # Check permissions
-    if current_user["role"] not in ["admin", "technician"]:
+    if current_user.role not in ["admin", "technician"]:
         raise HTTPException(status_code=403, detail="Insufficient permissions")
     
     # Verify device exists
