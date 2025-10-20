@@ -748,7 +748,10 @@ api_router.include_router(customer_router)
 api_router.include_router(seed_router)  # ⚠️ TEMPORARY: Remove after initial seeding
 api_router.include_router(device_router)  # Enhanced device management
 api_router.include_router(pricing_router)  # Multi-tier pricing system
-api_router.include_router(iot_router)  # IoT device integration
+api_router.include_router(iot_router)  # IoT device integration (legacy)
+
+# Register IoT real-time routes directly on app (WebSocket needs root level)
+app.include_router(iot_realtime_router)  # IoT real-time monitoring with WebSocket
 app.include_router(upload_router)
 
 # Then include api_router in app
