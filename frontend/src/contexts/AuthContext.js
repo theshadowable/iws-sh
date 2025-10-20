@@ -52,15 +52,17 @@ export const AuthProvider = ({ children }) => {
       const { access_token, user: userData } = response.data;
       
       localStorage.setItem('token', access_token);
+      localStorage.setItem('user', JSON.stringify(userData));
       setToken(access_token);
       setUser(userData);
       axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
       
       return { success: true };
     } catch (error) {
+      console.error('Login error:', error);
       return { 
         success: false, 
-        error: error.response?.data?.detail || 'Login failed' 
+        error: error.response?.data?.detail || 'Invalid credentials' 
       };
     }
   };
