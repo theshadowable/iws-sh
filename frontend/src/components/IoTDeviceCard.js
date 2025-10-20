@@ -1,7 +1,7 @@
 import React from 'react';
-import { Activity, Droplets, Battery, Wifi, ThermometerSun, Gauge } from 'lucide-react';
+import { Activity, Droplets, Battery, Wifi, ThermometerSun, Gauge, Edit2, Trash2 } from 'lucide-react';
 
-const IoTDeviceCard = ({ device, metrics, onClick }) => {
+const IoTDeviceCard = ({ device, metrics, onClick, onEdit, onDelete }) => {
   const getStatusColor = (status) => {
     switch (status) {
       case 'online': return 'bg-green-500';
