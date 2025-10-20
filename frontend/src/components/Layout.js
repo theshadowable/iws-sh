@@ -22,7 +22,8 @@ import {
   History,
   BarChart3,
   Target,
-  Ticket
+  Ticket,
+  Activity
 } from 'lucide-react';
 
 export const Layout = ({ children }) => {
