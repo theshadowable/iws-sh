@@ -81,11 +81,13 @@ export const useWebSocket = (sessionId) => {
   const disconnect = useCallback(() => {
     if (reconnectTimeout.current) {
       clearTimeout(reconnectTimeout.current);
+      reconnectTimeout.current = null;
+    }
+    if (pingIntervalRef.current) {
+      clearInterval(pingIntervalRef.current);
+      pingIntervalRef.current = null;
     }
     if (ws.current) {
-      if (ws.current.pingInterval) {
-        clearInterval(ws.current.pingInterval);
-      }
       ws.current.close();
       ws.current = null;
     }
