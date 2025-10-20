@@ -19,7 +19,8 @@ try:
     TESSERACT_AVAILABLE = True
 except ImportError:
     TESSERACT_AVAILABLE = False
-    logging.warning("pytesseract not available. OCR functionality will be disabled.")
+    # Optional feature - only log at INFO level, not WARNING
+    # OCR is not critical for core functionality
 
 from auth import get_current_user
 from models import User, UserRole
