@@ -743,6 +743,7 @@ api_router.include_router(alert_router)
 api_router.include_router(admin_router)
 api_router.include_router(customer_router)
 api_router.include_router(seed_router)  # ⚠️ TEMPORARY: Remove after initial seeding
+api_router.include_router(device_router)  # Enhanced device management
 app.include_router(upload_router)
 
 # Then include api_router in app
