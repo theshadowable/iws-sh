@@ -94,8 +94,8 @@
 ### 🚀 How to Use
 
 1. **Access the Application:**
-   - Frontend: https://water-auth-fix.preview.emergentagent.com
-   - Backend API: https://water-auth-fix.preview.emergentagent.com/api
+   - Frontend: https://projek-lanjut.preview.emergentagent.com
+   - Backend API: https://projek-lanjut.preview.emergentagent.com/api
 
 2. **Login:**
    - Use one of the demo credentials above
