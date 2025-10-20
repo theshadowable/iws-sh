@@ -247,6 +247,15 @@ const AppRoutes = () => {
       />
       
       <Route
+        path="/pricing"
+        element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <PricingManagement />
+          </ProtectedRoute>
+        }
+      />
+      
+      <Route
         path="/budget-goals"
         element={
           <ProtectedRoute allowedRoles={['customer']}>
