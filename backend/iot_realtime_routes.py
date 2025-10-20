@@ -443,7 +443,7 @@ async def send_device_command(
     
     # Store command
     command_dict = command.model_dump()
-    command_dict["issued_by"] = current_user["id"]
+    command_dict["issued_by"] = current_user.id
     command_dict["issued_at"] = datetime.utcnow()
     
     await db.iot_commands.insert_one(command_dict)
