@@ -1,6 +1,202 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
+// NEW: Pipe Flow Animation - Realistic water flowing through horizontal pipes
+export const PipeFlowAnimation = ({ isFlowing = true, flowRate = 50 }) => {
+  const speed = isFlowing ? Math.max(0.8, 2.5 - (flowRate / 100) * 1.5) : 0;
+  const intensity = flowRate / 100;
+  
+  return (
+    <div className="relative w-full h-32 rounded-2xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 shadow-inner">
+      {/* Pipe Container */}
+      <div className="absolute inset-0 flex items-center justify-center p-4">
+        {/* Main Pipe */}
+        <div className="relative w-full h-20 rounded-full" style={{
+          background: 'linear-gradient(180deg, #94a3b8 0%, #cbd5e1 30%, #e2e8f0 50%, #cbd5e1 70%, #94a3b8 100%)',
+          boxShadow: 'inset 0 4px 8px rgba(0,0,0,0.2), inset 0 -4px 8px rgba(255,255,255,0.3)',
+        }}>
+          {/* Pipe Inner Shadow (depth effect) */}
+          <div className="absolute inset-0 rounded-full" style={{
+            background: 'radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.1) 100%)',
+          }}/>
+          
+          {/* Water Flow Inside Pipe */}
+          {isFlowing && (
+            <div className="absolute inset-y-3 inset-x-2 rounded-full overflow-hidden" style={{
+              background: 'linear-gradient(180deg, rgba(59, 130, 246, 0.3) 0%, rgba(14, 165, 233, 0.5) 50%, rgba(59, 130, 246, 0.3) 100%)',
+              boxShadow: 'inset 0 2px 4px rgba(59, 130, 246, 0.4)',
+            }}>
+              {/* Animated Water Stream - Flowing Effect with Waves */}
+              {[0, 1, 2, 3, 4].map((i) => (
+                <motion.div
+                  key={`water-stream-${i}`}
+                  className="absolute inset-0"
+                  style={{
+                    background: `linear-gradient(90deg, 
+                      transparent 0%, 
+                      rgba(59, 130, 246, ${0.35 - i * 0.05}) 8%, 
+                      rgba(96, 165, 250, ${0.45 - i * 0.05}) 15%, 
+                      rgba(147, 197, 253, ${0.55 - i * 0.05}) 22%,
+                      rgba(191, 219, 254, ${0.5 - i * 0.05}) 30%,
+                      rgba(147, 197, 253, ${0.55 - i * 0.05}) 38%,
+                      rgba(96, 165, 250, ${0.45 - i * 0.05}) 45%, 
+                      rgba(59, 130, 246, ${0.35 - i * 0.05}) 52%, 
+                      transparent 60%,
+                      transparent 100%)`,
+                    backgroundSize: '300% 100%',
+                    opacity: 0.8 - i * 0.1,
+                  }}
+                  animate={{
+                    backgroundPosition: ['0% 0%', '300% 0%'],
+                  }}
+                  transition={{
+                    duration: speed * (0.8 + i * 0.15),
+                    repeat: Infinity,
+                    ease: "linear",
+                    delay: i * 0.1,
+                  }}
+                />
+              ))}
+              
+              {/* Horizontal Wave Distortion - Simulate water turbulence */}
+              {isFlowing && [0, 1, 2, 3].map((i) => (
+                <motion.div
+                  key={`wave-distortion-${i}`}
+                  className="absolute inset-0"
+                  style={{
+                    background: `repeating-linear-gradient(90deg, 
+                      rgba(147, 197, 253, ${0.15 - i * 0.02}) 0px, 
+                      transparent 3px, 
+                      transparent 6px,
+                      rgba(147, 197, 253, ${0.15 - i * 0.02}) 9px)`,
+                    mixBlendMode: 'overlay',
+                  }}
+                  animate={{
+                    x: ['-15px', '15px'],
+                    opacity: [0.4, 0.6, 0.4],
+                  }}
+                  transition={{
+                    duration: speed * (1.2 + i * 0.3),
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: i * 0.2,
+                  }}
+                />
+              ))}
+              
+              {/* Flow Streaks - Long horizontal lines simulating water flow */}
+              {isFlowing && [0, 1, 2, 3, 4, 5].map((i) => {
+                const topPos = 15 + i * 15;
+                const width = 80 + Math.random() * 120;
+                const opacity = 0.2 + Math.random() * 0.3;
+                
+                return (
+                  <motion.div
+                    key={`streak-${i}`}
+                    className="absolute h-px"
+                    style={{
+                      top: `${topPos}%`,
+                      width: `${width}px`,
+                      background: `linear-gradient(90deg, 
+                        transparent 0%, 
+                        rgba(191, 219, 254, ${opacity}) 20%, 
+                        rgba(191, 219, 254, ${opacity * 0.8}) 50%, 
+                        rgba(191, 219, 254, ${opacity}) 80%, 
+                        transparent 100%)`,
+                      boxShadow: `0 0 2px rgba(147, 197, 253, ${opacity})`,
+                    }}
+                    animate={{
+                      x: ['-150px', 'calc(100% + 150px)'],
+                      opacity: [0, opacity, opacity * 0.8, 0],
+                    }}
+                    transition={{
+                      duration: speed * (1.5 + Math.random() * 1),
+                      repeat: Infinity,
+                      delay: i * 0.3,
+                      ease: "linear"
+                    }}
+                  />
+                );
+              })}
+              
+              {/* Shimmer Effect - Light reflection on water surface */}
+              {isFlowing && [0, 1].map((i) => (
+                <motion.div
+                  key={`shimmer-${i}`}
+                  className="absolute inset-0"
+                  style={{
+                    background: `linear-gradient(90deg, 
+                      transparent 0%, 
+                      rgba(255, 255, 255, 0.15) 40%, 
+                      rgba(255, 255, 255, 0.25) 50%, 
+                      rgba(255, 255, 255, 0.15) 60%, 
+                      transparent 100%)`,
+                    backgroundSize: '200% 100%',
+                    mixBlendMode: 'overlay',
+                  }}
+                  animate={{
+                    backgroundPosition: ['-100% 0%', '200% 0%'],
+                  }}
+                  transition={{
+                    duration: speed * 2,
+                    repeat: Infinity,
+                    ease: "linear",
+                    delay: i * 1,
+                  }}
+                />
+              ))}
+            </div>
+          )}
+          
+          {/* Pipe Highlights (glossy effect) */}
+          <div className="absolute top-1 left-0 right-0 h-6 rounded-full" style={{
+            background: 'linear-gradient(180deg, rgba(255,255,255,0.4) 0%, transparent 100%)',
+          }}/>
+          
+          {/* Pipe Connector Left */}
+          <div className="absolute -left-4 top-1/2 -translate-y-1/2 w-8 h-16 rounded-l-lg" style={{
+            background: 'linear-gradient(90deg, #64748b 0%, #94a3b8 100%)',
+            boxShadow: '-2px 0 4px rgba(0,0,0,0.2)',
+          }}>
+            <div className="absolute inset-2 rounded-l-lg" style={{
+              background: 'linear-gradient(180deg, rgba(59, 130, 246, 0.2) 0%, rgba(14, 165, 233, 0.3) 100%)',
+            }}/>
+          </div>
+          
+          {/* Pipe Connector Right */}
+          <div className="absolute -right-4 top-1/2 -translate-y-1/2 w-8 h-16 rounded-r-lg" style={{
+            background: 'linear-gradient(90deg, #94a3b8 0%, #64748b 100%)',
+            boxShadow: '2px 0 4px rgba(0,0,0,0.2)',
+          }}>
+            <div className="absolute inset-2 rounded-r-lg" style={{
+              background: 'linear-gradient(180deg, rgba(59, 130, 246, 0.2) 0%, rgba(14, 165, 233, 0.3) 100%)',
+            }}/>
+          </div>
+        </div>
+      </div>
+      
+      {/* Status Indicator */}
+      <div className="absolute bottom-2 right-2 flex items-center gap-2 px-3 py-1 bg-white/80 backdrop-blur rounded-full shadow-md">
+        <motion.div 
+          className={`w-2 h-2 rounded-full ${isFlowing ? 'bg-green-500' : 'bg-gray-400'}`}
+          animate={isFlowing ? {
+            scale: [1, 1.3, 1],
+            opacity: [0.7, 1, 0.7],
+          } : {}}
+          transition={{
+            duration: 1.5,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        <span className="text-xs font-medium text-gray-700">
+          {isFlowing ? 'FLOWING' : 'IDLE'}
+        </span>
+      </div>
+    </div>
+  );
+};
+
 export const WaterFlowAnimation = ({ isFlowing = true, flowRate = 50 }) => {
   const speed = isFlowing ? Math.max(1, 3 - (flowRate / 100) * 1.5) : 0;
   const intensity = flowRate / 100;
