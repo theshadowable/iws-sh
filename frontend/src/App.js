@@ -24,6 +24,7 @@ import VoucherManagement from '@/pages/VoucherManagement';
 import CustomerManagement from '@/pages/CustomerManagement';
 import Devices from '@/pages/Devices';
 import PricingManagement from '@/pages/PricingManagement';
+import RoleManagement from '@/pages/RoleManagement';
 import IoTMonitoring from '@/pages/IoTMonitoring';
 import "@/App.css";
 
@@ -108,6 +109,15 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute allowedRoles={['admin']}>
             <UserManagement />
+          </ProtectedRoute>
+        }
+      />
+      
+      <Route
+        path="/roles"
+        element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <RoleManagement />
           </ProtectedRoute>
         }
       />
