@@ -39,6 +39,7 @@ const Devices = () => {
       }
     } catch (error) {
       console.error('Error fetching summary:', error);
+      // Don't show toast for summary errors to avoid double notifications
     }
   };
 
@@ -61,11 +62,17 @@ const Devices = () => {
         const data = await response.json();
         setDevices(data);
       } else {
-        toast.error('Failed to load devices');
+        // Only show error toast if not initial load (loading is false means it's a retry/refresh)
+        if (!loading) {
+          toast.error('Failed to load devices');
+        }
       }
     } catch (error) {
       console.error('Error fetching devices:', error);
-      toast.error('Error loading devices');
+      // Only show error toast if not initial load
+      if (!loading) {
+        toast.error('Error loading devices');
+      }
     } finally {
       setLoading(false);
     }

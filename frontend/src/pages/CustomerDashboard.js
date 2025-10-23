@@ -19,7 +19,7 @@ import {
   Bell
 } from 'lucide-react';
 import { 
-  WaterFlowAnimation, 
+  PipeFlowAnimation,
   AnimatedCounter, 
   PulsingDot,
   LeakAlertAnimation,
@@ -245,9 +245,9 @@ const CustomerDashboard = () => {
               </div>
             </div>
 
-            {/* Water Flow Animation */}
+            {/* Pipe Flow Animation - Water flowing through pipes */}
             <div className="mb-6">
-              <WaterFlowAnimation 
+              <PipeFlowAnimation 
                 isFlowing={realTimeData.isFlowing} 
                 flowRate={Math.min((realTimeData.flowRate / 10) * 100, 100)}
               />

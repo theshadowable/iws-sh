@@ -32,8 +32,8 @@ const IoTMonitoring = () => {
   const [formData, setFormData] = useState({
     device_id: '',
     device_name: '',
-    firmware_version: '',
-    hardware_version: '',
+    location: '',
+    notes: '',
     mac_address: '',
     device_secret: ''
   });
@@ -46,8 +46,11 @@ const IoTMonitoring = () => {
   const { isConnected, lastMessage, subscribe, unsubscribe } = useWebSocket(sessionId);
 
   // Fetch devices list
-  const fetchDevices = useCallback(async () => {
+  const fetchDevices = useCallback(async (forceRefresh = false) => {
     try {
+      if (forceRefresh) {
+        setLoading(true);
+      }
       const token = localStorage.getItem('token');
       const response = await fetch(`${API}/iot/devices/list`, {
         headers: {
@@ -63,6 +66,10 @@ const IoTMonitoring = () => {
         if (data.devices && data.devices.length > 0 && !selectedDevice) {
           setSelectedDevice(data.devices[0].device_id);
         }
+        
+        if (forceRefresh) {
+          console.log('✓ Devices refreshed successfully');
+        }
       } else {
         setError('Failed to load devices');
       }
@@ -70,7 +77,9 @@ const IoTMonitoring = () => {
       console.error('Error fetching devices:', err);
       setError('Failed to connect to server');
     } finally {
-      setLoading(false);
+      if (forceRefresh) {
+        setLoading(false);
+      }
     }
   }, [selectedDevice]);
 
@@ -183,6 +192,15 @@ const IoTMonitoring = () => {
     return () => clearInterval(interval);
   }, [fetchDevices]);
 
+  // Handle manual refresh
+  const handleRefresh = () => {
+    fetchDevices(true); // Force refresh with loading state
+    if (selectedDevice) {
+      fetchDeviceMetrics(selectedDevice);
+      fetchHistoricalData(selectedDevice);
+    }
+  };
+
   // Handle device selection
   const handleDeviceSelect = (deviceId) => {
     // Unsubscribe from previous device
@@ -225,10 +243,12 @@ const IoTMonitoring = () => {
         body: JSON.stringify({
           device_id: formData.device_id,
           device_name: formData.device_name,
-          firmware_version: formData.firmware_version,
-          hardware_version: formData.hardware_version,
+          location: formData.location,
+          notes: formData.notes,
           mac_address: formData.mac_address,
-          device_type: 'smart_meter'
+          device_type: 'smart_meter',
+          firmware_version: '1.0.0', // Default value
+          hardware_version: '1.0'    // Default value
         })
       });
 
@@ -237,8 +257,8 @@ const IoTMonitoring = () => {
         setFormData({
           device_id: '',
           device_name: '',
-          firmware_version: '',
-          hardware_version: '',
+          location: '',
+          notes: '',
           mac_address: '',
           device_secret: ''
         });
@@ -266,8 +286,8 @@ const IoTMonitoring = () => {
         },
         body: JSON.stringify({
           device_name: formData.device_name,
-          firmware_version: formData.firmware_version,
-          hardware_version: formData.hardware_version,
+          location: formData.location,
+          notes: formData.notes,
           mac_address: formData.mac_address
         })
       });
@@ -278,8 +298,8 @@ const IoTMonitoring = () => {
         setFormData({
           device_id: '',
           device_name: '',
-          firmware_version: '',
-          hardware_version: '',
+          location: '',
+          notes: '',
           mac_address: '',
           device_secret: ''
         });
@@ -325,8 +345,8 @@ const IoTMonitoring = () => {
     setFormData({
       device_id: device.device_id,
       device_name: device.device_name || '',
-      firmware_version: device.firmware_version || '',
-      hardware_version: device.hardware_version || '',
+      location: device.location || '',
+      notes: device.notes || '',
       mac_address: device.mac_address || '',
       device_secret: ''
     });
@@ -405,7 +425,7 @@ const IoTMonitoring = () => {
             </div>
             
             <button
-              onClick={fetchDevices}
+              onClick={handleRefresh}
               className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
             >
               <RefreshCw className="w-4 h-4" />
@@ -569,7 +589,7 @@ const IoTMonitoring = () => {
       {/* Add Device Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
             <h2 className="text-2xl font-bold mb-4">Add New IoT Device</h2>
             <form onSubmit={handleAddDevice}>
               <div className="space-y-4">
@@ -585,6 +605,7 @@ const IoTMonitoring = () => {
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="e.g., ESP32-001"
                   />
+                  <p className="text-xs text-gray-500 mt-1">Unique identifier from device label</p>
                 </div>
 
                 <div>
@@ -603,7 +624,21 @@ const IoTMonitoring = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Device Secret *
+                    Location *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.location}
+                    onChange={(e) => setFormData({...formData, location: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="e.g., Building A - Floor 2"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Device Secret (Authentication Key) *
                   </label>
                   <input
                     type="password"
@@ -611,37 +646,14 @@ const IoTMonitoring = () => {
                     value={formData.device_secret}
                     onChange={(e) => setFormData({...formData, device_secret: e.target.value})}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Pre-shared secret key"
+                    placeholder="Enter pre-shared secret key"
                   />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Firmware Version *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={formData.firmware_version}
-                      onChange={(e) => setFormData({...formData, firmware_version: e.target.value})}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="v1.0.0"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Hardware Version *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={formData.hardware_version}
-                      onChange={(e) => setFormData({...formData, hardware_version: e.target.value})}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="v1.0"
-                    />
+                  <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                    <p className="text-xs text-blue-800">
+                      <strong>📌 What is Device Secret?</strong><br/>
+                      Secret key untuk autentikasi perangkat IoT. Key ini harus sama dengan yang dikonfigurasi di perangkat fisik (ESP32/Arduino). 
+                      Contoh: "mySecret123" atau generate random key minimal 16 karakter.
+                    </p>
                   </div>
                 </div>
 
@@ -657,6 +669,19 @@ const IoTMonitoring = () => {
                     placeholder="AA:BB:CC:DD:EE:FF"
                   />
                 </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Notes (Optional)
+                  </label>
+                  <textarea
+                    value={formData.notes}
+                    onChange={(e) => setFormData({...formData, notes: e.target.value})}
+                    rows="3"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Additional information about this device..."
+                  />
+                </div>
               </div>
 
               <div className="flex gap-3 mt-6">
@@ -667,8 +692,8 @@ const IoTMonitoring = () => {
                     setFormData({
                       device_id: '',
                       device_name: '',
-                      firmware_version: '',
-                      hardware_version: '',
+                      location: '',
+                      notes: '',
                       mac_address: '',
                       device_secret: ''
                     });
@@ -692,7 +717,7 @@ const IoTMonitoring = () => {
       {/* Edit Device Modal */}
       {showEditModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
             <h2 className="text-2xl font-bold mb-4">Edit IoT Device</h2>
             <form onSubmit={handleEditDevice}>
               <div className="space-y-4">
@@ -722,32 +747,17 @@ const IoTMonitoring = () => {
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Firmware Version *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={formData.firmware_version}
-                      onChange={(e) => setFormData({...formData, firmware_version: e.target.value})}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Hardware Version *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={formData.hardware_version}
-                      onChange={(e) => setFormData({...formData, hardware_version: e.target.value})}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Location *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.location}
+                    onChange={(e) => setFormData({...formData, location: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
                 </div>
 
                 <div>
@@ -759,6 +769,20 @@ const IoTMonitoring = () => {
                     value={formData.mac_address}
                     onChange={(e) => setFormData({...formData, mac_address: e.target.value})}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="AA:BB:CC:DD:EE:FF"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Notes (Optional)
+                  </label>
+                  <textarea
+                    value={formData.notes}
+                    onChange={(e) => setFormData({...formData, notes: e.target.value})}
+                    rows="3"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Additional information about this device..."
                   />
                 </div>
               </div>
@@ -772,8 +796,8 @@ const IoTMonitoring = () => {
                     setFormData({
                       device_id: '',
                       device_name: '',
-                      firmware_version: '',
-                      hardware_version: '',
+                      location: '',
+                      notes: '',
                       mac_address: '',
                       device_secret: ''
                     });
