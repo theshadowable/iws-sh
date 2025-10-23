@@ -45,6 +45,7 @@ export const Layout = ({ children }) => {
     if (user?.role === 'admin') {
       items.push(
         { path: '/users', icon: Users, label: 'Users', roles: ['admin'] },
+        { path: '/roles', icon: Shield, label: 'Roles & Access', roles: ['admin'] },
         { path: '/customers', icon: Users, label: 'Customers', roles: ['admin'] },
         { path: '/properties', icon: Building2, label: 'Properties', roles: ['admin'] },
         { path: '/devices', icon: Gauge, label: 'Devices', roles: ['admin'] },
