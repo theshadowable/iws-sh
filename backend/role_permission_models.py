@@ -20,6 +20,8 @@ class PermissionCategory:
     PROPERTIES = "properties"
     ALERTS = "alerts"
     SETTINGS = "settings"
+    TICKETS = "tickets"
+    TIPS = "tips"
 
 # Permission Actions
 class PermissionAction:
@@ -149,6 +151,23 @@ DEFAULT_PERMISSIONS = [
     Permission(id="alerts.view", name="View Alerts", category="alerts", action="view", description="View alerts and notifications"),
     Permission(id="alerts.manage", name="Manage Alerts", category="alerts", action="manage", description="Manage alert settings"),
     
+    # Support Tickets
+    Permission(id="tickets.view", name="View Tickets", category="tickets", action="view", description="View support tickets"),
+    Permission(id="tickets.create", name="Create Tickets", category="tickets", action="create", description="Create support tickets"),
+    Permission(id="tickets.edit", name="Edit Tickets", category="tickets", action="edit", description="Edit support tickets"),
+    Permission(id="tickets.delete", name="Delete Tickets", category="tickets", action="delete", description="Delete support tickets"),
+    Permission(id="tickets.assign", name="Assign Tickets", category="tickets", action="manage", description="Assign tickets to technicians"),
+    Permission(id="tickets.reply", name="Reply to Tickets", category="tickets", action="manage", description="Reply to ticket messages"),
+    Permission(id="tickets.approve", name="Approve Tickets", category="tickets", action="manage", description="Approve maintenance/repair tickets"),
+    Permission(id="tickets.manage", name="Manage Tickets", category="tickets", action="manage", description="Full ticket management access"),
+    
+    # Water Conservation Tips
+    Permission(id="tips.view", name="View Tips", category="tips", action="view", description="View water conservation tips"),
+    Permission(id="tips.create", name="Create Tips", category="tips", action="create", description="Create water conservation tips"),
+    Permission(id="tips.edit", name="Edit Tips", category="tips", action="edit", description="Edit water conservation tips"),
+    Permission(id="tips.delete", name="Delete Tips", category="tips", action="delete", description="Delete water conservation tips"),
+    Permission(id="tips.manage", name="Manage Tips", category="tips", action="manage", description="Full tips management access"),
+    
     # Settings
     Permission(id="settings.view", name="View Settings", category="settings", action="view", description="View system settings"),
     Permission(id="settings.manage", name="Manage Settings", category="settings", action="manage", description="Manage system settings"),
@@ -175,7 +194,12 @@ DEFAULT_ROLES = {
             "iot.manage",
             "properties.view",
             "properties.edit",
-            "alerts.view"
+            "alerts.view",
+            "tickets.view",
+            "tickets.create",
+            "tickets.edit",
+            "tickets.reply",
+            "tips.view"
         ],
         "is_system_role": True
     },
@@ -186,7 +210,10 @@ DEFAULT_ROLES = {
             "dashboard.view",
             "analytics.view",
             "payments.view",
-            "alerts.view"
+            "alerts.view",
+            "tickets.view",
+            "tickets.create",
+            "tips.view"
         ],
         "is_system_role": True
     }
