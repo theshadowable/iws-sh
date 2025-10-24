@@ -18,7 +18,7 @@ from support_models import (
 from email_service import email_service
 from file_service import file_service
 
-router = APIRouter(prefix="/api/tickets", tags=["Support Tickets"])
+router = APIRouter(prefix="/tickets", tags=["Support Tickets"])
 
 # Database connection
 mongo_url = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
@@ -161,14 +161,12 @@ async def get_tickets(
             query['priority'] = priority
         
         # Count total
-        total = db_client.support_tickets.count_documents(query)
+        total = await db_client.support_tickets.count_documents(query)
         
         # Get paginated tickets
         skip = (page - 1) * limit
-        tickets = list(db_client.support_tickets.find(query)
-                      .sort("created_at", -1)
-                      .skip(skip)
-                      .limit(limit))
+        cursor = db_client.support_tickets.find(query).sort("created_at", -1).skip(skip).limit(limit)
+        tickets = await cursor.to_list(length=limit)
         
         has_more = (skip + len(tickets)) < total
         

@@ -13,7 +13,7 @@ from conservation_models import (
 )
 from tip_recommendation_service import TipRecommendationService
 
-router = APIRouter(prefix="/api/tips", tags=["Water Conservation Tips"])
+router = APIRouter(prefix="/tips", tags=["Water Conservation Tips"])
 
 # Database connection
 mongo_url = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
@@ -51,14 +51,12 @@ async def get_tips(
             ]
         
         # Count total
-        total = db_client.water_conservation_tips.count_documents(query)
+        total = await db_client.water_conservation_tips.count_documents(query)
         
         # Get paginated tips
         skip = (page - 1) * limit
-        tips = list(db_client.water_conservation_tips.find(query)
-                   .sort("created_at", -1)
-                   .skip(skip)
-                   .limit(limit))
+        cursor = db_client.water_conservation_tips.find(query).sort("created_at", -1).skip(skip).limit(limit)
+        tips = await cursor.to_list(length=limit)
         
         has_more = (skip + len(tips)) < total
         
