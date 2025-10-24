@@ -71,14 +71,14 @@ const AdminTipsManagement = () => {
         setTips(data.tips || []);
       } else {
         console.error('Failed to fetch tips:', response.status);
-        // Don't show error toast on empty data, only on actual errors
+        // Don't show error toast on empty data (404)
         if (response.status !== 404) {
           toast.error('Failed to load tips');
         }
       }
     } catch (error) {
       console.error('Error fetching tips:', error);
-      toast.error('Failed to load tips');
+      // Only show toast for network errors, not HTTP errors (already handled above)
     } finally {
       setLoading(false);
     }

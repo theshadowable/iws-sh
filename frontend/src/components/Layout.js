@@ -130,11 +130,15 @@ export const Layout = ({ children }) => {
           </div>
 
           {/* User info */}
-          <div className="px-6 py-4 border-b border-gray-200">
-            <p className="text-sm font-medium text-gray-900">{user?.full_name}</p>
-            <p className="text-xs text-gray-500">{user?.email}</p>
-            <span className="inline-block mt-2 px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800 capitalize">
-              {user?.role}
+          <div className={`px-6 py-4 border-b border-gray-200 ${sidebarCollapsed ? 'lg:px-2' : ''}`}>
+            {!sidebarCollapsed && (
+              <>
+                <p className="text-sm font-medium text-gray-900 truncate">{user?.full_name}</p>
+                <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+              </>
+            )}
+            <span className={`inline-block mt-2 px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800 capitalize ${sidebarCollapsed ? 'lg:px-1.5 lg:py-1' : ''}`}>
+              {sidebarCollapsed ? user?.role?.charAt(0).toUpperCase() : user?.role}
             </span>
           </div>
 
@@ -154,11 +158,13 @@ export const Layout = ({ children }) => {
                       ? 'bg-blue-50 text-blue-600 font-medium' 
                       : 'text-gray-700 hover:bg-gray-50'
                     }
+                    ${sidebarCollapsed ? 'lg:justify-center' : ''}
                   `}
                   onClick={() => setSidebarOpen(false)}
+                  title={sidebarCollapsed ? item.label : ''}
                 >
-                  <Icon className="h-5 w-5" />
-                  <span>{item.label}</span>
+                  <Icon className="h-5 w-5 flex-shrink-0" />
+                  <span className={sidebarCollapsed ? 'lg:hidden' : ''}>{item.label}</span>
                 </Link>
               );
             })}
@@ -168,25 +174,38 @@ export const Layout = ({ children }) => {
           <div className="px-4 py-4 border-t border-gray-200">
             <button
               onClick={handleLogout}
-              className="flex items-center space-x-3 w-full px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+              className={`flex items-center space-x-3 w-full px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors ${sidebarCollapsed ? 'lg:justify-center' : ''}`}
+              title={sidebarCollapsed ? "Logout" : ''}
             >
-              <LogOut className="h-5 w-5" />
-              <span>Logout</span>
+              <LogOut className="h-5 w-5 flex-shrink-0" />
+              <span className={sidebarCollapsed ? 'lg:hidden' : ''}>Logout</span>
             </button>
           </div>
         </div>
       </aside>
 
       {/* Main content */}
-      <div className="lg:pl-64">
+      <div className={`transition-all duration-200 ${sidebarCollapsed ? 'lg:pl-20' : 'lg:pl-64'}`}>
         {/* Top bar */}
         <header className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="lg:hidden text-gray-500 hover:text-gray-700"
-          >
-            <Menu className="h-6 w-6" />
-          </button>
+          <div className="flex items-center gap-3">
+            {/* Mobile menu button */}
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="lg:hidden text-gray-500 hover:text-gray-700"
+            >
+              <Menu className="h-6 w-6" />
+            </button>
+            
+            {/* Desktop sidebar toggle button */}
+            <button
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              className="hidden lg:block text-gray-500 hover:text-gray-700 hover:bg-gray-100 p-2 rounded-lg transition-colors"
+              title={sidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+            >
+              <Menu className="h-5 w-5" />
+            </button>
+          </div>
           
           <div className="flex items-center gap-4">
             <NotificationBell />

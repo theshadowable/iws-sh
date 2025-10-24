@@ -78,14 +78,14 @@ const AdminTickets = () => {
         setTickets(data.tickets || []);
       } else {
         console.error('Failed to fetch tickets:', response.status);
-        // Don't show error toast on empty data, only on actual errors
+        // Don't show error toast on empty data (404)
         if (response.status !== 404) {
           toast.error('Failed to load tickets');
         }
       }
     } catch (error) {
       console.error('Error fetching tickets:', error);
-      toast.error('Failed to load tickets');
+      // Only show toast for network errors, not HTTP errors (already handled above)
     } finally {
       setLoading(false);
     }
