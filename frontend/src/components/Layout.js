@@ -23,7 +23,10 @@ import {
   BarChart3,
   Target,
   Ticket,
-  Activity
+  Activity,
+  Shield,
+  Lightbulb,
+  Headset
 } from 'lucide-react';
 
 export const Layout = ({ children }) => {
@@ -50,6 +53,8 @@ export const Layout = ({ children }) => {
         { path: '/properties', icon: Building2, label: 'Properties', roles: ['admin'] },
         { path: '/devices', icon: Gauge, label: 'Devices', roles: ['admin'] },
         { path: '/iot-monitoring', icon: Activity, label: 'IoT Monitoring', roles: ['admin'] },
+        { path: '/admin/tickets', icon: Headset, label: 'Support Tickets', roles: ['admin'] },
+        { path: '/admin/tips', icon: Lightbulb, label: 'Water Tips', roles: ['admin'] },
         { path: '/vouchers', icon: Ticket, label: 'Vouchers', roles: ['admin'] },
         { path: '/payment-settings', icon: Settings, label: 'Payment Settings', roles: ['admin'] },
       );

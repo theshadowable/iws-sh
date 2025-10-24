@@ -26,6 +26,8 @@ import Devices from '@/pages/Devices';
 import PricingManagement from '@/pages/PricingManagement';
 import RoleManagement from '@/pages/RoleManagement';
 import IoTMonitoring from '@/pages/IoTMonitoring';
+import AdminTickets from '@/pages/AdminTickets';
+import AdminTipsManagement from '@/pages/AdminTipsManagement';
 import "@/App.css";
 
 // Placeholder pages (will be created in next phases)
@@ -280,6 +282,24 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute allowedRoles={['admin', 'technician', 'customer']}>
             <IoTMonitoring />
+          </ProtectedRoute>
+        }
+      />
+      
+      <Route
+        path="/admin/tickets"
+        element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <AdminTickets />
+          </ProtectedRoute>
+        }
+      />
+      
+      <Route
+        path="/admin/tips"
+        element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <AdminTipsManagement />
           </ProtectedRoute>
         }
       />
