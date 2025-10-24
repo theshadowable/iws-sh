@@ -75,7 +75,13 @@ const AdminTickets = () => {
 
       if (response.ok) {
         const data = await response.json();
-        setTickets(data.tickets);
+        setTickets(data.tickets || []);
+      } else {
+        console.error('Failed to fetch tickets:', response.status);
+        // Don't show error toast on empty data, only on actual errors
+        if (response.status !== 404) {
+          toast.error('Failed to load tickets');
+        }
       }
     } catch (error) {
       console.error('Error fetching tickets:', error);

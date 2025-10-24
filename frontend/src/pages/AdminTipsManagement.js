@@ -68,7 +68,13 @@ const AdminTipsManagement = () => {
 
       if (response.ok) {
         const data = await response.json();
-        setTips(data.tips);
+        setTips(data.tips || []);
+      } else {
+        console.error('Failed to fetch tips:', response.status);
+        // Don't show error toast on empty data, only on actual errors
+        if (response.status !== 404) {
+          toast.error('Failed to load tips');
+        }
       }
     } catch (error) {
       console.error('Error fetching tips:', error);

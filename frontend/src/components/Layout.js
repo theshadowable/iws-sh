@@ -34,6 +34,7 @@ export const Layout = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = React.useState(false);
 
   const handleLogout = () => {
     logout();
@@ -107,16 +108,18 @@ export const Layout = ({ children }) => {
 
       {/* Sidebar */}
       <aside className={`
-        fixed top-0 left-0 z-50 h-full w-64 bg-white border-r border-gray-200 
-        transform transition-transform duration-200 ease-in-out
+        fixed top-0 left-0 z-50 h-full bg-white border-r border-gray-200 
+        transform transition-all duration-200 ease-in-out
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+        ${sidebarCollapsed ? 'lg:w-20' : 'lg:w-64'}
+        w-64
       `}>
         <div className="flex flex-col h-full">
           {/* Logo */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-            <div className="flex items-center space-x-2">
+            <div className={`flex items-center space-x-2 ${sidebarCollapsed ? 'lg:justify-center lg:w-full' : ''}`}>
               <Droplets className="h-8 w-8 text-blue-600" />
-              <span className="text-xl font-bold text-gray-900">IndoWater</span>
+              {!sidebarCollapsed && <span className="text-xl font-bold text-gray-900">IndoWater</span>}
             </div>
             <button 
               onClick={() => setSidebarOpen(false)}

@@ -53,9 +53,10 @@ const VoucherManagement = () => {
       setLoading(true);
       const token = localStorage.getItem('token');
       
+      // Add trailing slash to prevent 307 redirect
       const url = filter === 'all' 
-        ? `${API}/vouchers` 
-        : `${API}/vouchers?status=${filter}`;
+        ? `${API}/vouchers/` 
+        : `${API}/vouchers/?status=${filter}`;
       
       const response = await axios.get(url, {
         headers: { Authorization: `Bearer ${token}` }
@@ -63,7 +64,10 @@ const VoucherManagement = () => {
       setVouchers(response.data || []);
     } catch (error) {
       console.error('Failed to fetch vouchers:', error);
-      toast.error('Failed to load vouchers', { id: 'voucher-load-error' });
+      // Only show error if it's not a 404 (empty data)
+      if (error.response && error.response.status !== 404) {
+        toast.error('Failed to load vouchers', { id: 'voucher-load-error' });
+      }
     } finally {
       setLoading(false);
     }
