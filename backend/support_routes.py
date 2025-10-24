@@ -7,7 +7,7 @@ import uuid
 import json
 import os
 
-from auth import get_current_user
+from auth import get_current_user, User
 from support_models import (
     SupportTicket, CreateTicketRequest, UpdateTicketRequest,
     AddMessageRequest, AssignTicketRequest, UpdateStatusRequest,
@@ -39,7 +39,7 @@ async def generate_ticket_number() -> str:
     return ticket_number
 
 # Helper to get ticket by ID with permission check
-async def get_ticket_with_permission(ticket_id: str, current_user: dict):
+async def get_ticket_with_permission(ticket_id: str, current_user: User):
     """Get ticket and check user permission"""
     ticket = await db_client.support_tickets.find_one({"id": ticket_id})
     if not ticket:
@@ -63,13 +63,13 @@ async def get_ticket_with_permission(ticket_id: str, current_user: dict):
 @router.post("/", response_model=SupportTicket)
 async def create_ticket(
     request: CreateTicketRequest,
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 
 ):
     """Create new support ticket"""
     try:
         ticket_id = str(uuid.uuid4())
-        ticket_number = generate_ticket_number(db)
+        ticket_number = await generate_ticket_number()
         now = datetime.utcnow()
         
         # Get customer info
@@ -132,7 +132,7 @@ async def get_tickets(
     priority: Optional[str] = None,
     page: int = 1,
     limit: int = 20,
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 
 ):
     """Get tickets (filtered by user role)"""
@@ -185,22 +185,22 @@ async def get_tickets(
 @router.get("/{ticket_id}", response_model=SupportTicket)
 async def get_ticket_detail(
     ticket_id: str,
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 
 ):
     """Get ticket detail"""
-    ticket = await get_ticket_with_permission(ticket_id, current_user, db)
+    ticket = await get_ticket_with_permission(ticket_id, current_user)
     return SupportTicket(**ticket)
 
 @router.put("/{ticket_id}", response_model=SupportTicket)
 async def update_ticket(
     ticket_id: str,
     request: UpdateTicketRequest,
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 
 ):
     """Update ticket (customer can update their own tickets if status is OPEN)"""
-    ticket = await get_ticket_with_permission(ticket_id, current_user, db)
+    ticket = await get_ticket_with_permission(ticket_id, current_user)
     
     # Only allow updates if ticket is OPEN
     if ticket['status'] != TicketStatus.OPEN:
@@ -229,11 +229,11 @@ async def update_ticket(
 @router.delete("/{ticket_id}")
 async def delete_ticket(
     ticket_id: str,
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 
 ):
     """Delete ticket (only customer's own OPEN tickets or admin)"""
-    ticket = await get_ticket_with_permission(ticket_id, current_user, db)
+    ticket = await get_ticket_with_permission(ticket_id, current_user)
     
     # Customer can only delete their own OPEN tickets
     if current_user.role == "customer":
@@ -261,11 +261,11 @@ async def delete_ticket(
 async def add_message(
     ticket_id: str,
     request: AddMessageRequest,
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 
 ):
     """Add message to ticket"""
-    ticket = await get_ticket_with_permission(ticket_id, current_user, db)
+    ticket = await get_ticket_with_permission(ticket_id, current_user)
     
     # Cannot add message to closed tickets
     if ticket['status'] == TicketStatus.CLOSED:
@@ -306,11 +306,11 @@ async def add_message(
 @router.get("/{ticket_id}/messages", response_model=List[TicketMessage])
 async def get_messages(
     ticket_id: str,
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 
 ):
     """Get all messages for a ticket"""
-    ticket = await get_ticket_with_permission(ticket_id, current_user, db)
+    ticket = await get_ticket_with_permission(ticket_id, current_user)
     
     query = {"ticket_id": ticket_id}
     
@@ -332,11 +332,11 @@ async def upload_attachment(
     gps_latitude: Optional[float] = Form(None),
     gps_longitude: Optional[float] = Form(None),
     gps_accuracy: Optional[float] = Form(None),
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 
 ):
     """Upload file attachment with GPS coordinates and timestamp"""
-    ticket = await get_ticket_with_permission(ticket_id, current_user, db)
+    ticket = await get_ticket_with_permission(ticket_id, current_user)
     
     try:
         # Read file content
@@ -403,11 +403,11 @@ async def upload_attachment(
 async def download_attachment(
     ticket_id: str,
     attachment_id: str,
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 
 ):
     """Download ticket attachment"""
-    ticket = await get_ticket_with_permission(ticket_id, current_user, db)
+    ticket = await get_ticket_with_permission(ticket_id, current_user)
     
     # Find attachment
     attachment = next((a for a in ticket.get('attachments', []) if a['id'] == attachment_id), None)
@@ -428,11 +428,11 @@ async def download_attachment(
 async def add_signature(
     ticket_id: str,
     request: AddSignatureRequest,
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 
 ):
     """Add digital signature to ticket (for approval or completion)"""
-    ticket = await get_ticket_with_permission(ticket_id, current_user, db)
+    ticket = await get_ticket_with_permission(ticket_id, current_user)
     
     # Validate signature type
     if request.signature_type == "approval":
@@ -511,11 +511,11 @@ async def add_signature(
 async def get_signature_image(
     ticket_id: str,
     signature_id: str,
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 
 ):
     """Get signature image file"""
-    ticket = await get_ticket_with_permission(ticket_id, current_user, db)
+    ticket = await get_ticket_with_permission(ticket_id, current_user)
     
     # Get signature metadata
     signature = file_service.get_file_metadata(signature_id, 'signature')
@@ -536,7 +536,7 @@ async def get_signature_image(
 async def assign_ticket(
     ticket_id: str,
     request: AssignTicketRequest,
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 
 ):
     """Assign ticket to technician (admin or technician can assign)"""
@@ -587,7 +587,7 @@ async def assign_ticket(
 async def update_ticket_status(
     ticket_id: str,
     request: UpdateStatusRequest,
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 
 ):
     """Update ticket status (admin/technician)"""
@@ -652,7 +652,7 @@ async def update_ticket_status(
 
 @router.get("/admin/stats", response_model=TicketStats)
 async def get_ticket_statistics(
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 
 ):
     """Get ticket statistics (admin/technician)"""
@@ -661,27 +661,28 @@ async def get_ticket_statistics(
     
     try:
         # Total tickets
-        total_tickets = db_client.support_tickets.count_documents({})
+        total_tickets = await db_client.support_tickets.count_documents({})
         
         # By status
-        open_tickets = db_client.support_tickets.count_documents({"status": TicketStatus.OPEN})
-        in_progress_tickets = db_client.support_tickets.count_documents({"status": TicketStatus.IN_PROGRESS})
-        resolved_tickets = db_client.support_tickets.count_documents({"status": TicketStatus.RESOLVED})
-        closed_tickets = db_client.support_tickets.count_documents({"status": TicketStatus.CLOSED})
+        open_tickets = await db_client.support_tickets.count_documents({"status": TicketStatus.OPEN})
+        in_progress_tickets = await db_client.support_tickets.count_documents({"status": TicketStatus.IN_PROGRESS})
+        resolved_tickets = await db_client.support_tickets.count_documents({"status": TicketStatus.RESOLVED})
+        closed_tickets = await db_client.support_tickets.count_documents({"status": TicketStatus.CLOSED})
         
         # Critical tickets
-        critical_tickets = db_client.support_tickets.count_documents({"priority": TicketPriority.CRITICAL, "status": {"$nin": [TicketStatus.CLOSED]}})
+        critical_tickets = await db_client.support_tickets.count_documents({"priority": TicketPriority.CRITICAL, "status": {"$nin": [TicketStatus.CLOSED]}})
         
         # My assigned tickets (for technician)
         my_assigned_tickets = 0
         if current_user.role == "technician":
-            my_assigned_tickets = db_client.support_tickets.count_documents({"assigned_to": current_user.id, "status": {"$nin": [TicketStatus.CLOSED]}})
+            my_assigned_tickets = await db_client.support_tickets.count_documents({"assigned_to": current_user.id, "status": {"$nin": [TicketStatus.CLOSED]}})
         
         # Calculate average resolution time
-        resolved_with_times = list(db_client.support_tickets.find({
+        resolved_with_times_cursor = db_client.support_tickets.find({
             "status": {"$in": [TicketStatus.RESOLVED, TicketStatus.CLOSED]},
             "resolved_at": {"$exists": True}
-        }))
+        })
+        resolved_with_times = await resolved_with_times_cursor.to_list(length=None)
         
         avg_resolution_time = 0
         if resolved_with_times:
@@ -695,13 +696,13 @@ async def get_ticket_statistics(
         # By category
         tickets_by_category = {}
         for category in TicketCategory:
-            count = db_client.support_tickets.count_documents({"category": category})
+            count = await db_client.support_tickets.count_documents({"category": category})
             tickets_by_category[category] = count
         
         # By priority
         tickets_by_priority = {}
         for priority in TicketPriority:
-            count = db_client.support_tickets.count_documents({"priority": priority})
+            count = await db_client.support_tickets.count_documents({"priority": priority})
             tickets_by_priority[priority] = count
         
         return TicketStats(

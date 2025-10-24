@@ -5,7 +5,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 import uuid
 import os
 
-from auth import get_current_user
+from auth import get_current_user, User
 from conservation_models import (
     WaterConservationTip, TipEngagement, CreateTipRequest, UpdateTipRequest,
     EngageTipRequest, PersonalizedTipRequest, TipStats, TipListResponse,
@@ -31,7 +31,7 @@ async def get_tips(
     search: Optional[str] = None,
     page: int = 1,
     limit: int = 20,
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 
 ):
     """Get water conservation tips with filters"""
@@ -74,7 +74,7 @@ async def get_tips(
 
 @router.get("/random", response_model=WaterConservationTip)
 async def get_random_tip(
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 
 ):
     """Get random water conservation tip for dashboard"""
@@ -98,7 +98,7 @@ async def get_random_tip(
 async def get_personalized_tips(
     limit: int = Query(5, ge=1, le=20),
     exclude_viewed: bool = False,
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 
 ):
     """Get personalized tips based on user's water usage patterns"""
@@ -130,7 +130,7 @@ async def get_personalized_tips(
 @router.get("/{tip_id}", response_model=TipDetailWithEngagement)
 async def get_tip_detail(
     tip_id: str,
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 
 ):
     """Get tip detail with user engagement data"""
@@ -198,7 +198,7 @@ async def get_tip_detail(
 async def engage_with_tip(
     tip_id: str,
     request: EngageTipRequest,
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 
 ):
     """Engage with tip (like, bookmark, implement)"""
@@ -287,7 +287,7 @@ async def engage_with_tip(
 
 @router.get("/user/bookmarked", response_model=List[WaterConservationTip])
 async def get_bookmarked_tips(
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 
 ):
     """Get user's bookmarked tips"""
@@ -319,7 +319,7 @@ async def get_bookmarked_tips(
 @router.post("/admin/create", response_model=WaterConservationTip)
 async def create_tip(
     request: CreateTipRequest,
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 
 ):
     """Create new water conservation tip (admin only)"""
@@ -363,7 +363,7 @@ async def create_tip(
 async def update_tip(
     tip_id: str,
     request: UpdateTipRequest,
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 
 ):
     """Update water conservation tip (admin only)"""
@@ -415,7 +415,7 @@ async def update_tip(
 @router.delete("/admin/{tip_id}")
 async def delete_tip(
     tip_id: str,
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 
 ):
     """Delete water conservation tip (admin only)"""
@@ -442,7 +442,7 @@ async def delete_tip(
 
 @router.get("/admin/stats", response_model=TipStats)
 async def get_tip_statistics(
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 
 ):
     """Get tip statistics (admin only)"""

@@ -10,7 +10,7 @@ import uuid
 import hashlib
 import logging
 
-from auth import get_current_user
+from auth import get_current_user, User
 from iot_models import (
     IoTDeviceReading, IoTDeviceRegistration, IoTDeviceCommand,
     IoTDeviceConnection, IoTMetricsSummary, DeviceStatus, ConnectionType
@@ -149,7 +149,7 @@ async def register_iot_device(
 
 @router.get("/devices/list")
 async def list_iot_devices(
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
     status: Optional[str] = Query(None)
 ):
     """
@@ -184,7 +184,7 @@ async def list_iot_devices(
 @router.get("/devices/{device_id}")
 async def get_iot_device(
     device_id: str,
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """Get IoT device details"""
     from server import db
@@ -220,7 +220,7 @@ async def get_iot_device(
 async def update_iot_device(
     device_id: str,
     update_data: dict,
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Update IoT device information
@@ -266,7 +266,7 @@ async def update_iot_device(
 @router.delete("/devices/{device_id}")
 async def delete_iot_device(
     device_id: str,
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Delete IoT device
@@ -387,7 +387,7 @@ async def ingest_device_data(
 @router.get("/metrics/realtime/{device_id}")
 async def get_realtime_metrics(
     device_id: str,
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Get real-time metrics for a device
@@ -457,7 +457,7 @@ async def get_realtime_metrics(
 async def get_device_history(
     device_id: str,
     hours: int = Query(24, description="Hours of history to retrieve"),
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Get historical readings for a device
@@ -504,7 +504,7 @@ async def get_device_history(
 @router.post("/commands/send")
 async def send_device_command(
     command: IoTDeviceCommand,
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Send command to IoT device
@@ -548,7 +548,7 @@ async def send_device_command(
 async def get_device_commands(
     device_id: str,
     limit: int = Query(50, le=200),
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """Get command history for a device"""
     from server import db
@@ -585,7 +585,7 @@ async def get_device_commands(
 
 @router.get("/status/connections")
 async def get_connection_status(
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Get WebSocket connection status

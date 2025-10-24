@@ -8,7 +8,7 @@ from datetime import datetime
 import os
 from pymongo import MongoClient
 
-from auth import get_current_user
+from auth import get_current_user, User
 from role_permission_models import (
     Permission, Role, CreateRoleRequest, UpdateRoleRequest,
     AssignRoleRequest, UpdateUserPermissionsRequest,
@@ -25,7 +25,7 @@ client = MongoClient(MONGO_URL)
 db = client[DB_NAME]
 
 # Helper function to check admin access
-def require_admin(current_user: dict):
+def require_admin(current_user: User):
     if current_user.get('role') != 'admin':
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -34,7 +34,7 @@ def require_admin(current_user: dict):
 
 # Initialize default permissions and roles
 @router.post("/initialize", status_code=status.HTTP_201_CREATED)
-async def initialize_roles_and_permissions(current_user: dict = Depends(get_current_user)):
+async def initialize_roles_and_permissions(current_user: User = Depends(get_current_user)):
     """Initialize default permissions and roles (Admin only)"""
     require_admin(current_user)
     
@@ -67,7 +67,7 @@ async def initialize_roles_and_permissions(current_user: dict = Depends(get_curr
 
 # GET all permissions
 @router.get("/permissions", response_model=List[Permission])
-async def get_all_permissions(current_user: dict = Depends(get_current_user)):
+async def get_all_permissions(current_user: User = Depends(get_current_user)):
     """Get all available permissions"""
     require_admin(current_user)
     
@@ -82,7 +82,7 @@ async def get_all_permissions(current_user: dict = Depends(get_current_user)):
 
 # GET all roles
 @router.get("/list", response_model=List[RoleWithPermissions])
-async def get_all_roles(current_user: dict = Depends(get_current_user)):
+async def get_all_roles(current_user: User = Depends(get_current_user)):
     """Get all roles with their permissions"""
     require_admin(current_user)
     
@@ -111,7 +111,7 @@ async def get_all_roles(current_user: dict = Depends(get_current_user)):
 
 # GET specific role by ID
 @router.get("/{role_id}", response_model=RoleWithPermissions)
-async def get_role_by_id(role_id: str, current_user: dict = Depends(get_current_user)):
+async def get_role_by_id(role_id: str, current_user: User = Depends(get_current_user)):
     """Get specific role details"""
     require_admin(current_user)
     
@@ -140,7 +140,7 @@ async def get_role_by_id(role_id: str, current_user: dict = Depends(get_current_
 @router.post("/create", status_code=status.HTTP_201_CREATED)
 async def create_role(
     request: CreateRoleRequest,
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """Create a new custom role"""
     require_admin(current_user)
@@ -174,7 +174,7 @@ async def create_role(
 async def update_role(
     role_id: str,
     request: UpdateRoleRequest,
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """Update role details and permissions"""
     require_admin(current_user)
@@ -208,7 +208,7 @@ async def update_role(
 
 # DELETE role
 @router.delete("/{role_id}")
-async def delete_role(role_id: str, current_user: dict = Depends(get_current_user)):
+async def delete_role(role_id: str, current_user: User = Depends(get_current_user)):
     """Delete a custom role (cannot delete system roles)"""
     require_admin(current_user)
     
@@ -240,7 +240,7 @@ async def delete_role(role_id: str, current_user: dict = Depends(get_current_use
 @router.post("/assign")
 async def assign_role_to_user(
     request: AssignRoleRequest,
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """Assign a role to a user"""
     require_admin(current_user)
@@ -273,7 +273,7 @@ async def assign_role_to_user(
 
 # GET users with their roles and permissions
 @router.get("/users/detailed", response_model=List[UserWithRoleAndPermissions])
-async def get_users_with_roles(current_user: dict = Depends(get_current_user)):
+async def get_users_with_roles(current_user: User = Depends(get_current_user)):
     """Get all users with their roles and permissions"""
     require_admin(current_user)
     

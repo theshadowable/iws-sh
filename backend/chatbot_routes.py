@@ -7,7 +7,7 @@ from datetime import datetime
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 
-from auth import get_current_user
+from auth import get_current_user, User
 from chat_models import (
     SendMessageRequest, 
     SendMessageResponse,
@@ -121,7 +121,7 @@ async def send_chat_message(
 async def get_chat_history(
     session_id: str,
     limit: int = 50,
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Get chat history for a specific session
@@ -130,7 +130,7 @@ async def get_chat_history(
         # Verify session belongs to user
         session = await db.chat_sessions.find_one({
             "id": session_id,
-            "customer_id": current_user["id"]
+            "customer_id": current_user.id
         })
         
         if not session:
@@ -164,14 +164,14 @@ async def get_chat_history(
 @router.get("/sessions")
 async def get_chat_sessions(
     limit: int = 10,
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Get all chat sessions for current user
     """
     try:
         sessions_cursor = db.chat_sessions.find({
-            "customer_id": current_user["id"]
+            "customer_id": current_user.id
         }).sort("last_message_at", -1).limit(limit)
         
         sessions = await sessions_cursor.to_list(length=limit)
@@ -192,7 +192,7 @@ async def get_chat_sessions(
 @router.post("/ticket", response_model=CreateTicketResponse)
 async def create_support_ticket(
     request: CreateTicketRequest,
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Create a support ticket from chat
@@ -200,9 +200,9 @@ async def create_support_ticket(
     try:
         # Create ticket
         ticket = SupportTicket(
-            customer_id=current_user["id"],
-            customer_name=current_user.get("full_name", "Unknown"),
-            customer_email=current_user.get("email", ""),
+            customer_id=current_user.id,
+            customer_name=current_user.full_name if hasattr(current_user, 'full_name') else "Unknown",
+            customer_email=current_user.email if hasattr(current_user, 'email') else "",
             subject=request.subject,
             description=request.description,
             category=request.category,
@@ -230,13 +230,13 @@ async def create_support_ticket(
 async def get_support_tickets(
     status: Optional[str] = None,
     limit: int = 20,
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Get support tickets for current user
     """
     try:
-        query = {"customer_id": current_user["id"]}
+        query = {"customer_id": current_user.id}
         
         if status:
             query["status"] = status
@@ -260,7 +260,7 @@ async def get_support_tickets(
 @router.get("/ticket/{ticket_id}")
 async def get_ticket_details(
     ticket_id: str,
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Get details of a specific support ticket
@@ -268,7 +268,7 @@ async def get_ticket_details(
     try:
         ticket = await db.support_tickets.find_one({
             "id": ticket_id,
-            "customer_id": current_user["id"]
+            "customer_id": current_user.id
         })
         
         if not ticket:
@@ -296,7 +296,7 @@ async def get_all_tickets(
     priority: Optional[str] = None,
     limit: int = 50,
     skip: int = 0,
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Admin endpoint to get all support tickets
@@ -340,7 +340,7 @@ async def update_ticket_status(
     ticket_id: str,
     status: TicketStatus,
     notes: Optional[str] = None,
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Admin endpoint to update ticket status

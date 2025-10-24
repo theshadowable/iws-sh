@@ -7,7 +7,7 @@ from datetime import datetime
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 
-from auth import get_current_user, require_role
+from auth import get_current_user, require_role, User
 from voucher_models import (
     Voucher, VoucherUsage, VoucherStatus, DiscountType,
     CreateVoucherRequest, VoucherValidationRequest, 
@@ -25,7 +25,7 @@ db = client[os.environ.get('DB_NAME', 'indowater_db')]
 @router.post("/", response_model=Voucher)
 async def create_voucher(
     request: CreateVoucherRequest,
-    current_user: dict = Depends(require_role(["admin"]))
+    current_user = Depends(require_role(["admin"]))
 ):
     """
     Create a new promotional voucher (Admin only)
@@ -255,7 +255,7 @@ async def apply_voucher(
 @router.get("/", response_model=List[Voucher])
 async def list_vouchers(
     voucher_status: Optional[VoucherStatus] = None,
-    current_user: dict = Depends(require_role(["admin"]))
+    current_user = Depends(require_role(["admin"]))
 ):
     """
     List all vouchers (Admin only)
@@ -278,7 +278,7 @@ async def list_vouchers(
 
 @router.get("/active", response_model=List[Voucher])
 async def list_active_vouchers(
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """
     List currently active vouchers available to customers
@@ -330,7 +330,7 @@ async def get_voucher_usage_history(
 async def update_voucher_status(
     voucher_id: str,
     new_status: VoucherStatus,
-    current_user: dict = Depends(require_role(["admin"]))
+    current_user = Depends(require_role(["admin"]))
 ):
     """
     Update voucher status (Admin only)
