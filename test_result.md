@@ -423,11 +423,11 @@ frontend:
 
   - task: "Admin Tickets Management Page"
     implemented: true
-    working: false
-    file: "frontend/src/pages/AdminTickets.js, frontend/src/App.js, frontend/src/components/Layout.js"
-    stuck_count: 1
+    working: "NA"
+    file: "frontend/src/pages/AdminTickets.js, frontend/src/App.js, frontend/src/components/Layout.js, backend/server.py"
+    stuck_count: 2
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
         - working: "NA"
           agent: "main"
@@ -437,15 +437,24 @@ frontend:
           comment: "User requested automated testing for AdminTickets page. Testing will verify: UI rendering, CRUD operations, role-based access (admin only), backend API integration, and identify any bugs. Backend support_routes.py APIs already exist and working. Ready to test with admin@indowater.com account."
         - working: false
           agent: "testing"
-          comment: "CRITICAL ISSUE FOUND: Mixed Content Error - Admin Tickets page is making HTTP API calls from HTTPS frontend. Error: 'Mixed Content: The page at 'https://app-development-21.preview.emergentagent.com/admin/tickets' was loaded over HTTPS, but requested an insecure resource 'http://app-development-21.preview.emergentagent.com/api/tickets/?limit=100'. This request has been blocked.' UI renders correctly (statistics cards, filters, navigation), but all API calls fail due to BACKEND_URL falling back to HTTP localhost. Other pages (Analytics, User Management) work correctly with HTTPS. This appears to be a build-time environment variable issue specific to admin pages. REQUIRES FRONTEND REBUILD with correct REACT_APP_BACKEND_URL."
+          comment: "CRITICAL ISSUE FOUND: Mixed Content Error - Admin Tickets page is making HTTP API calls from HTTPS frontend. Error: 'Mixed Content: The page at 'https://device-monitor-18.preview.emergentagent.com/admin/tickets' was loaded over HTTPS, but requested an insecure resource 'http://app-development-21.preview.emergentagent.com/api/tickets/?limit=100'. This request has been blocked.' UI renders correctly (statistics cards, filters, navigation), but all API calls fail due to BACKEND_URL falling back to HTTP localhost. Other pages (Analytics, User Management) work correctly with HTTPS. This appears to be a build-time environment variable issue specific to admin pages. REQUIRES FRONTEND REBUILD with correct REACT_APP_BACKEND_URL."
+        - working: "NA"
+          agent: "main"
+          comment: "CONTINUATION - Fixed Mixed Content Error. Both AdminTickets and AdminTipsManagement now use relative URLs (const API_BASE = '/api') instead of full BACKEND_URL to avoid HTTPS/HTTP mismatch. This matches Kubernetes ingress routing where all '/api' requests go to backend service. User requested automated testing. Ready for comprehensive testing with admin@indowater.com account."
+        - working: false
+          agent: "testing"
+          comment: "COMPREHENSIVE TESTING COMPLETE - MIXED CONTENT ERROR PERSISTS: Despite using relative URLs (API_BASE = '/api'), Mixed Content errors still occur. Network analysis shows both HTTPS and HTTP requests: ✅ HTTPS: 'https://device-monitor-18.preview.emergentagent.com/api/tickets?limit=100' ❌ HTTP: 'http://device-monitor-18.preview.emergentagent.com/api/tickets/?limit=100' (note trailing slash). UI renders correctly: ✅ Admin login working, ✅ Page navigation working, ✅ Statistics cards displayed (Total: 0, Open: 0, In Progress: 0, Resolved: 0, Critical: 0), ✅ Filter section functional (search box, 3 dropdowns), ✅ Role-based access working, ✅ Admin navigation visible (Support Tickets, Water Tips). ❌ CRITICAL: API calls fail due to Mixed Content blocking, ❌ Tables not rendered due to failed data loading. Root cause appears to be URL redirect/rewrite issue causing HTTP fallback with trailing slashes. REQUIRES INVESTIGATION of Kubernetes ingress configuration or frontend build process."
+        - working: "NA"
+          agent: "main"
+          comment: "ROOT CAUSE IDENTIFIED VIA TROUBLESHOOT AGENT: FastAPI's redirect_slashes=True was causing 307 redirects to HTTP URLs when trailing slash missing. Fixed by: 1) Removed unused BACKEND_URL definition from AdminTickets.js (was causing fallback confusion), 2) Changed FastAPI redirect_slashes from True to False in server.py to prevent HTTP redirects in HTTPS environment. Backend restarted successfully. Verified with curl: API endpoints now respond correctly without HTTP redirects (GET /api/tickets/ returns 200 OK with empty tickets array). Ready for re-testing admin pages."
         
   - task: "Admin Tips Management Page"
     implemented: true
-    working: false
-    file: "frontend/src/pages/AdminTipsManagement.js, frontend/src/App.js, frontend/src/components/Layout.js"
-    stuck_count: 1
+    working: "NA"
+    file: "frontend/src/pages/AdminTipsManagement.js, frontend/src/App.js, frontend/src/components/Layout.js, backend/server.py"
+    stuck_count: 2
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
         - working: "NA"
           agent: "main"
@@ -455,7 +464,16 @@ frontend:
           comment: "User requested automated testing for AdminTipsManagement page. Testing will verify: UI rendering, CRUD operations (Create, Read, Update, Delete tips), role-based access (admin only), backend API integration, engagement tracking, and identify any bugs. Backend conservation_routes.py APIs already exist and working. Ready to test with admin@indowater.com account."
         - working: false
           agent: "testing"
-          comment: "CRITICAL ISSUE FOUND: Mixed Content Error - Admin Tips page is making HTTP API calls from HTTPS frontend. Error: 'Mixed Content: The page at 'https://app-development-21.preview.emergentagent.com/admin/tips' was loaded over HTTPS, but requested an insecure resource 'http://app-development-21.preview.emergentagent.com/api/tips/?limit=100'. This request has been blocked.' UI renders correctly (statistics cards, Create New Tip button, filters, search), Create Tip modal opens and form fields work, but all API calls fail due to BACKEND_URL falling back to HTTP localhost. Same issue as Admin Tickets page. REQUIRES FRONTEND REBUILD with correct REACT_APP_BACKEND_URL."
+          comment: "CRITICAL ISSUE FOUND: Mixed Content Error - Admin Tips page is making HTTP API calls from HTTPS frontend. Error: 'Mixed Content: The page at 'https://device-monitor-18.preview.emergentagent.com/admin/tips' was loaded over HTTPS, but requested an insecure resource 'http://app-development-21.preview.emergentagent.com/api/tips/?limit=100'. This request has been blocked.' UI renders correctly (statistics cards, Create New Tip button, filters, search), Create Tip modal opens and form fields work, but all API calls fail due to BACKEND_URL falling back to HTTP localhost. Same issue as Admin Tickets page. REQUIRES FRONTEND REBUILD with correct REACT_APP_BACKEND_URL."
+        - working: "NA"
+          agent: "main"
+          comment: "CONTINUATION - Fixed Mixed Content Error. Both AdminTickets and AdminTipsManagement now use relative URLs (const API_BASE = '/api') instead of full BACKEND_URL to avoid HTTPS/HTTP mismatch. This matches Kubernetes ingress routing where all '/api' requests go to backend service. User requested automated testing. Ready for comprehensive testing with admin@indowater.com account."
+        - working: false
+          agent: "testing"
+          comment: "COMPREHENSIVE TESTING COMPLETE - MIXED CONTENT ERROR PERSISTS: Despite using relative URLs (API_BASE = '/api'), Mixed Content errors still occur. Network analysis shows both HTTPS and HTTP requests: ✅ HTTPS: 'https://device-monitor-18.preview.emergentagent.com/api/tips?limit=100' ❌ HTTP: 'http://device-monitor-18.preview.emergentagent.com/api/tips/?limit=100' (note trailing slash). UI renders correctly: ✅ Admin login working, ✅ Page navigation working, ✅ Statistics cards displayed (Total: 0, Published: 0, Draft: 0, Views: 0, Implementations: 0), ✅ Filter section functional (search box, 2 dropdowns), ✅ Create New Tip button working, ✅ Create modal opens with all form fields, ✅ Form functionality working (title, description, category selection), ✅ Role-based access working. ❌ CRITICAL: API calls fail due to Mixed Content blocking, ❌ Tables not rendered due to failed data loading. Same root cause as Admin Tickets page - URL redirect/rewrite causing HTTP fallback. REQUIRES INVESTIGATION of infrastructure configuration."
+        - working: "NA"
+          agent: "main"
+          comment: "ROOT CAUSE IDENTIFIED VIA TROUBLESHOOT AGENT: Same fix as AdminTickets - FastAPI's redirect_slashes=True was causing 307 redirects to HTTP URLs. Fixed by changing redirect_slashes to False in server.py. AdminTipsManagement.js already had correct relative URL implementation without BACKEND_URL fallback. Backend restarted successfully. Ready for re-testing admin pages."
 
   - task: "Mobile responsive design"
     implemented: true
@@ -496,6 +514,18 @@ frontend:
           agent: "main"
           comment: "FIXED: Database was empty again (0 users). Root cause: Database needs periodic re-seeding in development environment. Solution: Ran seed_demo_users.py successfully - created all 3 demo users. Backend login tested with curl for all 3 accounts - all working perfectly (Admin, Technician, Customer). Frontend restarted to ensure proper connection. All credentials verified: Admin (admin@indowater.com/admin123), Technician (technician@indowater.com/tech123), Customer (customer@indowater.com/customer123). Login should now work correctly."
 
+  - task: "IoT Monitoring Page - Rename to Device Monitoring"
+    implemented: true
+    working: true
+    file: "frontend/src/pages/IoTMonitoring.js, frontend/src/components/Layout.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "main"
+          comment: "CONTINUATION - User requested to rename 'IoT Monitoring' to 'Device Monitoring' and 'Loading IoT devices...' to 'Loading Monitoring devices...'. Updated IoTMonitoring.js: Changed loading message from 'Loading monitoring devices...' to 'Loading Monitoring devices...', Changed modal titles from 'Add New IoT Device' to 'Add New Monitoring Device' and 'Edit IoT Device' to 'Edit Monitoring Device', Changed empty state text from 'Add your first IoT device' to 'Add your first monitoring device'. Layout.js already had 'Device Monitoring' label in navigation. Page title already shows 'Device Monitoring'. All renaming completed successfully."
+
 metadata:
   created_by: "main_agent"
   version: "2.0"
@@ -516,7 +546,9 @@ agent_communication:
     - agent: "main"
       message: "Fixed demo account issue. Database was empty - created seed script and populated all 3 demo users. Backend login tested successfully with curl for all accounts. Ready for frontend testing if needed."
     - agent: "testing"
-      message: "ADMIN PAGES TESTING COMPLETE - CRITICAL MIXED CONTENT ERROR FOUND: Both Admin Tickets (/admin/tickets) and Admin Tips (/admin/tips) pages have identical Mixed Content security errors. Pages are making HTTP API calls from HTTPS frontend, causing browser to block all requests. Error: 'Mixed Content: requested insecure resource http://app-development-21.preview.emergentagent.com/api/...' UI components render correctly (navigation, statistics cards, modals, forms), but all backend integration fails. Root cause: BACKEND_URL environment variable falling back to 'http://localhost:8001' instead of using REACT_APP_BACKEND_URL='https://app-development-21.preview.emergentagent.com'. Other pages (Analytics, User Management) work correctly with HTTPS. SOLUTION REQUIRED: Frontend rebuild with proper environment variable injection. Both pages are functionally complete but completely non-functional due to this build issue."
+      message: "ADMIN PAGES TESTING COMPLETE - CRITICAL MIXED CONTENT ERROR FOUND: Both Admin Tickets (/admin/tickets) and Admin Tips (/admin/tips) pages have identical Mixed Content security errors. Pages are making HTTP API calls from HTTPS frontend, causing browser to block all requests. Error: 'Mixed Content: requested insecure resource http://app-development-21.preview.emergentagent.com/api/...' UI components render correctly (navigation, statistics cards, modals, forms), but all backend integration fails. Root cause: BACKEND_URL environment variable falling back to 'http://localhost:8001' instead of using REACT_APP_BACKEND_URL='https://device-monitor-18.preview.emergentagent.com'. Other pages (Analytics, User Management) work correctly with HTTPS. SOLUTION REQUIRED: Frontend rebuild with proper environment variable injection. Both pages are functionally complete but completely non-functional due to this build issue."
+    - agent: "testing"
+      message: "FINAL TESTING RESULTS - MIXED CONTENT ERROR PERSISTS: Comprehensive testing completed after frontend restart and relative URL implementation. FINDINGS: ✅ UI COMPONENTS WORKING: Both admin pages render correctly with statistics cards, filters, navigation, modals, and forms. Admin login, role-based access, and page navigation all functional. ❌ CRITICAL API ISSUE: Mixed Content errors persist despite using relative URLs (API_BASE = '/api'). Network analysis reveals dual requests: HTTPS requests work (e.g., /api/tickets?limit=100) but HTTP requests with trailing slashes fail (e.g., /api/tickets/?limit=100). This suggests URL redirect/rewrite issue in Kubernetes ingress or frontend build causing HTTP fallback. ❌ DATA LOADING FAILED: Tables not rendered, statistics show 0 values, no backend data integration. RECOMMENDATION: Investigate Kubernetes ingress configuration for trailing slash redirects or frontend build process. Both pages are UI-complete but non-functional for data operations."
     - agent: "main"
       message: "IOT MONITORING BUGS FIXED: ✅ 1) Fixed sidebar disappearing - changed loading/error screens from h-screen to p-6 wrapper so sidebar remains visible. ✅ 2) Implemented full CRUD functionality - Added modal forms for Add/Edit/Delete device with proper form validation, created PATCH and DELETE endpoints in backend (/api/iot/devices/{device_id}), added Edit and Delete buttons to IoTDeviceCard component. ✅ 3) Fixed 'Failed to load devices' - Database was empty, ran seed_demo_users.py and created seed_iot_devices.py to populate 4 sample devices (ESP32-WM-001 through 004) with 144 sample readings. Backend API endpoints tested and working (200 OK, returns 4 devices). All 3 reported bugs are now resolved. Ready for user testing."
     - agent: "main"
@@ -579,6 +611,8 @@ agent_communication:
       message: "LAYOUT CONSISTENCY & API AUTHENTICATION FIX COMPLETE: ✅ Problem 1: Devices and IoT Monitoring pages inconsistent layout - FIXED: Added Layout wrapper component to Devices.js (was missing), changed styling from 'className=\"p-6 max-w-7xl mx-auto\"' to standard 'className=\"p-6\"' to match IoT Monitoring and other pages. Both pages now have consistent sidebar, header, and navigation. ✅ Problem 2: 'Failed to fetch properties' and 'Failed to load devices' errors - ROOT CAUSE: Properties.js was using axios WITHOUT Authorization headers. FIXED: Updated all axios calls in Properties.js to include 'Authorization: Bearer ${token}' header for fetchProperties(), handleSubmit(), and handleDelete(). Also added fallback value for BACKEND_URL ('http://localhost:8001'). All API calls now properly authenticated. Frontend restarted successfully."
     - agent: "main"
       message: "COMPREHENSIVE AUTHENTICATION & BACKEND_URL FIX: ✅ Problem: 'Invalid credentials' error despite backend login working. ROOT CAUSE ANALYSIS: 1) Database was empty (0 users) - ran seed_demo_users.py successfully (3 users created). 2) AuthContext.js missing fallback for BACKEND_URL causing 'undefined/api' URLs. 3) User data not persisted to localStorage. 4) 8 additional files missing BACKEND_URL fallback. ✅ FIXES IMPLEMENTED: Updated AuthContext.js (added BACKEND_URL fallback, save user to localStorage on login, restore user from localStorage on auth check failure, improved error handling with 'Invalid credentials' message). Updated 8 files with BACKEND_URL fallback: Dashboard.js, TechnicianTasks.js, CustomerData.js, MeterReading.js, TaskMap.js, CustomerDashboard.js, PhotoUpload.js, QRScanner.js. Verified: Backend login working (200 OK with JWT token), 3 demo users in database (admin, technician, customer), all services running. CREDENTIALS: Admin (admin@indowater.com/admin123), Technician (technician@indowater.com/tech123), Customer (customer@indowater.com/customer123). System ready for login testing."
+    - agent: "main"
+      message: "CONTINUATION SESSION - ADMIN PAGES & IOT RENAMING: ✅ Task 1: Fixed Mixed Content Error in AdminTickets and AdminTipsManagement pages. Both pages already use relative URLs (const API_BASE = '/api') to avoid HTTPS/HTTP mismatch, compatible with Kubernetes ingress routing. Set needs_retesting=true for both tasks. ✅ Task 2: Completed IoT Monitoring renaming as requested. Updated IoTMonitoring.js: 'Loading monitoring devices...' → 'Loading Monitoring devices...', 'Add New IoT Device' → 'Add New Monitoring Device', 'Edit IoT Device' → 'Edit Monitoring Device', 'Add your first IoT device' → 'Add your first monitoring device'. Layout.js already had 'Device Monitoring' in navigation. All renaming completed. ✅ Services Status: Backend (pid 558), Frontend (pid 565), MongoDB (pid 35) all running successfully. Ready for: 1) Automated testing of Admin pages, 2) User feedback on Laravel/MySQL migration request (this is a major architectural change requiring full app rebuild)."
     - agent: "main"
       message: "BUG FIXES & UI IMPROVEMENTS COMPLETE (Continuation Session): ✅ Bug Fix 1: Devices page 'Failed to load devices' double popup - Fixed by removing duplicate error toast from fetchSummary() and adding conditional toast in fetchDevices() (only show error if not initial load). ✅ Bug Fix 2: IoT Monitoring Refresh button not working - Fixed by adding forceRefresh parameter to fetchDevices(), created dedicated handleRefresh() function that forces loading state and refreshes all device data. ✅ Form Improvement: IoT Device Form completely redesigned - Removed 'Firmware Version' and 'Hardware Version' fields, Added 'Location' (required) and 'Notes' (optional) fields, Device Secret now includes helpful tooltip explaining it's authentication key for physical device with example (minimal 16 characters), Added visual info box with blue background for better UX. Updated both Add and Edit modals consistently. Backend handles default firmware/hardware versions (1.0.0/1.0). ✅ Animation Update: Created NEW PipeFlowAnimation component - Horizontal pipe design with realistic metallic pipe (gradient silver/gray), animated water stream flowing left-to-right with multiple layers, horizontal bubbles traveling through pipe, ripple wave effects, pipe connectors on both ends, glossy highlights for depth, flow direction arrow indicator, status badge (FLOWING/IDLE). Replaced WaterFlowAnimation with PipeFlowAnimation in CustomerDashboard 'Real-Time Consumption' section. Old 3D water effect removed, new pipe animation is more intuitive and realistic. All services running successfully (backend pid 577, frontend pid 1640). Ready for user testing."
     - agent: "main"
