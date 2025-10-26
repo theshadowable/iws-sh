@@ -733,6 +733,7 @@ from iot_routes import router as iot_router
 from iot_realtime_routes import router as iot_realtime_router
 from support_routes import router as support_router
 from conservation_routes import router as conservation_router
+from role_permission_routes import router as role_router
 
 # Include routers - include technician routes in api_router first
 api_router.include_router(technician_router)
@@ -753,6 +754,7 @@ api_router.include_router(pricing_router)  # Multi-tier pricing system
 api_router.include_router(iot_router)  # IoT device integration (legacy)
 api_router.include_router(support_router)  # Support ticket system
 api_router.include_router(conservation_router)  # Water conservation tips
+api_router.include_router(role_router)  # Role & permission management
 
 # Register IoT real-time routes directly on app (WebSocket needs root level)
 app.include_router(iot_realtime_router)  # IoT real-time monitoring with WebSocket

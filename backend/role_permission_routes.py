@@ -16,7 +16,7 @@ from role_permission_models import (
     DEFAULT_PERMISSIONS, DEFAULT_ROLES
 )
 
-router = APIRouter(prefix="/api/roles", tags=["Role & Permission Management"])
+router = APIRouter(prefix="/roles", tags=["Role & Permission Management"])
 
 # MongoDB connection
 MONGO_URL = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
