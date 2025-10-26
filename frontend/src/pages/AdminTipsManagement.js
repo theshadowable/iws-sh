@@ -27,19 +27,18 @@ const AdminTipsManagement = () => {
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [selectedTip, setSelectedTip] = useState(null);
 
-  // Form states
+  // Form states - field names match backend API
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    category: 'saving_water',
-    difficulty: 'easy',
-    estimated_savings: 0,
-    implementation_difficulty: 'easy',
-    steps: [],
+    category: 'general_savings',
+    difficulty_level: 'easy',
+    potential_savings_percentage: 0,
+    implementation_time: '5 menit',
+    implementation_steps: [],
     benefits: [],
     required_tools: [],
-    estimated_time_minutes: 0,
-    status: 'published'
+    tags: []
   });
 
   const [newStep, setNewStep] = useState('');
@@ -104,21 +103,32 @@ const AdminTipsManagement = () => {
     setFormData({
       title: '',
       description: '',
-      category: 'saving_water',
-      difficulty: 'easy',
-      estimated_savings: 0,
-      implementation_difficulty: 'easy',
-      steps: [],
+      category: 'general_savings',
+      difficulty_level: 'easy',
+      potential_savings_percentage: 0,
+      implementation_time: '5 menit',
+      implementation_steps: [],
       benefits: [],
       required_tools: [],
-      estimated_time_minutes: 0,
-      status: 'published'
+      tags: []
     });
   };
 
   const handleCreateTip = async () => {
     if (!formData.title || !formData.description) {
-      toast.error('Please fill in all required fields');
+      toast.error('Mohon isi semua field yang wajib');
+      return;
+    }
+
+    // Validate title length (backend requires min 5 chars)
+    if (formData.title.length < 5) {
+      toast.error('Judul harus minimal 5 karakter');
+      return;
+    }
+
+    // Validate description length (backend requires min 20 chars)
+    if (formData.description.length < 20) {
+      toast.error('Deskripsi harus minimal 20 karakter');
       return;
     }
 
@@ -140,7 +150,15 @@ const AdminTipsManagement = () => {
         fetchTips();
       } else {
         const error = await response.json();
-        toast.error(error.detail || 'Failed to create tip');
+        // Handle validation errors (array of objects)
+        if (Array.isArray(error.detail)) {
+          const errorMessages = error.detail.map(err => err.msg).join(', ');
+          toast.error(`Validation error: ${errorMessages}`);
+        } else if (typeof error.detail === 'string') {
+          toast.error(error.detail);
+        } else {
+          toast.error('Failed to create tip');
+        }
       }
     } catch (error) {
       console.error('Error creating tip:', error);
@@ -150,7 +168,19 @@ const AdminTipsManagement = () => {
 
   const handleEditTip = async () => {
     if (!formData.title || !formData.description) {
-      toast.error('Please fill in all required fields');
+      toast.error('Mohon isi semua field yang wajib');
+      return;
+    }
+
+    // Validate title length (backend requires min 5 chars)
+    if (formData.title.length < 5) {
+      toast.error('Judul harus minimal 5 karakter');
+      return;
+    }
+
+    // Validate description length (backend requires min 20 chars)
+    if (formData.description.length < 20) {
+      toast.error('Deskripsi harus minimal 20 karakter');
       return;
     }
 
@@ -173,7 +203,15 @@ const AdminTipsManagement = () => {
         fetchTips();
       } else {
         const error = await response.json();
-        toast.error(error.detail || 'Failed to update tip');
+        // Handle validation errors (array of objects)
+        if (Array.isArray(error.detail)) {
+          const errorMessages = error.detail.map(err => err.msg).join(', ');
+          toast.error(`Validation error: ${errorMessages}`);
+        } else if (typeof error.detail === 'string') {
+          toast.error(error.detail);
+        } else {
+          toast.error('Failed to update tip');
+        }
       }
     } catch (error) {
       console.error('Error updating tip:', error);
@@ -209,27 +247,26 @@ const AdminTipsManagement = () => {
       title: tip.title,
       description: tip.description,
       category: tip.category,
-      difficulty: tip.difficulty,
-      estimated_savings: tip.estimated_savings,
-      implementation_difficulty: tip.implementation_difficulty,
-      steps: tip.steps || [],
+      difficulty_level: tip.difficulty_level,
+      potential_savings_percentage: tip.potential_savings_percentage || 0,
+      implementation_time: tip.implementation_time || '5 menit',
+      implementation_steps: tip.implementation_steps || [],
       benefits: tip.benefits || [],
       required_tools: tip.required_tools || [],
-      estimated_time_minutes: tip.estimated_time_minutes || 0,
-      status: tip.status || 'published'
+      tags: tip.tags || []
     });
     setShowEditModal(true);
   };
 
   const addStep = () => {
     if (newStep.trim()) {
-      setFormData({ ...formData, steps: [...formData.steps, newStep.trim()] });
+      setFormData({ ...formData, implementation_steps: [...formData.implementation_steps, newStep.trim()] });
       setNewStep('');
     }
   };
 
   const removeStep = (index) => {
-    setFormData({ ...formData, steps: formData.steps.filter((_, i) => i !== index) });
+    setFormData({ ...formData, implementation_steps: formData.implementation_steps.filter((_, i) => i !== index) });
   };
 
   const addBenefit = () => {
@@ -256,11 +293,10 @@ const AdminTipsManagement = () => {
 
   const getCategoryLabel = (category) => {
     const labels = {
-      'saving_water': 'Saving Water',
-      'leak_prevention': 'Leak Prevention',
-      'conservation': 'Conservation',
-      'maintenance': 'Maintenance',
-      'efficiency': 'Efficiency'
+      'general_savings': 'Penghematan Umum',
+      'leak_prevention': 'Pencegahan Kebocoran',
+      'best_practices': 'Praktik Terbaik',
+      'saran_penghematan_prabayar': 'Saran Penghematan Prabayar'
     };
     return labels[category] || category;
   };
@@ -433,7 +469,7 @@ const AdminTipsManagement = () => {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {filteredTips.map((tip) => {
-                    const DifficultyBadge = getDifficultyBadge(tip.difficulty);
+                    const DifficultyBadge = getDifficultyBadge(tip.difficulty_level);
 
                     return (
                       <tr key={tip.id} className="hover:bg-gray-50">
@@ -456,15 +492,15 @@ const AdminTipsManagement = () => {
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {tip.estimated_savings}%
+                          {tip.potential_savings_percentage || 0}%
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                            tip.status === 'published' 
+                            tip.is_active 
                               ? 'bg-green-100 text-green-700' 
-                              : 'bg-yellow-100 text-yellow-700'
+                              : 'bg-gray-100 text-gray-700'
                           }`}>
-                            {tip.status === 'published' ? 'Published' : 'Draft'}
+                            {tip.is_active ? 'Aktif' : 'Nonaktif'}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -537,62 +573,63 @@ const AdminTipsManagement = () => {
                 {/* Title */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Title <span className="text-red-500">*</span>
+                    Judul <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Enter tip title..."
+                    placeholder="Masukkan judul tips..."
                   />
+                  <p className="mt-1 text-xs text-gray-500">Minimal 5 karakter</p>
                 </div>
 
                 {/* Description */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Description <span className="text-red-500">*</span>
+                    Deskripsi <span className="text-red-500">*</span>
                   </label>
                   <textarea
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     rows={4}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Enter detailed description..."
+                    placeholder="Masukkan deskripsi lengkap..."
                   />
+                  <p className="mt-1 text-xs text-gray-500">Minimal 20 karakter</p>
                 </div>
 
                 {/* Category and Difficulty */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Category
+                      Kategori
                     </label>
                     <select
                       value={formData.category}
                       onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
-                      <option value="saving_water">Saving Water</option>
-                      <option value="leak_prevention">Leak Prevention</option>
-                      <option value="conservation">Conservation</option>
-                      <option value="maintenance">Maintenance</option>
-                      <option value="efficiency">Efficiency</option>
+                      <option value="general_savings">Penghematan Umum</option>
+                      <option value="leak_prevention">Pencegahan Kebocoran</option>
+                      <option value="best_practices">Praktik Terbaik</option>
+                      <option value="saran_penghematan_prabayar">Saran Penghematan Prabayar</option>
                     </select>
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Difficulty
+                      Tingkat Kesulitan
                     </label>
                     <select
-                      value={formData.difficulty}
-                      onChange={(e) => setFormData({ ...formData, difficulty: e.target.value })}
+                      value={formData.difficulty_level}
+                      onChange={(e) => setFormData({ ...formData, difficulty_level: e.target.value })}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
-                      <option value="easy">Easy</option>
-                      <option value="medium">Medium</option>
-                      <option value="hard">Hard</option>
+                      <option value="easy">Mudah</option>
+                      <option value="medium">Sedang</option>
+                      <option value="hard">Sulit</option>
                     </select>
                   </div>
                 </div>
@@ -601,12 +638,12 @@ const AdminTipsManagement = () => {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Estimated Savings (%)
+                      Estimasi Penghematan (%)
                     </label>
                     <input
                       type="number"
-                      value={formData.estimated_savings}
-                      onChange={(e) => setFormData({ ...formData, estimated_savings: parseInt(e.target.value) || 0 })}
+                      value={formData.potential_savings_percentage}
+                      onChange={(e) => setFormData({ ...formData, potential_savings_percentage: parseInt(e.target.value) || 0 })}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       min="0"
                       max="100"
@@ -615,38 +652,22 @@ const AdminTipsManagement = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Estimated Time (minutes)
+                      Waktu Implementasi
                     </label>
                     <input
-                      type="number"
-                      value={formData.estimated_time_minutes}
-                      onChange={(e) => setFormData({ ...formData, estimated_time_minutes: parseInt(e.target.value) || 0 })}
+                      type="text"
+                      value={formData.implementation_time}
+                      onChange={(e) => setFormData({ ...formData, implementation_time: e.target.value })}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      min="0"
+                      placeholder="e.g., 5 menit, 1 jam"
                     />
                   </div>
-                </div>
-
-                {/* Implementation Difficulty */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Implementation Difficulty
-                  </label>
-                  <select
-                    value={formData.implementation_difficulty}
-                    onChange={(e) => setFormData({ ...formData, implementation_difficulty: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  >
-                    <option value="easy">Easy</option>
-                    <option value="medium">Medium</option>
-                    <option value="hard">Hard</option>
-                  </select>
                 </div>
 
                 {/* Steps */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Implementation Steps
+                    Langkah Implementasi
                   </label>
                   <div className="flex gap-2 mb-2">
                     <input
@@ -655,7 +676,7 @@ const AdminTipsManagement = () => {
                       onChange={(e) => setNewStep(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && addStep()}
                       className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="Add a step..."
+                      placeholder="Tambah langkah..."
                     />
                     <button
                       onClick={addStep}
@@ -665,7 +686,7 @@ const AdminTipsManagement = () => {
                     </button>
                   </div>
                   <div className="space-y-2">
-                    {formData.steps.map((step, index) => (
+                    {formData.implementation_steps.map((step, index) => (
                       <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 rounded">
                         <span className="text-sm text-gray-700 flex-1">{index + 1}. {step}</span>
                         <button
@@ -682,7 +703,7 @@ const AdminTipsManagement = () => {
                 {/* Benefits */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Benefits
+                    Manfaat
                   </label>
                   <div className="flex gap-2 mb-2">
                     <input
@@ -817,24 +838,24 @@ const AdminTipsManagement = () => {
                     <p className="font-medium text-gray-900">{getCategoryLabel(selectedTip.category)}</p>
                   </div>
                   <div className="bg-gray-50 p-3 rounded-lg">
-                    <p className="text-sm text-gray-600">Difficulty</p>
-                    <p className="font-medium text-gray-900">{selectedTip.difficulty}</p>
+                    <p className="text-sm text-gray-600">Tingkat Kesulitan</p>
+                    <p className="font-medium text-gray-900">{selectedTip.difficulty_level}</p>
                   </div>
                   <div className="bg-gray-50 p-3 rounded-lg">
-                    <p className="text-sm text-gray-600">Estimated Savings</p>
-                    <p className="font-medium text-gray-900">{selectedTip.estimated_savings}%</p>
+                    <p className="text-sm text-gray-600">Estimasi Penghematan</p>
+                    <p className="font-medium text-gray-900">{selectedTip.potential_savings_percentage || 0}%</p>
                   </div>
                   <div className="bg-gray-50 p-3 rounded-lg">
-                    <p className="text-sm text-gray-600">Estimated Time</p>
-                    <p className="font-medium text-gray-900">{selectedTip.estimated_time_minutes} min</p>
+                    <p className="text-sm text-gray-600">Waktu Implementasi</p>
+                    <p className="font-medium text-gray-900">{selectedTip.implementation_time}</p>
                   </div>
                 </div>
 
-                {selectedTip.steps && selectedTip.steps.length > 0 && (
+                {selectedTip.implementation_steps && selectedTip.implementation_steps.length > 0 && (
                   <div>
-                    <h4 className="font-bold text-gray-900 mb-3">Implementation Steps</h4>
+                    <h4 className="font-bold text-gray-900 mb-3">Langkah Implementasi</h4>
                     <ol className="space-y-2">
-                      {selectedTip.steps.map((step, index) => (
+                      {selectedTip.implementation_steps.map((step, index) => (
                         <li key={index} className="flex gap-3">
                           <span className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm">
                             {index + 1}
