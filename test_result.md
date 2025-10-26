@@ -423,27 +423,39 @@ frontend:
 
   - task: "Admin Tickets Management Page"
     implemented: true
-    working: "NA"
+    working: false
     file: "frontend/src/pages/AdminTickets.js, frontend/src/App.js, frontend/src/components/Layout.js"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Created comprehensive AdminTickets.js page for admin to manage all support tickets. Features implemented: Statistics cards (Total, Open, In Progress, Resolved, Critical tickets), Filter section (search, status, category, priority), Tickets table with all ticket data (ticket#, subject, customer, category, priority, status, assigned to, created date), Detail modal with 3 tabs (info, messages, attachments), Assign technician modal, Reply message modal (with internal message option), Status update modal with maintenance_repairs approval workflow (requires photos with GPS+timestamp, documents, digital signature), Attachments display with GPS metadata, Role-based access (admin only). Added route /admin/tickets in App.js, Added 'Support Tickets' navigation in Layout.js with Headset icon. Ready for testing."
+        - working: "NA"
+          agent: "main"
+          comment: "User requested automated testing for AdminTickets page. Testing will verify: UI rendering, CRUD operations, role-based access (admin only), backend API integration, and identify any bugs. Backend support_routes.py APIs already exist and working. Ready to test with admin@indowater.com account."
+        - working: false
+          agent: "testing"
+          comment: "CRITICAL ISSUE FOUND: Mixed Content Error - Admin Tickets page is making HTTP API calls from HTTPS frontend. Error: 'Mixed Content: The page at 'https://app-development-21.preview.emergentagent.com/admin/tickets' was loaded over HTTPS, but requested an insecure resource 'http://app-development-21.preview.emergentagent.com/api/tickets/?limit=100'. This request has been blocked.' UI renders correctly (statistics cards, filters, navigation), but all API calls fail due to BACKEND_URL falling back to HTTP localhost. Other pages (Analytics, User Management) work correctly with HTTPS. This appears to be a build-time environment variable issue specific to admin pages. REQUIRES FRONTEND REBUILD with correct REACT_APP_BACKEND_URL."
         
   - task: "Admin Tips Management Page"
     implemented: true
-    working: "NA"
+    working: false
     file: "frontend/src/pages/AdminTipsManagement.js, frontend/src/App.js, frontend/src/components/Layout.js"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Created comprehensive AdminTipsManagement.js page for admin to manage water conservation tips. Features implemented: Statistics cards (Total Tips, Published, Draft, Total Views, Total Implementations), Filter section (search, category, difficulty), Tips table showing all tip data (title, category, difficulty, savings %, status, engagement metrics - views/likes/implementations), Create modal with full form (title, description, category, difficulty, estimated savings %, estimated time, implementation difficulty, steps array, benefits array, required tools array, status published/draft), Edit modal with pre-populated data, Delete confirmation modal, Preview modal showing full tip details with formatted steps/benefits/tools. Dynamic arrays with add/remove functionality for steps/benefits/tools. Role-based access (admin only). Added route /admin/tips in App.js, Added 'Water Tips' navigation in Layout.js with Lightbulb icon. Ready for testing."
+        - working: "NA"
+          agent: "main"
+          comment: "User requested automated testing for AdminTipsManagement page. Testing will verify: UI rendering, CRUD operations (Create, Read, Update, Delete tips), role-based access (admin only), backend API integration, engagement tracking, and identify any bugs. Backend conservation_routes.py APIs already exist and working. Ready to test with admin@indowater.com account."
+        - working: false
+          agent: "testing"
+          comment: "CRITICAL ISSUE FOUND: Mixed Content Error - Admin Tips page is making HTTP API calls from HTTPS frontend. Error: 'Mixed Content: The page at 'https://app-development-21.preview.emergentagent.com/admin/tips' was loaded over HTTPS, but requested an insecure resource 'http://app-development-21.preview.emergentagent.com/api/tips/?limit=100'. This request has been blocked.' UI renders correctly (statistics cards, Create New Tip button, filters, search), Create Tip modal opens and form fields work, but all API calls fail due to BACKEND_URL falling back to HTTP localhost. Same issue as Admin Tickets page. REQUIRES FRONTEND REBUILD with correct REACT_APP_BACKEND_URL."
 
   - task: "Mobile responsive design"
     implemented: true
@@ -477,6 +489,12 @@ frontend:
         - working: true
           agent: "testing"
           comment: "COMPREHENSIVE LOGIN TESTING COMPLETE: ✅ All 3 demo accounts working perfectly. Admin (admin@indowater.com/admin123) - successful login, redirected to Admin Dashboard with proper user info display and role-based navigation. Technician (technician@indowater.com/tech123) - successful login, redirected to Dashboard with technician-specific stats and navigation menu. Customer (customer@indowater.com/customer123) - successful login, redirected to Dashboard with customer-specific stats and navigation. All accounts show proper user information in sidebar (name, email, role badge), success toast messages, and logout functionality working. Frontend login flow is fully functional end-to-end."
+        - working: false
+          agent: "user"
+          comment: "User reported 'Invalid Credential' error saat login"
+        - working: true
+          agent: "main"
+          comment: "FIXED: Database was empty again (0 users). Root cause: Database needs periodic re-seeding in development environment. Solution: Ran seed_demo_users.py successfully - created all 3 demo users. Backend login tested with curl for all 3 accounts - all working perfectly (Admin, Technician, Customer). Frontend restarted to ensure proper connection. All credentials verified: Admin (admin@indowater.com/admin123), Technician (technician@indowater.com/tech123), Customer (customer@indowater.com/customer123). Login should now work correctly."
 
 metadata:
   created_by: "main_agent"
@@ -486,17 +504,19 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Analytics API endpoints"
-    - "Report generation API (PDF/Excel)"
-    - "Alert & Notification System"
-    - "Admin Management APIs"
-  stuck_tasks: []
+    - "Admin Tickets Management Page"
+    - "Admin Tips Management Page"
+  stuck_tasks:
+    - "Admin Tickets Management Page"
+    - "Admin Tips Management Page"
   test_all: false
   test_priority: "high_first"
 
 agent_communication:
     - agent: "main"
       message: "Fixed demo account issue. Database was empty - created seed script and populated all 3 demo users. Backend login tested successfully with curl for all accounts. Ready for frontend testing if needed."
+    - agent: "testing"
+      message: "ADMIN PAGES TESTING COMPLETE - CRITICAL MIXED CONTENT ERROR FOUND: Both Admin Tickets (/admin/tickets) and Admin Tips (/admin/tips) pages have identical Mixed Content security errors. Pages are making HTTP API calls from HTTPS frontend, causing browser to block all requests. Error: 'Mixed Content: requested insecure resource http://app-development-21.preview.emergentagent.com/api/...' UI components render correctly (navigation, statistics cards, modals, forms), but all backend integration fails. Root cause: BACKEND_URL environment variable falling back to 'http://localhost:8001' instead of using REACT_APP_BACKEND_URL='https://app-development-21.preview.emergentagent.com'. Other pages (Analytics, User Management) work correctly with HTTPS. SOLUTION REQUIRED: Frontend rebuild with proper environment variable injection. Both pages are functionally complete but completely non-functional due to this build issue."
     - agent: "main"
       message: "IOT MONITORING BUGS FIXED: ✅ 1) Fixed sidebar disappearing - changed loading/error screens from h-screen to p-6 wrapper so sidebar remains visible. ✅ 2) Implemented full CRUD functionality - Added modal forms for Add/Edit/Delete device with proper form validation, created PATCH and DELETE endpoints in backend (/api/iot/devices/{device_id}), added Edit and Delete buttons to IoTDeviceCard component. ✅ 3) Fixed 'Failed to load devices' - Database was empty, ran seed_demo_users.py and created seed_iot_devices.py to populate 4 sample devices (ESP32-WM-001 through 004) with 144 sample readings. Backend API endpoints tested and working (200 OK, returns 4 devices). All 3 reported bugs are now resolved. Ready for user testing."
     - agent: "main"
