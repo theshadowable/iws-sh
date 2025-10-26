@@ -100,7 +100,7 @@ db = client[os.environ.get('DB_NAME', 'indowater_db')]
 app = FastAPI(
     title="IndoWater Solution API", 
     version="1.0.0",
-    redirect_slashes=True
+    redirect_slashes=False  # Disable to prevent HTTP redirects in HTTPS environment
 )
 
 # Create API router with /api prefix
