@@ -365,7 +365,7 @@ const IoTMonitoring = () => {
           <div className="flex items-center justify-center h-96">
             <div className="text-center">
               <RefreshCw className="w-12 h-12 text-blue-600 animate-spin mx-auto mb-4" />
-              <p className="text-gray-600">Loading IoT devices...</p>
+              <p className="text-gray-600">Loading monitoring devices...</p>
             </div>
           </div>
         </div>
@@ -405,7 +405,7 @@ const IoTMonitoring = () => {
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">IoT Monitoring</h1>
+            <h1 className="text-3xl font-bold text-gray-900">Device Monitoring</h1>
             <p className="text-gray-600">Real-time device monitoring and analytics</p>
           </div>
           <div className="flex items-center gap-3">

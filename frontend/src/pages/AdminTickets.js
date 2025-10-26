@@ -36,7 +36,11 @@ const AdminTickets = () => {
   const [messages, setMessages] = useState([]);
   const [attachments, setAttachments] = useState([]);
 
-  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+  // Use relative URLs to avoid mixed content issues - frontend and backend are on same domain
+  const API_BASE = '/api';
+  
+  // Keep BACKEND_URL for direct file downloads that need full URL
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || window.location.origin;
 
   useEffect(() => {
     fetchStats();
@@ -47,7 +51,7 @@ const AdminTickets = () => {
   const fetchStats = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${BACKEND_URL}/api/tickets/admin/stats`, {
+      const response = await fetch(`${API_BASE}/tickets/admin/stats`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -63,7 +67,7 @@ const AdminTickets = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      let url = `${BACKEND_URL}/api/tickets?limit=100`;
+      let url = `${API_BASE}/tickets?limit=100`;
       
       if (statusFilter !== 'all') url += `&status=${statusFilter}`;
       if (categoryFilter !== 'all') url += `&category=${categoryFilter}`;
@@ -94,7 +98,7 @@ const AdminTickets = () => {
   const fetchTechnicians = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${BACKEND_URL}/api/users?role=technician`, {
+      const response = await fetch(`${API_BASE}/users?role=technician`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -114,7 +118,7 @@ const AdminTickets = () => {
     // Fetch messages
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${BACKEND_URL}/api/tickets/${ticket.id}/messages`, {
+      const response = await fetch(`${API_BASE}/tickets/${ticket.id}/messages`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -137,7 +141,7 @@ const AdminTickets = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${BACKEND_URL}/api/tickets/${selectedTicket.id}/assign`, {
+      const response = await fetch(`${API_BASE}/tickets/${selectedTicket.id}/assign`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -169,7 +173,7 @@ const AdminTickets = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${BACKEND_URL}/api/tickets/${selectedTicket.id}/messages`, {
+      const response = await fetch(`${API_BASE}/tickets/${selectedTicket.id}/messages`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -188,7 +192,7 @@ const AdminTickets = () => {
         setShowReplyModal(false);
         
         // Refresh messages
-        const messagesResponse = await fetch(`${BACKEND_URL}/api/tickets/${selectedTicket.id}/messages`, {
+        const messagesResponse = await fetch(`${API_BASE}/tickets/${selectedTicket.id}/messages`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (messagesResponse.ok) {
@@ -212,7 +216,7 @@ const AdminTickets = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${BACKEND_URL}/api/tickets/${selectedTicket.id}/status`, {
+      const response = await fetch(`${API_BASE}/tickets/${selectedTicket.id}/status`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -233,7 +237,7 @@ const AdminTickets = () => {
         fetchStats();
         
         // Update selected ticket
-        const updatedResponse = await fetch(`${BACKEND_URL}/api/tickets/${selectedTicket.id}`, {
+        const updatedResponse = await fetch(`${API_BASE}/tickets/${selectedTicket.id}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (updatedResponse.ok) {
@@ -775,7 +779,7 @@ const AdminTickets = () => {
                               </div>
                             </div>
                             <a
-                              href={`${BACKEND_URL}/api/tickets/${selectedTicket.id}/attachments/${attachment.id}`}
+                              href={`${API_BASE}/tickets/${selectedTicket.id}/attachments/${attachment.id}`}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"

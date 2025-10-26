@@ -46,7 +46,8 @@ const AdminTipsManagement = () => {
   const [newBenefit, setNewBenefit] = useState('');
   const [newTool, setNewTool] = useState('');
 
-  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+  // Use relative URLs to avoid mixed content issues - frontend and backend are on same domain
+  const API_BASE = '/api';
 
   useEffect(() => {
     fetchTips();
@@ -57,7 +58,7 @@ const AdminTipsManagement = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      let url = `${BACKEND_URL}/api/tips?limit=100`;
+      let url = `${API_BASE}/tips?limit=100`;
 
       if (categoryFilter !== 'all') url += `&category=${categoryFilter}`;
       if (difficultyFilter !== 'all') url += `&difficulty=${difficultyFilter}`;
@@ -123,7 +124,7 @@ const AdminTipsManagement = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${BACKEND_URL}/api/tips/admin/create`, {
+      const response = await fetch(`${API_BASE}/tips/admin/create`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -155,7 +156,7 @@ const AdminTipsManagement = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${BACKEND_URL}/api/tips/admin/${selectedTip.id}`, {
+      const response = await fetch(`${API_BASE}/tips/admin/${selectedTip.id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -183,7 +184,7 @@ const AdminTipsManagement = () => {
   const handleDeleteTip = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${BACKEND_URL}/api/tips/admin/${selectedTip.id}`, {
+      const response = await fetch(`${API_BASE}/tips/admin/${selectedTip.id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });

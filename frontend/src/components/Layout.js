@@ -53,7 +53,7 @@ export const Layout = ({ children }) => {
         { path: '/customers', icon: Users, label: 'Customers', roles: ['admin'] },
         { path: '/properties', icon: Building2, label: 'Properties', roles: ['admin'] },
         { path: '/devices', icon: Gauge, label: 'Devices', roles: ['admin'] },
-        { path: '/iot-monitoring', icon: Activity, label: 'IoT Monitoring', roles: ['admin'] },
+        { path: '/iot-monitoring', icon: Activity, label: 'Device Monitoring', roles: ['admin'] },
         { path: '/admin/tickets', icon: Headset, label: 'Support Tickets', roles: ['admin'] },
         { path: '/admin/tips', icon: Lightbulb, label: 'Water Tips', roles: ['admin'] },
         { path: '/vouchers', icon: Ticket, label: 'Vouchers', roles: ['admin'] },
@@ -69,14 +69,14 @@ export const Layout = ({ children }) => {
         { path: '/customer-data', icon: UserCheck, label: 'Customers', roles: ['technician'] },
         { path: '/properties', icon: Building2, label: 'Properties', roles: ['technician'] },
         { path: '/devices', icon: Gauge, label: 'Devices', roles: ['technician'] },
-        { path: '/iot-monitoring', icon: Activity, label: 'IoT Monitoring', roles: ['technician'] },
+        { path: '/iot-monitoring', icon: Activity, label: 'Device Monitoring', roles: ['technician'] },
       );
     }
 
     if (user?.role === 'customer') {
       items.push(
         { path: '/my-devices', icon: Gauge, label: 'My Devices', roles: ['customer'] },
-        { path: '/iot-monitoring', icon: Activity, label: 'IoT Monitoring', roles: ['customer'] },
+        { path: '/iot-monitoring', icon: Activity, label: 'Device Monitoring', roles: ['customer'] },
         { path: '/analytics', icon: BarChart3, label: 'Analytics', roles: ['customer'] },
         { path: '/balance-purchase', icon: ShoppingCart, label: 'Top-Up Balance', roles: ['customer'] },
         { path: '/purchase-history', icon: History, label: 'Purchase History', roles: ['customer'] },
