@@ -73,7 +73,7 @@ async def create_ticket(
         now = datetime.utcnow()
         
         # Get customer info
-        customer = db_client.users.find_one({"id": current_user.id})
+        customer = await db_client.users.find_one({"id": current_user.id})
         if not customer:
             raise HTTPException(status_code=404, detail="Customer not found")
         
@@ -104,7 +104,7 @@ async def create_ticket(
         if request.gps_coordinates:
             ticket_data['gps_coordinates'] = request.gps_coordinates.dict()
         
-        db_client.support_tickets.insert_one(ticket_data)
+        await db_client.support_tickets.insert_one(ticket_data)
         
         # Send email notification
         email_service.send_ticket_created_notification({
@@ -218,12 +218,12 @@ async def update_ticket(
     if request.description:
         update_data['description'] = request.description
     
-    db_client.support_tickets.update_one(
+    await db_client.support_tickets.update_one(
         {"id": ticket_id},
         {"$set": update_data}
     )
     
-    updated_ticket = db_client.support_tickets.find_one({"id": ticket_id})
+    updated_ticket = await db_client.support_tickets.find_one({"id": ticket_id})
     return SupportTicket(**updated_ticket)
 
 @router.delete("/{ticket_id}")
@@ -241,8 +241,8 @@ async def delete_ticket(
             raise HTTPException(status_code=400, detail="Can only delete OPEN tickets")
     
     # Delete ticket and related data
-    db_client.support_tickets.delete_one({"id": ticket_id})
-    db_client.ticket_messages.delete_many({"ticket_id": ticket_id})
+    await db_client.support_tickets.delete_one({"id": ticket_id})
+    await db_client.ticket_messages.delete_many({"ticket_id": ticket_id})
     
     # Delete attachments and signatures
     for attachment in ticket.get('attachments', []):
@@ -275,7 +275,7 @@ async def add_message(
     now = datetime.utcnow()
     
     # Get user info
-    user = db_client.users.find_one({"id": current_user.id})
+    user = await db_client.users.find_one({"id": current_user.id})
     
     message_data = {
         "id": message_id,
@@ -289,10 +289,10 @@ async def add_message(
         "attachments": []
     }
     
-    db_client.ticket_messages.insert_one(message_data)
+    await db_client.ticket_messages.insert_one(message_data)
     
     # Update ticket
-    db_client.support_tickets.update_one(
+    await db_client.support_tickets.update_one(
         {"id": ticket_id},
         {
             "$set": {"last_message_at": now, "updated_at": now},
@@ -318,7 +318,7 @@ async def get_messages(
     if current_user.role == "customer":
         query['is_internal'] = False
     
-    messages = list(db_client.ticket_messages.find(query).sort("created_at", 1))
+    messages = await db_client.ticket_messages.find(query).sort("created_at", 1).to_list(1000)
     return [TicketMessage(**m) for m in messages]
 
 # ============================================================================
@@ -384,7 +384,7 @@ async def upload_attachment(
             "timestamp_metadata": datetime.fromisoformat(file_metadata['timestamp_metadata'])
         }
         
-        db_client.support_tickets.update_one(
+        await db_client.support_tickets.update_one(
             {"id": ticket_id},
             {
                 "$push": {"attachments": file_metadata},
@@ -458,7 +458,7 @@ async def add_signature(
                 raise HTTPException(status_code=400, detail="Invalid GPS coordinates")
         
         # Get user info
-        user = db_client.users.find_one({"id": current_user.id})
+        user = await db_client.users.find_one({"id": current_user.id})
         
         # Save signature
         signature_metadata = file_service.save_signature(
@@ -492,13 +492,13 @@ async def add_signature(
             update_data['status'] = TicketStatus.CLOSED
             update_data['closed_at'] = datetime.utcnow()
         
-        db_client.support_tickets.update_one(
+        await db_client.support_tickets.update_one(
             {"id": ticket_id},
             {"$set": update_data}
         )
         
         # Store signature in separate collection for reference
-        db_client.ticket_signatures.insert_one(signature_metadata)
+        await db_client.ticket_signatures.insert_one(signature_metadata)
         
         print(f"✅ Signature added to ticket {ticket['ticket_number']}")
         return TicketSignature(**signature_data)
@@ -543,17 +543,17 @@ async def assign_ticket(
     if current_user.role not in ["admin", "technician"]:
         raise HTTPException(status_code=403, detail="Only admin or technician can assign tickets")
     
-    ticket = db_client.support_tickets.find_one({"id": ticket_id})
+    ticket = await db_client.support_tickets.find_one({"id": ticket_id})
     if not ticket:
         raise HTTPException(status_code=404, detail="Ticket not found")
     
     # Verify technician exists
-    technician = db_client.users.find_one({"id": request.assigned_to, "role": "technician"})
+    technician = await db_client.users.find_one({"id": request.assigned_to, "role": "technician"})
     if not technician:
         raise HTTPException(status_code=404, detail="Technician not found")
     
     # Update ticket
-    db_client.support_tickets.update_one(
+    await db_client.support_tickets.update_one(
         {"id": ticket_id},
         {
             "$set": {
@@ -579,7 +579,7 @@ async def assign_ticket(
         technician.get('email')
     )
     
-    updated_ticket = db_client.support_tickets.find_one({"id": ticket_id})
+    updated_ticket = await db_client.support_tickets.find_one({"id": ticket_id})
     print(f"✅ Ticket {ticket['ticket_number']} assigned to {technician.get('full_name')}")
     return SupportTicket(**updated_ticket)
 
@@ -594,7 +594,7 @@ async def update_ticket_status(
     if current_user.role not in ["admin", "technician"]:
         raise HTTPException(status_code=403, detail="Only admin or technician can update status")
     
-    ticket = db_client.support_tickets.find_one({"id": ticket_id})
+    ticket = await db_client.support_tickets.find_one({"id": ticket_id})
     if not ticket:
         raise HTTPException(status_code=404, detail="Ticket not found")
     
@@ -614,7 +614,7 @@ async def update_ticket_status(
     if new_status == TicketStatus.CLOSED and old_status != TicketStatus.CLOSED:
         update_data['closed_at'] = datetime.utcnow()
     
-    db_client.support_tickets.update_one(
+    await db_client.support_tickets.update_one(
         {"id": ticket_id},
         {"$set": update_data}
     )
@@ -632,7 +632,7 @@ async def update_ticket_status(
             "is_internal": True,
             "attachments": []
         }
-        db_client.ticket_messages.insert_one(message_data)
+        await db_client.ticket_messages.insert_one(message_data)
     
     # Send email notification to customer
     email_service.send_ticket_status_update_notification(
@@ -646,7 +646,7 @@ async def update_ticket_status(
         new_status
     )
     
-    updated_ticket = db_client.support_tickets.find_one({"id": ticket_id})
+    updated_ticket = await db_client.support_tickets.find_one({"id": ticket_id})
     print(f"✅ Ticket {ticket['ticket_number']} status updated: {old_status} → {new_status}")
     return SupportTicket(**updated_ticket)
 

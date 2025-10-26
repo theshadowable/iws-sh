@@ -112,10 +112,11 @@ async def get_personalized_tips(
         # Filter out viewed tips if requested
         if exclude_viewed:
             viewed_tip_ids = set()
-            engagements = db_client.tip_engagements.find({
+            engagements_cursor = db_client.tip_engagements.find({
                 "customer_id": current_user.id,
                 "viewed_at": {"$exists": True}
             })
+            engagements = await engagements_cursor.to_list(1000)
             for eng in engagements:
                 viewed_tip_ids.add(eng['tip_id'])
             
@@ -136,12 +137,12 @@ async def get_tip_detail(
     """Get tip detail with user engagement data"""
     try:
         # Get tip
-        tip = db_client.water_conservation_tips.find_one({"id": tip_id})
+        tip = await db_client.water_conservation_tips.find_one({"id": tip_id})
         if not tip:
             raise HTTPException(status_code=404, detail="Tip not found")
         
         # Get user engagement
-        engagement = db_client.tip_engagements.find_one({
+        engagement = await db_client.tip_engagements.find_one({
             "tip_id": tip_id,
             "customer_id": current_user.id
         })
@@ -157,10 +158,10 @@ async def get_tip_detail(
                 "bookmarked": False,
                 "implemented": False
             }
-            db_client.tip_engagements.insert_one(engagement_data)
+            await db_client.tip_engagements.insert_one(engagement_data)
             
             # Increment view count
-            db_client.water_conservation_tips.update_one(
+            await db_client.water_conservation_tips.update_one(
                 {"id": tip_id},
                 {"$inc": {"view_count": 1}}
             )
@@ -168,18 +169,18 @@ async def get_tip_detail(
             engagement = engagement_data
         elif not engagement.get('viewed_at'):
             # Update viewed_at if not set
-            db_client.tip_engagements.update_one(
+            await db_client.tip_engagements.update_one(
                 {"id": engagement['id']},
                 {"$set": {"viewed_at": datetime.utcnow()}}
             )
-            db_client.water_conservation_tips.update_one(
+            await db_client.water_conservation_tips.update_one(
                 {"id": tip_id},
                 {"$inc": {"view_count": 1}}
             )
-            engagement = db_client.tip_engagements.find_one({"id": engagement['id']})
+            engagement = await db_client.tip_engagements.find_one({"id": engagement['id']})
         
         # Refresh tip data (for updated view count)
-        tip = db_client.water_conservation_tips.find_one({"id": tip_id})
+        tip = await db_client.water_conservation_tips.find_one({"id": tip_id})
         
         return TipDetailWithEngagement(
             tip=WaterConservationTip(**tip),
@@ -204,12 +205,12 @@ async def engage_with_tip(
     """Engage with tip (like, bookmark, implement)"""
     try:
         # Verify tip exists
-        tip = db_client.water_conservation_tips.find_one({"id": tip_id})
+        tip = await db_client.water_conservation_tips.find_one({"id": tip_id})
         if not tip:
             raise HTTPException(status_code=404, detail="Tip not found")
         
         # Get or create engagement
-        engagement = db_client.tip_engagements.find_one({
+        engagement = await db_client.tip_engagements.find_one({
             "tip_id": tip_id,
             "customer_id": current_user.id
         })
@@ -224,7 +225,7 @@ async def engage_with_tip(
                 "bookmarked": False,
                 "implemented": False
             }
-            db_client.tip_engagements.insert_one(engagement)
+            await db_client.tip_engagements.insert_one(engagement)
         
         # Process action
         update_data = {}
@@ -266,14 +267,14 @@ async def engage_with_tip(
             raise HTTPException(status_code=400, detail="Invalid action")
         
         # Update engagement
-        db_client.tip_engagements.update_one(
+        await db_client.tip_engagements.update_one(
             {"id": engagement['id']},
             {"$set": update_data}
         )
         
         # Update tip counts
         if tip_update:
-            db_client.water_conservation_tips.update_one(
+            await db_client.water_conservation_tips.update_one(
                 {"id": tip_id},
                 tip_update
             )
@@ -293,18 +294,20 @@ async def get_bookmarked_tips(
     """Get user's bookmarked tips"""
     try:
         # Get bookmarked tip IDs
-        engagements = db_client.tip_engagements.find({
+        engagements_cursor = db_client.tip_engagements.find({
             "customer_id": current_user.id,
             "bookmarked": True
         })
+        engagements = await engagements_cursor.to_list(1000)
         
         bookmarked_tip_ids = [eng['tip_id'] for eng in engagements]
         
         # Get tips
-        tips = list(db_client.water_conservation_tips.find({
+        tips_cursor = db_client.water_conservation_tips.find({
             "id": {"$in": bookmarked_tip_ids},
             "is_active": True
-        }))
+        })
+        tips = await tips_cursor.to_list(1000)
         
         return [WaterConservationTip(**t) for t in tips]
         
@@ -350,7 +353,7 @@ async def create_tip(
             "image_url": request.image_url
         }
         
-        db_client.water_conservation_tips.insert_one(tip_data)
+        await db_client.water_conservation_tips.insert_one(tip_data)
         
         print(f"✅ Water conservation tip created: {request.title}")
         return WaterConservationTip(**tip_data)
@@ -371,7 +374,7 @@ async def update_tip(
         raise HTTPException(status_code=403, detail="Only admin can update tips")
     
     try:
-        tip = db_client.water_conservation_tips.find_one({"id": tip_id})
+        tip = await db_client.water_conservation_tips.find_one({"id": tip_id})
         if not tip:
             raise HTTPException(status_code=404, detail="Tip not found")
         
@@ -399,12 +402,12 @@ async def update_tip(
         if request.is_active is not None:
             update_data['is_active'] = request.is_active
         
-        db_client.water_conservation_tips.update_one(
+        await db_client.water_conservation_tips.update_one(
             {"id": tip_id},
             {"$set": update_data}
         )
         
-        updated_tip = db_client.water_conservation_tips.find_one({"id": tip_id})
+        updated_tip = await db_client.water_conservation_tips.find_one({"id": tip_id})
         print(f"✅ Tip updated: {tip_id}")
         return WaterConservationTip(**updated_tip)
         
@@ -423,12 +426,12 @@ async def delete_tip(
         raise HTTPException(status_code=403, detail="Only admin can delete tips")
     
     try:
-        tip = db_client.water_conservation_tips.find_one({"id": tip_id})
+        tip = await db_client.water_conservation_tips.find_one({"id": tip_id})
         if not tip:
             raise HTTPException(status_code=404, detail="Tip not found")
         
         # Soft delete (mark as inactive)
-        db_client.water_conservation_tips.update_one(
+        await db_client.water_conservation_tips.update_one(
             {"id": tip_id},
             {"$set": {"is_active": False, "updated_at": datetime.utcnow()}}
         )
@@ -451,8 +454,8 @@ async def get_tip_statistics(
     
     try:
         # Total tips
-        total_tips = db_client.water_conservation_tips.count_documents({})
-        active_tips = db_client.water_conservation_tips.count_documents({"is_active": True})
+        total_tips = await db_client.water_conservation_tips.count_documents({})
+        active_tips = await db_client.water_conservation_tips.count_documents({"is_active": True})
         
         # Aggregate stats
         pipeline = [
@@ -473,19 +476,17 @@ async def get_tip_statistics(
         # By category
         tips_by_category = {}
         for category in TipCategory:
-            count = db_client.water_conservation_tips.count_documents({"category": category, "is_active": True})
+            count = await db_client.water_conservation_tips.count_documents({"category": category, "is_active": True})
             tips_by_category[category] = count
         
         # Most popular tips
-        most_popular_tips = list(db_client.water_conservation_tips.find({"is_active": True})
-                                 .sort("view_count", -1)
-                                 .limit(5))
+        most_popular_cursor = db_client.water_conservation_tips.find({"is_active": True}).sort("view_count", -1).limit(5)
+        most_popular_tips = await most_popular_cursor.to_list(1000)
         most_popular = [{"id": t['id'], "title": t['title'], "views": t['view_count']} for t in most_popular_tips]
         
         # Most implemented tips
-        most_implemented_tips = list(db_client.water_conservation_tips.find({"is_active": True})
-                                     .sort("implementation_count", -1)
-                                     .limit(5))
+        most_implemented_cursor = db_client.water_conservation_tips.find({"is_active": True}).sort("implementation_count", -1).limit(5)
+        most_implemented_tips = await most_implemented_cursor.to_list(1000)
         most_implemented = [{"id": t['id'], "title": t['title'], "implementations": t['implementation_count']} for t in most_implemented_tips]
         
         return TipStats(
