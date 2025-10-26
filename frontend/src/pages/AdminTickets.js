@@ -38,9 +38,6 @@ const AdminTickets = () => {
 
   // Use relative URLs to avoid mixed content issues - frontend and backend are on same domain
   const API_BASE = '/api';
-  
-  // Keep BACKEND_URL for direct file downloads that need full URL
-  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || window.location.origin;
 
   useEffect(() => {
     fetchStats();

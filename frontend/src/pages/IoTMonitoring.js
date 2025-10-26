@@ -365,7 +365,7 @@ const IoTMonitoring = () => {
           <div className="flex items-center justify-center h-96">
             <div className="text-center">
               <RefreshCw className="w-12 h-12 text-blue-600 animate-spin mx-auto mb-4" />
-              <p className="text-gray-600">Loading monitoring devices...</p>
+              <p className="text-gray-600">Loading Monitoring devices...</p>
             </div>
           </div>
         </div>
@@ -514,7 +514,7 @@ const IoTMonitoring = () => {
                 <div className="text-center py-8">
                   <Settings className="w-12 h-12 text-gray-400 mx-auto mb-2" />
                   <p className="text-gray-600">No devices found</p>
-                  <p className="text-sm text-gray-500">Add your first IoT device to get started</p>
+                  <p className="text-sm text-gray-500">Add your first monitoring device to get started</p>
                 </div>
               )}
             </div>
@@ -590,7 +590,7 @@ const IoTMonitoring = () => {
       {showAddModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
-            <h2 className="text-2xl font-bold mb-4">Add New IoT Device</h2>
+            <h2 className="text-2xl font-bold mb-4">Add New Monitoring Device</h2>
             <form onSubmit={handleAddDevice}>
               <div className="space-y-4">
                 <div>
@@ -718,7 +718,7 @@ const IoTMonitoring = () => {
       {showEditModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
-            <h2 className="text-2xl font-bold mb-4">Edit IoT Device</h2>
+            <h2 className="text-2xl font-bold mb-4">Edit Monitoring Device</h2>
             <form onSubmit={handleEditDevice}>
               <div className="space-y-4">
                 <div>
