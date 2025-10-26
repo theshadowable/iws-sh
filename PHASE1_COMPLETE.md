@@ -94,8 +94,8 @@
 ### 🚀 How to Use
 
 1. **Access the Application:**
-   - Frontend: https://device-monitor-18.preview.emergentagent.com
-   - Backend API: https://device-monitor-18.preview.emergentagent.com/api
+   - Frontend: https://element-verifier.preview.emergentagent.com
+   - Backend API: https://element-verifier.preview.emergentagent.com/api
 
 2. **Login:**
    - Use one of the demo credentials above
