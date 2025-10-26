@@ -25,6 +25,9 @@ class WaterConservationTip(BaseModel):
     potential_savings_amount: Optional[float] = None  # Estimated savings in IDR per month
     difficulty_level: DifficultyLevel
     implementation_time: Optional[str] = None  # e.g., "5 minutes", "1 hour", "1 day"
+    implementation_steps: List[str] = []  # Step-by-step instructions
+    benefits: List[str] = []  # List of benefits
+    required_tools: List[str] = []  # Tools needed for implementation
     created_at: datetime
     updated_at: datetime
     created_by: str  # Admin ID
@@ -59,6 +62,9 @@ class CreateTipRequest(BaseModel):
     potential_savings_amount: Optional[float] = Field(None, ge=0)
     difficulty_level: DifficultyLevel
     implementation_time: Optional[str] = None
+    implementation_steps: List[str] = []
+    benefits: List[str] = []
+    required_tools: List[str] = []
     tags: List[str] = []
     image_url: Optional[str] = None
 
@@ -71,6 +77,9 @@ class UpdateTipRequest(BaseModel):
     potential_savings_amount: Optional[float] = Field(None, ge=0)
     difficulty_level: Optional[DifficultyLevel] = None
     implementation_time: Optional[str] = None
+    implementation_steps: Optional[List[str]] = None
+    benefits: Optional[List[str]] = None
+    required_tools: Optional[List[str]] = None
     tags: Optional[List[str]] = None
     image_url: Optional[str] = None
     is_active: Optional[bool] = None

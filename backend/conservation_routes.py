@@ -342,6 +342,9 @@ async def create_tip(
             "potential_savings_amount": request.potential_savings_amount,
             "difficulty_level": request.difficulty_level,
             "implementation_time": request.implementation_time,
+            "implementation_steps": request.implementation_steps,
+            "benefits": request.benefits,
+            "required_tools": request.required_tools,
             "created_at": now,
             "updated_at": now,
             "created_by": current_user.id,
@@ -395,6 +398,12 @@ async def update_tip(
             update_data['difficulty_level'] = request.difficulty_level
         if request.implementation_time is not None:
             update_data['implementation_time'] = request.implementation_time
+        if request.implementation_steps is not None:
+            update_data['implementation_steps'] = request.implementation_steps
+        if request.benefits is not None:
+            update_data['benefits'] = request.benefits
+        if request.required_tools is not None:
+            update_data['required_tools'] = request.required_tools
         if request.tags is not None:
             update_data['tags'] = request.tags
         if request.image_url is not None:
