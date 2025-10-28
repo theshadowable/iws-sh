@@ -396,6 +396,18 @@ async def seed_all_data():
             'difficulty_level': 'easy',
             'potential_savings_percentage': 15.0,
             'implementation_time': '30 minutes',
+            'implementation_steps': [
+                'Turn off the water supply to the faucet',
+                'Remove the faucet handle',
+                'Replace the worn washer or O-ring',
+                'Reassemble the faucet and turn water back on'
+            ],
+            'benefits': [
+                'Save up to 20 liters of water daily',
+                'Reduce water bills',
+                'Prevent water damage to fixtures'
+            ],
+            'required_tools': ['Wrench', 'Screwdriver', 'Replacement washer'],
             'tags': ['maintenance', 'leaks', 'DIY'],
             'is_active': True,
             'view_count': 245,
@@ -413,6 +425,19 @@ async def seed_all_data():
             'difficulty_level': 'easy',
             'potential_savings_percentage': 40.0,
             'implementation_time': '20 minutes',
+            'implementation_steps': [
+                'Purchase a WaterSense certified low-flow showerhead',
+                'Remove the old showerhead by turning counterclockwise',
+                'Clean the shower arm threads',
+                'Apply thread tape to the shower arm',
+                'Install the new showerhead by turning clockwise'
+            ],
+            'benefits': [
+                'Reduce water consumption by 40-50%',
+                'Lower energy costs for water heating',
+                'Maintain comfortable water pressure'
+            ],
+            'required_tools': ['Adjustable wrench', 'Thread tape', 'Low-flow showerhead'],
             'tags': ['efficiency', 'bathroom', 'upgrade'],
             'is_active': True,
             'view_count': 312,
@@ -430,6 +455,20 @@ async def seed_all_data():
             'difficulty_level': 'medium',
             'potential_savings_percentage': 30.0,
             'implementation_time': '2 hours',
+            'implementation_steps': [
+                'Choose a suitable location for rain barrel',
+                'Position barrel under downspout',
+                'Install overflow valve',
+                'Add screen to prevent debris',
+                'Connect hose or watering can spout'
+            ],
+            'benefits': [
+                'Free water source for garden',
+                'Reduce tap water usage by 30%',
+                'Better for plants (no chlorine)',
+                'Reduce stormwater runoff'
+            ],
+            'required_tools': ['Rain barrel', 'Downspout diverter', 'Hose', 'Screen mesh'],
             'tags': ['garden', 'rainwater', 'outdoor'],
             'is_active': True,
             'view_count': 187,
@@ -447,6 +486,20 @@ async def seed_all_data():
             'difficulty_level': 'easy',
             'potential_savings_percentage': 25.0,
             'implementation_time': '5 minutes',
+            'implementation_steps': [
+                'Wait until dishwasher is completely full before running',
+                'Scrape food off plates (no need to pre-rinse)',
+                'Load dishes properly for better cleaning',
+                'Select eco or energy-saving mode',
+                'Run during off-peak hours if applicable'
+            ],
+            'benefits': [
+                'Save up to 27 liters per load',
+                'Reduce energy consumption',
+                'Lower utility bills',
+                'Better for environment'
+            ],
+            'required_tools': [],
             'tags': ['kitchen', 'appliances', 'habits'],
             'is_active': True,
             'view_count': 423,
