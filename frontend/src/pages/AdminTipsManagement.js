@@ -57,7 +57,8 @@ const AdminTipsManagement = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      let url = `${API_BASE}/tips?limit=100`;
+      // Important: Use trailing slash for FastAPI routes
+      let url = `${API_BASE}/tips/?limit=100`;
 
       if (categoryFilter !== 'all') url += `&category=${categoryFilter}`;
       if (difficultyFilter !== 'all') url += `&difficulty=${difficultyFilter}`;
