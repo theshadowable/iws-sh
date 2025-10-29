@@ -69,7 +69,14 @@ async def get_current_user(
     
     # Get user from database
     from server import db as database
-    user_doc = await database.users.find_one({"id": user_id}, {"_id": 0})
+    from bson import ObjectId
+    
+    # Try to find user by _id (ObjectId)
+    try:
+        user_doc = await database.users.find_one({"_id": ObjectId(user_id)})
+    except:
+        # Fallback to string id if ObjectId conversion fails
+        user_doc = await database.users.find_one({"id": user_id})
     
     if user_doc is None:
         raise HTTPException(
@@ -83,7 +90,12 @@ async def get_current_user(
     if isinstance(user_doc.get('updated_at'), str):
         user_doc['updated_at'] = datetime.fromisoformat(user_doc['updated_at'])
     
-    return User(**user_doc)
+    # Convert _id to id for User model
+    user_data = {k: v for k, v in user_doc.items() if k != 'hashed_password'}
+    if '_id' in user_data:
+        user_data['id'] = str(user_data.pop('_id'))
+    
+    return User(**user_data)
 
 
 def require_role(allowed_roles: list[UserRole]):

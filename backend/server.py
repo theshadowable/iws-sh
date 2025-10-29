@@ -160,7 +160,7 @@ async def register(user_data: UserCreate):
 @api_router.post("/auth/login", response_model=Token)
 async def login(credentials: UserLogin):
     """Login and get access token"""
-    user_doc = await db.users.find_one({"email": credentials.email}, {"_id": 0})
+    user_doc = await db.users.find_one({"email": credentials.email})
     
     if not user_doc:
         raise HTTPException(
@@ -181,7 +181,7 @@ async def login(credentials: UserLogin):
         )
     
     # Create access token
-    access_token = create_access_token(data={"sub": user_doc['id']})
+    access_token = create_access_token(data={"sub": str(user_doc['_id'])})
     
     # Convert timestamps
     if isinstance(user_doc.get('created_at'), str):
@@ -189,7 +189,10 @@ async def login(credentials: UserLogin):
     if isinstance(user_doc.get('updated_at'), str):
         user_doc['updated_at'] = datetime.fromisoformat(user_doc['updated_at'])
     
-    user = User(**{k: v for k, v in user_doc.items() if k != 'hashed_password'})
+    # Convert _id to id for User model
+    user_data = {k: v for k, v in user_doc.items() if k != 'hashed_password'}
+    user_data['id'] = str(user_data.pop('_id'))
+    user = User(**user_data)
     
     return Token(access_token=access_token, user=user)
 

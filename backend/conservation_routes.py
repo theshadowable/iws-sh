@@ -60,8 +60,15 @@ async def get_tips(
         
         has_more = (skip + len(tips)) < total
         
+        # Convert MongoDB documents to Pydantic models
+        tip_models = []
+        for t in tips:
+            # Convert _id to id
+            t['id'] = str(t.pop('_id'))
+            tip_models.append(WaterConservationTip(**t))
+        
         return TipListResponse(
-            tips=[WaterConservationTip(**t) for t in tips],
+            tips=tip_models,
             total=total,
             page=page,
             limit=limit,
@@ -88,7 +95,10 @@ async def get_random_tip(
         if not tips:
             raise HTTPException(status_code=404, detail="No tips available")
         
-        return WaterConservationTip(**tips[0])
+        # Convert _id to id
+        tip_data = tips[0]
+        tip_data['id'] = str(tip_data.pop('_id'))
+        return WaterConservationTip(**tip_data)
         
     except Exception as e:
         print(f"❌ Error getting random tip: {str(e)}")
@@ -122,7 +132,14 @@ async def get_personalized_tips(
             
             tips = [t for t in tips if t['id'] not in viewed_tip_ids]
         
-        return [WaterConservationTip(**t) for t in tips]
+        # Convert _id to id for each tip
+        tip_models = []
+        for t in tips:
+            if '_id' in t:
+                t['id'] = str(t.pop('_id'))
+            tip_models.append(WaterConservationTip(**t))
+        
+        return tip_models
         
     except Exception as e:
         print(f"❌ Error getting personalized tips: {str(e)}")
@@ -181,6 +198,14 @@ async def get_tip_detail(
         
         # Refresh tip data (for updated view count)
         tip = await db_client.water_conservation_tips.find_one({"id": tip_id})
+        
+        # Convert _id to id for tip
+        if '_id' in tip:
+            tip['id'] = str(tip.pop('_id'))
+        
+        # Convert _id to id for engagement if exists
+        if engagement and '_id' in engagement:
+            engagement['id'] = str(engagement.pop('_id'))
         
         return TipDetailWithEngagement(
             tip=WaterConservationTip(**tip),
@@ -309,7 +334,14 @@ async def get_bookmarked_tips(
         })
         tips = await tips_cursor.to_list(1000)
         
-        return [WaterConservationTip(**t) for t in tips]
+        # Convert _id to id for each tip
+        tip_models = []
+        for t in tips:
+            if '_id' in t:
+                t['id'] = str(t.pop('_id'))
+            tip_models.append(WaterConservationTip(**t))
+        
+        return tip_models
         
     except Exception as e:
         print(f"❌ Error getting bookmarked tips: {str(e)}")
@@ -357,6 +389,9 @@ async def create_tip(
         }
         
         await db_client.water_conservation_tips.insert_one(tip_data)
+        
+        # Convert _id to id for response
+        tip_data['id'] = str(tip_data.pop('_id'))
         
         print(f"✅ Water conservation tip created: {request.title}")
         return WaterConservationTip(**tip_data)
@@ -417,6 +452,11 @@ async def update_tip(
         )
         
         updated_tip = await db_client.water_conservation_tips.find_one({"id": tip_id})
+        
+        # Convert _id to id for response
+        if '_id' in updated_tip:
+            updated_tip['id'] = str(updated_tip.pop('_id'))
+        
         print(f"✅ Tip updated: {tip_id}")
         return WaterConservationTip(**updated_tip)
         
