@@ -11,7 +11,7 @@ import time
 from typing import Dict, Any, Optional
 
 # Backend URL from environment
-BACKEND_URL = "https://water-tips-fix.preview.emergentagent.com/api"
+BACKEND_URL = "https://frontend-automation.preview.emergentagent.com/api"
 
 # Demo accounts to test
 DEMO_ACCOUNTS = [

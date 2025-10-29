@@ -94,8 +94,8 @@
 ### 🚀 How to Use
 
 1. **Access the Application:**
-   - Frontend: https://water-tips-fix.preview.emergentagent.com
-   - Backend API: https://water-tips-fix.preview.emergentagent.com/api
+   - Frontend: https://frontend-automation.preview.emergentagent.com
+   - Backend API: https://frontend-automation.preview.emergentagent.com/api
 
 2. **Login:**
    - Use one of the demo credentials above
