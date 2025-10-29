@@ -26,7 +26,7 @@ db = client[DB_NAME]
 
 # Helper function to check admin access
 def require_admin(current_user: User):
-    if current_user.get('role') != 'admin':
+    if current_user.role != 'admin':
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Admin access required"

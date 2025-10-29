@@ -113,45 +113,61 @@ async def seed_all_data():
     demo_properties = [
         {
             'id': str(uuid.uuid4()),
+            'property_name': 'Rumah Sudirman',
             'property_type': 'residential',
             'address': 'Jl. Sudirman No. 123, Jakarta Pusat',
             'city': 'Jakarta',
+            'province': 'DKI Jakarta',
             'postal_code': '10110',
             'customer_id': customer1_user['id'],
             'customer_name': customer1_user['full_name'],
+            'owner_name': customer1_user['full_name'],
+            'owner_phone': '+6281234567890',
             'status': 'active',
             'created_at': datetime.utcnow()
         },
         {
             'id': str(uuid.uuid4()),
+            'property_name': 'Toko Thamrin',
             'property_type': 'commercial',
             'address': 'Jl. Thamrin No. 45, Jakarta Pusat',
             'city': 'Jakarta',
+            'province': 'DKI Jakarta',
             'postal_code': '10350',
             'customer_id': customer2_user['id'],
             'customer_name': customer2_user['full_name'],
+            'owner_name': customer2_user['full_name'],
+            'owner_phone': '+6281234567891',
             'status': 'active',
             'created_at': datetime.utcnow()
         },
         {
             'id': str(uuid.uuid4()),
+            'property_name': 'Pabrik Cibinong',
             'property_type': 'industrial',
             'address': 'Jl. Raya Bogor KM 27, Cibinong',
             'city': 'Bogor',
+            'province': 'Jawa Barat',
             'postal_code': '16914',
             'customer_id': customer3_user['id'],
             'customer_name': customer3_user['full_name'],
+            'owner_name': customer3_user['full_name'],
+            'owner_phone': '+6281234567892',
             'status': 'active',
             'created_at': datetime.utcnow()
         },
         {
             'id': str(uuid.uuid4()),
+            'property_name': 'Rumah Bandung',
             'property_type': 'residential',
             'address': 'Jl. Gatot Subroto No. 88, Bandung',
             'city': 'Bandung',
+            'province': 'Jawa Barat',
             'postal_code': '40262',
             'customer_id': customer1_user['id'],
             'customer_name': customer1_user['full_name'],
+            'owner_name': customer1_user['full_name'],
+            'owner_phone': '+6281234567890',
             'status': 'active',
             'created_at': datetime.utcnow()
         }
@@ -171,6 +187,7 @@ async def seed_all_data():
         {
             'id': str(uuid.uuid4()),
             'device_id': 'WM-2024-001',
+            'device_name': 'Water Meter Sudirman',
             'device_type': 'smart_meter',
             'property_id': demo_properties[0]['id'],
             'customer_id': customer1_user['id'],
@@ -182,6 +199,7 @@ async def seed_all_data():
         {
             'id': str(uuid.uuid4()),
             'device_id': 'WM-2024-002',
+            'device_name': 'Water Meter Thamrin',
             'device_type': 'smart_meter',
             'property_id': demo_properties[1]['id'],
             'customer_id': customer2_user['id'],
@@ -193,6 +211,7 @@ async def seed_all_data():
         {
             'id': str(uuid.uuid4()),
             'device_id': 'WM-2024-003',
+            'device_name': 'Water Meter Cibinong',
             'device_type': 'smart_meter',
             'property_id': demo_properties[2]['id'],
             'customer_id': customer3_user['id'],
@@ -204,6 +223,7 @@ async def seed_all_data():
         {
             'id': str(uuid.uuid4()),
             'device_id': 'WM-2024-004',
+            'device_name': 'Water Meter Bandung',
             'device_type': 'smart_meter',
             'property_id': demo_properties[3]['id'],
             'customer_id': customer1_user['id'],
@@ -213,6 +233,8 @@ async def seed_all_data():
             'created_at': datetime.utcnow()
         }
     ]
+    
+    await devices_collection.insert_many(demo_devices)
     
     await devices_collection.insert_many(demo_devices)
     print(f"✅ Created {len(demo_devices)} devices")
