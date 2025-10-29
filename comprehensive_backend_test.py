@@ -1,17 +1,35 @@
 #!/usr/bin/env python3
 """
-Comprehensive Backend API Testing Script for IndoWater Solution
-Tests all major API endpoints as specified in the review request
+COMPREHENSIVE BACKEND API TESTING SCRIPT FOR INDOWATER SOLUTION
+Tests ALL backend API endpoints to identify bugs, errors, and non-functional features.
+
+This script performs a complete sweep of the IndoWater backend system including:
+- Authentication & Users
+- Dashboard APIs  
+- Customer Management
+- Device Management
+- IoT Monitoring
+- Analytics APIs
+- Payment APIs
+- Voucher System
+- Support Tickets
+- Water Conservation Tips
+- Alert & Notification System
+- Admin Management
+- Report Generation
+- Role & Permission Management
+- Properties Management
 """
 
 import requests
 import json
 import sys
 import time
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
+from datetime import datetime, timedelta
 
 # Backend URL from environment
-BACKEND_URL = "https://frontend-automation.preview.emergentagent.com/api"
+BACKEND_URL = "https://bug-sweep.preview.emergentagent.com/api"
 
 # Demo accounts to test
 DEMO_ACCOUNTS = [
