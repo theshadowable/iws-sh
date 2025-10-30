@@ -30,10 +30,8 @@ from openpyxl.chart import LineChart, Reference
 
 router = APIRouter(prefix="/reports", tags=["reports"])
 
-# Database connection
-mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ.get('DB_NAME', 'indowater_db')]
+# Database connection - import from server to avoid environment variable issues
+from server import db
 
 
 def parse_date(date_str: str) -> datetime:

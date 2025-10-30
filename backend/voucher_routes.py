@@ -16,10 +16,8 @@ from voucher_models import (
 
 router = APIRouter(prefix="/vouchers", tags=["Vouchers"])
 
-# Database connection
-mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ.get('DB_NAME', 'indowater_db')]
+# Database connection - import from server to avoid environment variable issues
+from server import db
 
 
 @router.post("/", response_model=Voucher)

@@ -209,25 +209,47 @@ async def update_profile(
     current_user: User = Depends(get_current_user)
 ):
     """Update current user profile"""
-    update_data = user_update.model_dump(exclude_unset=True)
-    
-    if 'password' in update_data:
-        update_data['hashed_password'] = get_password_hash(update_data.pop('password'))
-    
-    update_data['updated_at'] = datetime.utcnow().isoformat()
-    
-    await db.users.update_one(
-        {"id": current_user.id},
-        {"$set": update_data}
-    )
-    
-    updated_user = await db.users.find_one({"id": current_user.id}, {"_id": 0})
-    if isinstance(updated_user.get('created_at'), str):
-        updated_user['created_at'] = datetime.fromisoformat(updated_user['created_at'])
-    if isinstance(updated_user.get('updated_at'), str):
-        updated_user['updated_at'] = datetime.fromisoformat(updated_user['updated_at'])
-    
-    return User(**{k: v for k, v in updated_user.items() if k != 'hashed_password'})
+    try:
+        from bson import ObjectId
+        
+        update_data = user_update.model_dump(exclude_unset=True)
+        
+        if 'password' in update_data:
+            update_data['hashed_password'] = get_password_hash(update_data.pop('password'))
+        
+        update_data['updated_at'] = datetime.utcnow().isoformat()
+        
+        # Use _id (ObjectId) to find user, not id field
+        result = await db.users.update_one(
+            {"_id": ObjectId(current_user.id)},
+            {"$set": update_data}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        # Find user by _id
+        updated_user = await db.users.find_one({"_id": ObjectId(current_user.id)})
+        if not updated_user:
+            raise HTTPException(status_code=404, detail="User not found after update")
+        
+        # Parse datetime fields
+        if isinstance(updated_user.get('created_at'), str):
+            updated_user['created_at'] = datetime.fromisoformat(updated_user['created_at'])
+        if isinstance(updated_user.get('updated_at'), str):
+            updated_user['updated_at'] = datetime.fromisoformat(updated_user['updated_at'])
+        
+        # Convert _id to id for User model and remove hashed_password
+        user_data = {k: v for k, v in updated_user.items() if k != 'hashed_password'}
+        if '_id' in user_data:
+            user_data['id'] = str(user_data.pop('_id'))
+        
+        return User(**user_data)
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"Profile update error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to update profile: {str(e)}")
 
 
 # ==================== USER MANAGEMENT ROUTES (Admin Only) ====================

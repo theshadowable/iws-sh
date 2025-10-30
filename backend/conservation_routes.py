@@ -15,10 +15,8 @@ from tip_recommendation_service import TipRecommendationService
 
 router = APIRouter(prefix="/tips", tags=["Water Conservation Tips"])
 
-# Database connection
-mongo_url = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
-client = AsyncIOMotorClient(mongo_url)
-db_client = client[os.environ.get('DB_NAME', 'indowater_db')]
+# Database connection - import from server to avoid environment variable issues
+from server import db as db_client
 
 # ============================================================================
 # CUSTOMER ENDPOINTS

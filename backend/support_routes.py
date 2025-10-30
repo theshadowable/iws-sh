@@ -20,10 +20,8 @@ from file_service import file_service
 
 router = APIRouter(prefix="/tickets", tags=["Support Tickets"])
 
-# Database connection
-mongo_url = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
-client = AsyncIOMotorClient(mongo_url)
-db_client = client[os.environ.get('DB_NAME', 'indowater_db')]
+# Database connection - import from server to avoid environment variable issues
+from server import db as db_client
 
 # Helper function to generate ticket number
 async def generate_ticket_number() -> str:
