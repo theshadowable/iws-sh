@@ -94,8 +94,8 @@
 ### 🚀 How to Use
 
 1. **Access the Application:**
-   - Frontend: https://bug-hunter-83.preview.emergentagent.com
-   - Backend API: https://bug-hunter-83.preview.emergentagent.com/api
+   - Frontend: https://fix-bugs-backend.preview.emergentagent.com
+   - Backend API: https://fix-bugs-backend.preview.emergentagent.com/api
 
 2. **Login:**
    - Use one of the demo credentials above

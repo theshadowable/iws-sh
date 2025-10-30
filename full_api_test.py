@@ -9,7 +9,7 @@ import json
 import time
 from datetime import datetime, timedelta
 
-BACKEND_URL = "https://bug-hunter-83.preview.emergentagent.com/api"
+BACKEND_URL = "https://fix-bugs-backend.preview.emergentagent.com/api"
 
 # Test credentials
 ADMIN_CREDS = {"email": "admin@indowater.com", "password": "admin123"}
