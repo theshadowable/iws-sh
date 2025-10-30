@@ -208,15 +208,18 @@ async def update_profile(
     user_update: UserUpdate,
     current_user: User = Depends(get_current_user)
 ):
-    """Update current user profile"""
+    """Update current user profile - Enhanced with better error handling"""
     try:
         from bson import ObjectId
         
-        update_data = user_update.model_dump(exclude_unset=True)
+        # Get update data, excluding unset and None values
+        update_data = user_update.model_dump(exclude_unset=True, exclude_none=True)
         
+        # Handle password update securely
         if 'password' in update_data:
             update_data['hashed_password'] = get_password_hash(update_data.pop('password'))
         
+        # Update timestamp
         update_data['updated_at'] = datetime.utcnow().isoformat()
         
         # Use _id (ObjectId) to find user, not id field
@@ -233,22 +236,31 @@ async def update_profile(
         if not updated_user:
             raise HTTPException(status_code=404, detail="User not found after update")
         
-        # Parse datetime fields
+        # Parse datetime fields safely
         if isinstance(updated_user.get('created_at'), str):
-            updated_user['created_at'] = datetime.fromisoformat(updated_user['created_at'])
+            try:
+                updated_user['created_at'] = datetime.fromisoformat(updated_user['created_at'])
+            except:
+                updated_user['created_at'] = datetime.utcnow()
+        
         if isinstance(updated_user.get('updated_at'), str):
-            updated_user['updated_at'] = datetime.fromisoformat(updated_user['updated_at'])
+            try:
+                updated_user['updated_at'] = datetime.fromisoformat(updated_user['updated_at'])
+            except:
+                updated_user['updated_at'] = datetime.utcnow()
         
         # Convert _id to id for User model and remove hashed_password
         user_data = {k: v for k, v in updated_user.items() if k != 'hashed_password'}
         if '_id' in user_data:
             user_data['id'] = str(user_data.pop('_id'))
         
+        logger.info(f"✅ Profile updated for user: {current_user.email}")
         return User(**user_data)
+        
     except HTTPException:
         raise
     except Exception as e:
-        logging.error(f"Profile update error: {str(e)}")
+        logger.error(f"❌ Profile update error for {current_user.email}: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Failed to update profile: {str(e)}")
 
 

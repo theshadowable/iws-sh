@@ -297,13 +297,15 @@ def generate_excel_report(data: dict, customer_info: dict, include_charts: bool 
     return excel_bytes
 
 
+# Support both with and without trailing slash
 @router.post("/export-pdf")
+@router.post("/export-pdf/")
 async def export_pdf_report(
     request: ReportRequest,
     current_user: User = Depends(get_current_user)
 ):
     """
-    Generate and download PDF report
+    Generate and download PDF report (supports both /export-pdf and /export-pdf/)
     """
     # Permission check
     if current_user.role == UserRole.CUSTOMER:
@@ -367,12 +369,13 @@ async def export_pdf_report(
 
 
 @router.post("/export-excel")
+@router.post("/export-excel/")
 async def export_excel_report(
     request: ReportRequest,
     current_user: User = Depends(get_current_user)
 ):
     """
-    Generate and download Excel report
+    Generate and download Excel report (supports both /export-excel and /export-excel/)
     """
     # Permission check
     if current_user.role == UserRole.CUSTOMER:

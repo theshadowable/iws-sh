@@ -64,23 +64,40 @@ async def create_ticket(
     current_user: User = Depends(get_current_user),
 
 ):
-    """Create new support ticket"""
+    """Create new support ticket - Fixed customer lookup"""
     try:
+        from bson import ObjectId
+        import logging
+        
+        logger = logging.getLogger(__name__)
+        
         ticket_id = str(uuid.uuid4())
         ticket_number = await generate_ticket_number()
         now = datetime.utcnow()
         
-        # Get customer info
-        customer = await db_client.users.find_one({"id": current_user.id})
+        # Get customer info - Try both id field and _id field
+        customer = await db_client.users.find_one({
+            "$or": [
+                {"id": current_user.id},
+                {"_id": ObjectId(current_user.id)}
+            ]
+        })
+        
         if not customer:
-            raise HTTPException(status_code=404, detail="Customer not found")
+            # If still not found, log the issue and use current_user data
+            logger.warning(f"Customer lookup failed for user_id: {current_user.id}, using current_user data")
+            customer_name = current_user.full_name or current_user.email
+            customer_email = current_user.email
+        else:
+            customer_name = customer.get('full_name', customer.get('email'))
+            customer_email = customer.get('email')
         
         ticket_data = {
             "id": ticket_id,
             "ticket_number": ticket_number,
             "customer_id": current_user.id,
-            "customer_name": customer.get('full_name', customer.get('email')),
-            "customer_email": customer.get('email'),
+            "customer_name": customer_name,
+            "customer_email": customer_email,
             "assigned_to": None,
             "assigned_to_name": None,
             "category": request.category,
@@ -104,24 +121,29 @@ async def create_ticket(
         
         await db_client.support_tickets.insert_one(ticket_data)
         
-        # Send email notification
-        email_service.send_ticket_created_notification({
-            'ticket_number': ticket_number,
-            'customer_name': ticket_data['customer_name'],
-            'customer_email': ticket_data['customer_email'],
-            'category': request.category,
-            'priority': request.priority,
-            'subject': request.subject,
-            'description': request.description,
-            'created_at': now.strftime('%Y-%m-%d %H:%M:%S')
-        })
+        # Send email notification with error handling
+        try:
+            email_service.send_ticket_created_notification({
+                'ticket_number': ticket_number,
+                'customer_name': customer_name,
+                'customer_email': customer_email,
+                'category': request.category,
+                'priority': request.priority,
+                'subject': request.subject,
+                'description': request.description,
+                'created_at': now.strftime('%Y-%m-%d %H:%M:%S')
+            })
+        except Exception as email_error:
+            logger.warning(f"Failed to send email notification: {email_error}")
         
-        print(f"✅ Ticket created: {ticket_number}")
+        logger.info(f"✅ Ticket created: {ticket_number}")
         return SupportTicket(**ticket_data)
         
     except Exception as e:
-        print(f"❌ Error creating ticket: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"❌ Error creating ticket: {str(e)}")
+        import traceback
+        logger.error(f"Traceback: {traceback.format_exc()}")
+        raise HTTPException(status_code=500, detail=f"Failed to create ticket: {str(e)}")
 
 @router.get("/", response_model=TicketListResponse)
 async def get_tickets(

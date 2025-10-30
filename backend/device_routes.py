@@ -17,7 +17,9 @@ from device_models import (
 router = APIRouter(prefix="/devices", tags=["devices-enhanced"])
 
 
+# Support both with and without trailing slash
 @router.get("/comprehensive", response_model=List[DeviceComprehensive])
+@router.get("/comprehensive/", response_model=List[DeviceComprehensive])
 async def get_devices_comprehensive(
     status: Optional[str] = None,
     device_type: Optional[str] = None,
