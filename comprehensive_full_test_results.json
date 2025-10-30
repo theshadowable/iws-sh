@@ -1,0 +1,3524 @@
+{
+  "Admin": {
+    "login": {
+      "success": true,
+      "data": {
+        "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2OTAyNmZkM2M0ZTM2MzUzOTAzZjcyNDkiLCJleHAiOjE3NjIzNzI2NTd9.juRbyXrdsaXCVuUCFJvjon64afFvV2440evN7JsrDm8",
+        "token_type": "bearer",
+        "user": {
+          "email": "admin@indowater.com",
+          "full_name": "Admin User",
+          "role": "admin",
+          "phone": "+62-812-3456-7890",
+          "is_active": true,
+          "id": "69026fd3c4e36353903f7249",
+          "balance": 0.0,
+          "created_at": "2025-10-29T19:49:37.725287",
+          "updated_at": "2025-10-29T19:49:37.725301"
+        }
+      },
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2OTAyNmZkM2M0ZTM2MzUzOTAzZjcyNDkiLCJleHAiOjE3NjIzNzI2NTd9.juRbyXrdsaXCVuUCFJvjon64afFvV2440evN7JsrDm8",
+      "user": {
+        "email": "admin@indowater.com",
+        "full_name": "Admin User",
+        "role": "admin",
+        "phone": "+62-812-3456-7890",
+        "is_active": true,
+        "id": "69026fd3c4e36353903f7249",
+        "balance": 0.0,
+        "created_at": "2025-10-29T19:49:37.725287",
+        "updated_at": "2025-10-29T19:49:37.725301"
+      }
+    },
+    "authentication": {
+      "get_current_user": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "email": "admin@indowater.com",
+          "full_name": "Admin User",
+          "role": "admin",
+          "phone": "+62-812-3456-7890",
+          "is_active": true,
+          "id": "69026fd3c4e36353903f7249",
+          "balance": 0.0,
+          "created_at": "2025-10-29T19:49:37.725287",
+          "updated_at": "2025-10-29T19:49:37.725301"
+        },
+        "headers": {
+          "Content-Length": "246",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:37 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "update_profile": {
+        "success": false,
+        "status_code": 500,
+        "error": "Internal Server Error",
+        "headers": {
+          "Content-Length": "21",
+          "content-type": "text/plain; charset=utf-8",
+          "date": "Wed, 29 Oct 2025 19:57:37 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "dashboard": {
+      "dashboard_stats": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "total_users": 3,
+          "total_customers": 0,
+          "total_properties": 0,
+          "total_devices": 0,
+          "active_devices": 0,
+          "total_transactions": 0,
+          "total_revenue": 0
+        },
+        "headers": {
+          "Content-Length": "136",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:37 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "user_management": {
+      "list_users": {
+        "success": true,
+        "status_code": 200,
+        "data": [
+          {
+            "email": "admin@indowater.com",
+            "full_name": "Admin User",
+            "role": "admin",
+            "phone": "+62-812-3456-7890",
+            "is_active": true,
+            "id": "admin-001",
+            "balance": 0.0,
+            "created_at": "2025-10-29T19:49:37.725287",
+            "updated_at": "2025-10-29T19:49:37.725301"
+          },
+          {
+            "email": "technician@indowater.com",
+            "full_name": "Technician User",
+            "role": "technician",
+            "phone": "+62-812-3456-7891",
+            "is_active": true,
+            "id": "tech-001",
+            "balance": 0.0,
+            "created_at": "2025-10-29T19:49:38.655098",
+            "updated_at": "2025-10-29T19:49:38.655113"
+          },
+          {
+            "email": "customer@indowater.com",
+            "full_name": "Customer User",
+            "role": "customer",
+            "phone": "+62-812-3456-7892",
+            "is_active": true,
+            "id": "cust-001",
+            "balance": 0.0,
+            "created_at": "2025-10-29T19:49:39.549213",
+            "updated_at": "2025-10-29T19:49:39.549228"
+          }
+        ],
+        "headers": {
+          "Content-Length": "719",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:37 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "create_user": {
+        "success": true,
+        "status_code": 201,
+        "data": {
+          "email": "test_user_1761767858@indowater.com",
+          "full_name": "Test User",
+          "role": "customer",
+          "phone": "+6281234567890",
+          "is_active": true,
+          "id": "d89d1689-b960-4b6a-ba56-aa846cb3c8c0",
+          "balance": 0.0,
+          "created_at": "2025-10-29T19:57:38.479232",
+          "updated_at": "2025-10-29T19:57:38.479236"
+        },
+        "headers": {
+          "Content-Length": "272",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:37 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "get_user": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "email": "test_user_1761767858@indowater.com",
+          "full_name": "Test User",
+          "role": "customer",
+          "phone": "+6281234567890",
+          "is_active": true,
+          "id": "d89d1689-b960-4b6a-ba56-aa846cb3c8c0",
+          "balance": 0.0,
+          "created_at": "2025-10-29T19:57:38.479232",
+          "updated_at": "2025-10-29T19:57:38.479236"
+        },
+        "headers": {
+          "Content-Length": "272",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:37 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "update_user": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "email": "test_user_1761767858@indowater.com",
+          "full_name": "Updated Test User",
+          "role": "customer",
+          "phone": "+6281234567890",
+          "is_active": true,
+          "id": "d89d1689-b960-4b6a-ba56-aa846cb3c8c0",
+          "balance": 0.0,
+          "created_at": "2025-10-29T19:57:38.479232",
+          "updated_at": "2025-10-29T19:57:39.592622"
+        },
+        "headers": {
+          "Content-Length": "280",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:39 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "delete_user": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "message": "User deleted successfully"
+        },
+        "headers": {
+          "Content-Length": "39",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:39 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "customer_management": {
+      "list_customers": {
+        "success": true,
+        "status_code": 200,
+        "data": [],
+        "headers": {
+          "Content-Length": "2",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:39 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "create_customer": {
+        "success": false,
+        "status_code": 422,
+        "error": [
+          {
+            "type": "missing",
+            "loc": [
+              "body",
+              "user_id"
+            ],
+            "msg": "Field required",
+            "input": {
+              "customer_number": "CUST1761767859",
+              "full_name": "Test Customer",
+              "email": "test_customer_1761767859@indowater.com",
+              "phone": "+6281234567890",
+              "address": "Test Address",
+              "balance": 100000
+            },
+            "url": "https://errors.pydantic.dev/2.12/v/missing"
+          },
+          {
+            "type": "missing",
+            "loc": [
+              "body",
+              "city"
+            ],
+            "msg": "Field required",
+            "input": {
+              "customer_number": "CUST1761767859",
+              "full_name": "Test Customer",
+              "email": "test_customer_1761767859@indowater.com",
+              "phone": "+6281234567890",
+              "address": "Test Address",
+              "balance": 100000
+            },
+            "url": "https://errors.pydantic.dev/2.12/v/missing"
+          },
+          {
+            "type": "missing",
+            "loc": [
+              "body",
+              "province"
+            ],
+            "msg": "Field required",
+            "input": {
+              "customer_number": "CUST1761767859",
+              "full_name": "Test Customer",
+              "email": "test_customer_1761767859@indowater.com",
+              "phone": "+6281234567890",
+              "address": "Test Address",
+              "balance": 100000
+            },
+            "url": "https://errors.pydantic.dev/2.12/v/missing"
+          }
+        ],
+        "headers": {
+          "Content-Length": "931",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:39 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "properties": {
+      "list_properties": {
+        "success": true,
+        "status_code": 200,
+        "data": [],
+        "headers": {
+          "Content-Length": "2",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:39 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "create_property": {
+        "success": false,
+        "status_code": 422,
+        "error": [
+          {
+            "type": "missing",
+            "loc": [
+              "body",
+              "property_name"
+            ],
+            "msg": "Field required",
+            "input": {
+              "name": "Test Property 1761767860",
+              "address": "Test Address 123",
+              "property_type": "residential",
+              "area_size": 100.5,
+              "owner_name": "Test Owner",
+              "owner_contact": "+6281234567890"
+            },
+            "url": "https://errors.pydantic.dev/2.12/v/missing"
+          },
+          {
+            "type": "missing",
+            "loc": [
+              "body",
+              "city"
+            ],
+            "msg": "Field required",
+            "input": {
+              "name": "Test Property 1761767860",
+              "address": "Test Address 123",
+              "property_type": "residential",
+              "area_size": 100.5,
+              "owner_name": "Test Owner",
+              "owner_contact": "+6281234567890"
+            },
+            "url": "https://errors.pydantic.dev/2.12/v/missing"
+          },
+          {
+            "type": "missing",
+            "loc": [
+              "body",
+              "province"
+            ],
+            "msg": "Field required",
+            "input": {
+              "name": "Test Property 1761767860",
+              "address": "Test Address 123",
+              "property_type": "residential",
+              "area_size": 100.5,
+              "owner_name": "Test Owner",
+              "owner_contact": "+6281234567890"
+            },
+            "url": "https://errors.pydantic.dev/2.12/v/missing"
+          },
+          {
+            "type": "missing",
+            "loc": [
+              "body",
+              "owner_phone"
+            ],
+            "msg": "Field required",
+            "input": {
+              "name": "Test Property 1761767860",
+              "address": "Test Address 123",
+              "property_type": "residential",
+              "area_size": 100.5,
+              "owner_name": "Test Owner",
+              "owner_contact": "+6281234567890"
+            },
+            "url": "https://errors.pydantic.dev/2.12/v/missing"
+          }
+        ],
+        "headers": {
+          "Content-Length": "1212",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:39 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "device_management": {
+      "list_devices": {
+        "success": true,
+        "status_code": 200,
+        "data": [],
+        "headers": {
+          "Content-Length": "2",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:39 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "comprehensive_devices": {
+        "success": false,
+        "status_code": 404,
+        "error": "Device not found",
+        "headers": {
+          "Content-Length": "29",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:39 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "batch_operations": {
+        "success": false,
+        "status_code": 422,
+        "error": [
+          {
+            "type": "missing",
+            "loc": [
+              "body",
+              "performed_by"
+            ],
+            "msg": "Field required",
+            "input": {
+              "device_ids": [
+                "test-device-1",
+                "test-device-2"
+              ],
+              "operation": "activate",
+              "parameters": {}
+            },
+            "url": "https://errors.pydantic.dev/2.12/v/missing"
+          }
+        ],
+        "headers": {
+          "Content-Length": "231",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:40 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "iot_monitoring": {
+      "list_iot_devices": {
+        "success": false,
+        "status_code": 404,
+        "error": "Not Found",
+        "headers": {
+          "Content-Length": "22",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:40 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "register_iot_device": {
+        "success": false,
+        "status_code": 422,
+        "error": [
+          {
+            "type": "missing",
+            "loc": [
+              "header",
+              "x-device-secret"
+            ],
+            "msg": "Field required",
+            "input": null,
+            "url": "https://errors.pydantic.dev/2.12/v/missing"
+          },
+          {
+            "type": "missing",
+            "loc": [
+              "body",
+              "hardware_version"
+            ],
+            "msg": "Field required",
+            "input": {
+              "device_id": "ESP32-TEST-1761767861",
+              "device_name": "Test IoT Device",
+              "device_type": "water_meter",
+              "location": "Test Location",
+              "customer_id": "test-customer-1",
+              "firmware_version": "1.0.0"
+            },
+            "url": "https://errors.pydantic.dev/2.12/v/missing"
+          }
+        ],
+        "headers": {
+          "Content-Length": "472",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:40 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "ingest_iot_data": {
+        "success": false,
+        "status_code": 404,
+        "error": "Not Found",
+        "headers": {
+          "Content-Length": "22",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:40 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "device_metrics": {
+        "success": false,
+        "status_code": 404,
+        "error": "Not Found",
+        "headers": {
+          "Content-Length": "22",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:40 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "device_command": {
+        "success": false,
+        "status_code": 404,
+        "error": "Not Found",
+        "headers": {
+          "Content-Length": "22",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:40 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "analytics": {
+      "usage_analytics": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "period": "month",
+          "start_date": "2025-09-29T19:57:42.179683",
+          "end_date": "2025-10-29T19:57:42.179683",
+          "customer_id": null,
+          "total_consumption": 0.0,
+          "total_cost": 0.0,
+          "average_daily": 0.0,
+          "data_points": [],
+          "device_count": 0
+        },
+        "headers": {
+          "Content-Length": "214",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:40 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "trends_analytics": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "period_type": "month",
+          "trends": [],
+          "overall_trend": "stable",
+          "growth_rate": 0.0
+        },
+        "headers": {
+          "Content-Length": "78",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:42 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "predictions": {
+        "success": false,
+        "status_code": 400,
+        "error": "Insufficient data for predictions (minimum 7 days required)",
+        "headers": {
+          "Content-Length": "72",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:42 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "comparison": {
+        "success": false,
+        "status_code": 422,
+        "error": [
+          {
+            "type": "missing",
+            "loc": [
+              "query",
+              "period1_start"
+            ],
+            "msg": "Field required",
+            "input": null,
+            "url": "https://errors.pydantic.dev/2.12/v/missing"
+          },
+          {
+            "type": "missing",
+            "loc": [
+              "query",
+              "period1_end"
+            ],
+            "msg": "Field required",
+            "input": null,
+            "url": "https://errors.pydantic.dev/2.12/v/missing"
+          },
+          {
+            "type": "missing",
+            "loc": [
+              "query",
+              "period2_start"
+            ],
+            "msg": "Field required",
+            "input": null,
+            "url": "https://errors.pydantic.dev/2.12/v/missing"
+          },
+          {
+            "type": "missing",
+            "loc": [
+              "query",
+              "period2_end"
+            ],
+            "msg": "Field required",
+            "input": null,
+            "url": "https://errors.pydantic.dev/2.12/v/missing"
+          }
+        ],
+        "headers": {
+          "Content-Length": "560",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:42 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "admin_overview": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "total_devices": 0,
+          "active_devices": 0,
+          "total_customers": 0,
+          "total_consumption_30d": 0.0,
+          "total_consumption_all_time": 0.0,
+          "total_revenue_30d": 0.0,
+          "total_revenue_all_time": 0.0,
+          "average_consumption_per_device": 0.0,
+          "top_consumers": [],
+          "recent_anomalies": [],
+          "device_status_breakdown": {}
+        },
+        "headers": {
+          "Content-Length": "279",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:42 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "payments": {
+      "payment_history": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "transactions": [],
+          "total": 0,
+          "limit": 50,
+          "skip": 0
+        },
+        "headers": {
+          "Content-Length": "49",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:42 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "payment_history_filtered": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "transactions": [],
+          "total": 0,
+          "limit": 50,
+          "skip": 0
+        },
+        "headers": {
+          "Content-Length": "49",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:43 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "vouchers": {
+      "list_vouchers": {
+        "success": false,
+        "status_code": 404,
+        "error": "Not Found",
+        "headers": {
+          "Content-Length": "22",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:43 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "active_vouchers": {
+        "success": true,
+        "status_code": 200,
+        "data": [],
+        "headers": {
+          "Content-Length": "2",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:43 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "validate_voucher": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "valid": false,
+          "message": "Invalid voucher code",
+          "voucher": null,
+          "discount_amount": 0.0,
+          "final_amount": 200000.0
+        },
+        "headers": {
+          "Content-Length": "109",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:43 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "apply_voucher": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "valid": false,
+          "message": "Invalid voucher code",
+          "voucher": null,
+          "discount_amount": 0.0,
+          "final_amount": 200000.0
+        },
+        "headers": {
+          "Content-Length": "109",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:43 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "create_voucher": {
+        "success": false,
+        "status_code": 404,
+        "error": "Not Found",
+        "headers": {
+          "Content-Length": "22",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:43 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "voucher_usage_history": {
+        "success": true,
+        "status_code": 200,
+        "data": [],
+        "headers": {
+          "Content-Length": "2",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:43 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "support_tickets": {
+      "list_tickets": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "tickets": [],
+          "total": 0,
+          "page": 1,
+          "limit": 20,
+          "has_more": false
+        },
+        "headers": {
+          "Content-Length": "61",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:43 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "create_ticket": {
+        "success": false,
+        "status_code": 500,
+        "error": "404: Customer not found",
+        "headers": {
+          "Content-Length": "36",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:43 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "admin_stats": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "total_tickets": 0,
+          "open_tickets": 0,
+          "in_progress_tickets": 0,
+          "resolved_tickets": 0,
+          "closed_tickets": 0,
+          "critical_tickets": 0,
+          "my_assigned_tickets": 0,
+          "avg_resolution_time": 0.0,
+          "tickets_by_category": {
+            "technical_issue": 0,
+            "water_quality": 0,
+            "maintenance_repairs": 0,
+            "general_inquiry": 0
+          },
+          "tickets_by_priority": {
+            "low": 0,
+            "medium": 0,
+            "high": 0,
+            "critical": 0
+          }
+        },
+        "headers": {
+          "Content-Length": "342",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:45 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "water_tips": {
+      "list_tips": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "tips": [],
+          "total": 0,
+          "page": 1,
+          "limit": 20,
+          "has_more": false
+        },
+        "headers": {
+          "Content-Length": "58",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:45 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "filter_tips": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "tips": [],
+          "total": 0,
+          "page": 1,
+          "limit": 20,
+          "has_more": false
+        },
+        "headers": {
+          "Content-Length": "58",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:45 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "personalized_tips": {
+        "success": true,
+        "status_code": 200,
+        "data": [],
+        "headers": {
+          "Content-Length": "2",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:45 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "create_tip": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "id": "690271b9ce99eeeb15a95a3d",
+          "title": "Test Water Tip 1761767865",
+          "description": "This is a test water conservation tip created via API testing",
+          "category": "general_savings",
+          "potential_savings_percentage": 20.0,
+          "potential_savings_amount": null,
+          "difficulty_level": "medium",
+          "implementation_time": "2 hours",
+          "implementation_steps": [
+            "Step 1: Identify water usage areas",
+            "Step 2: Install water-saving devices",
+            "Step 3: Monitor usage reduction"
+          ],
+          "benefits": [
+            "Reduces water consumption",
+            "Lowers water bills"
+          ],
+          "required_tools": [
+            "Water meter",
+            "Basic tools"
+          ],
+          "created_at": "2025-10-29T19:57:45.707568",
+          "updated_at": "2025-10-29T19:57:45.707568",
+          "created_by": "69026fd3c4e36353903f7249",
+          "is_active": true,
+          "view_count": 0,
+          "like_count": 0,
+          "implementation_count": 0,
+          "tags": [],
+          "image_url": null
+        },
+        "headers": {
+          "Content-Length": "771",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:45 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "get_tip": {
+        "success": false,
+        "status_code": 500,
+        "error": "404: Tip not found",
+        "headers": {
+          "Content-Length": "31",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:45 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "update_tip": {
+        "success": false,
+        "status_code": 500,
+        "error": "404: Tip not found",
+        "headers": {
+          "Content-Length": "31",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:45 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "delete_tip": {
+        "success": false,
+        "status_code": 500,
+        "error": "404: Tip not found",
+        "headers": {
+          "Content-Length": "31",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:45 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "alerts": {
+      "get_alerts": {
+        "success": true,
+        "status_code": 200,
+        "data": [],
+        "headers": {
+          "Content-Length": "2",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:46 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "unread_count": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "unread_count": 0
+        },
+        "headers": {
+          "Content-Length": "18",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:46 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "mark_all_read": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "message": "Marked 0 alerts as read"
+        },
+        "headers": {
+          "Content-Length": "37",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:46 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "alert_preferences": {
+        "success": false,
+        "status_code": 500,
+        "error": "Failed to get alert preferences: alert_models.AlertPreferences() argument after ** must be a mapping, not AlertPreferences",
+        "headers": {
+          "Content-Length": "135",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:46 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "update_preferences": {
+        "success": false,
+        "status_code": 422,
+        "error": [
+          {
+            "type": "missing",
+            "loc": [
+              "body",
+              "customer_id"
+            ],
+            "msg": "Field required",
+            "input": {
+              "low_balance_threshold": 50000,
+              "high_usage_threshold": 100.0,
+              "leak_detection_enabled": true,
+              "email_notifications": true,
+              "sms_notifications": false,
+              "push_notifications": true
+            },
+            "url": "https://errors.pydantic.dev/2.12/v/missing"
+          }
+        ],
+        "headers": {
+          "Content-Length": "312",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:46 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "leak_events": {
+        "success": true,
+        "status_code": 200,
+        "data": [],
+        "headers": {
+          "Content-Length": "2",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:47 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "tampering_events": {
+        "success": true,
+        "status_code": 200,
+        "data": [],
+        "headers": {
+          "Content-Length": "2",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:47 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "water_saving_tips": {
+        "success": true,
+        "status_code": 200,
+        "data": [],
+        "headers": {
+          "Content-Length": "2",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:47 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "reports": {
+      "pdf_report": {
+        "success": false,
+        "status_code": 404,
+        "error": "No usage data found for the specified period",
+        "headers": {
+          "Content-Length": "57",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:47 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "excel_report": {
+        "success": false,
+        "status_code": 404,
+        "error": "No usage data found for the specified period",
+        "headers": {
+          "Content-Length": "57",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:47 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "admin_management": {
+      "dashboard_metrics": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "total_customers": 0,
+          "active_customers": 0,
+          "total_devices": 0,
+          "online_devices": 0,
+          "offline_devices": 0,
+          "devices_with_alerts": 0,
+          "total_revenue_today": 0.0,
+          "total_revenue_month": 0.0,
+          "total_consumption_today": 0.0,
+          "total_consumption_month": 0.0,
+          "low_balance_customers": 0,
+          "pending_maintenance": 0,
+          "active_leaks": 0,
+          "timestamp": "2025-10-29T19:57:48.968102"
+        },
+        "headers": {
+          "Content-Length": "343",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:47 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "device_monitoring": {
+        "success": true,
+        "status_code": 200,
+        "data": [],
+        "headers": {
+          "Content-Length": "2",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:49 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "bulk_operations": {
+        "success": false,
+        "status_code": 422,
+        "error": [
+          {
+            "type": "missing",
+            "loc": [
+              "body",
+              "action"
+            ],
+            "msg": "Field required",
+            "input": {
+              "customer_ids": [
+                "test-customer-1",
+                "test-customer-2"
+              ],
+              "operation": "send_notification",
+              "parameters": {
+                "message": "Test bulk notification from API testing",
+                "type": "info"
+              }
+            },
+            "url": "https://errors.pydantic.dev/2.12/v/missing"
+          }
+        ],
+        "headers": {
+          "Content-Length": "305",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:49 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "maintenance_list": {
+        "success": true,
+        "status_code": 200,
+        "data": [],
+        "headers": {
+          "Content-Length": "2",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:49 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "create_maintenance": {
+        "success": false,
+        "status_code": 404,
+        "error": "Device not found",
+        "headers": {
+          "Content-Length": "29",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:49 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "revenue_report": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "period": "monthly",
+          "start_date": "2025-10-01T00:00:00",
+          "end_date": "2025-10-29T19:57:49.692379",
+          "total_revenue": 0.0,
+          "total_transactions": 0,
+          "total_water_consumption": 0.0,
+          "avg_transaction_value": 0.0,
+          "revenue_by_payment_method": {},
+          "revenue_by_day": [],
+          "top_customers": [],
+          "growth_percentage": null,
+          "generated_at": "2025-10-29T19:57:49.700031"
+        },
+        "headers": {
+          "Content-Length": "335",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:49 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "roles_permissions": {
+      "list_roles": {
+        "success": true,
+        "status_code": 200,
+        "data": [],
+        "headers": {
+          "Content-Length": "2",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:49 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "list_permissions": {
+        "success": true,
+        "status_code": 200,
+        "data": [
+          {
+            "id": "dashboard.view",
+            "name": "View Dashboard",
+            "category": "dashboard",
+            "action": "view",
+            "description": "Access to dashboard"
+          },
+          {
+            "id": "users.view",
+            "name": "View Users",
+            "category": "users",
+            "action": "view",
+            "description": "View user list"
+          },
+          {
+            "id": "users.create",
+            "name": "Create Users",
+            "category": "users",
+            "action": "create",
+            "description": "Create new users"
+          },
+          {
+            "id": "users.edit",
+            "name": "Edit Users",
+            "category": "users",
+            "action": "edit",
+            "description": "Edit user details"
+          },
+          {
+            "id": "users.delete",
+            "name": "Delete Users",
+            "category": "users",
+            "action": "delete",
+            "description": "Delete users"
+          },
+          {
+            "id": "users.manage",
+            "name": "Manage Users",
+            "category": "users",
+            "action": "manage",
+            "description": "Full user management"
+          },
+          {
+            "id": "customers.view",
+            "name": "View Customers",
+            "category": "customers",
+            "action": "view",
+            "description": "View customer list"
+          },
+          {
+            "id": "customers.create",
+            "name": "Create Customers",
+            "category": "customers",
+            "action": "create",
+            "description": "Create new customers"
+          },
+          {
+            "id": "customers.edit",
+            "name": "Edit Customers",
+            "category": "customers",
+            "action": "edit",
+            "description": "Edit customer details"
+          },
+          {
+            "id": "customers.delete",
+            "name": "Delete Customers",
+            "category": "customers",
+            "action": "delete",
+            "description": "Delete customers"
+          },
+          {
+            "id": "devices.view",
+            "name": "View Devices",
+            "category": "devices",
+            "action": "view",
+            "description": "View device list"
+          },
+          {
+            "id": "devices.create",
+            "name": "Create Devices",
+            "category": "devices",
+            "action": "create",
+            "description": "Register new devices"
+          },
+          {
+            "id": "devices.edit",
+            "name": "Edit Devices",
+            "category": "devices",
+            "action": "edit",
+            "description": "Edit device details"
+          },
+          {
+            "id": "devices.delete",
+            "name": "Delete Devices",
+            "category": "devices",
+            "action": "delete",
+            "description": "Delete devices"
+          },
+          {
+            "id": "iot.view",
+            "name": "View IoT Monitoring",
+            "category": "iot",
+            "action": "view",
+            "description": "View IoT device monitoring"
+          },
+          {
+            "id": "iot.manage",
+            "name": "Manage IoT",
+            "category": "iot",
+            "action": "manage",
+            "description": "Manage IoT devices and data"
+          },
+          {
+            "id": "analytics.view",
+            "name": "View Analytics",
+            "category": "analytics",
+            "action": "view",
+            "description": "View analytics and reports"
+          },
+          {
+            "id": "analytics.export",
+            "name": "Export Reports",
+            "category": "analytics",
+            "action": "manage",
+            "description": "Export PDF/Excel reports"
+          },
+          {
+            "id": "payments.view",
+            "name": "View Payments",
+            "category": "payments",
+            "action": "view",
+            "description": "View payment transactions"
+          },
+          {
+            "id": "payments.manage",
+            "name": "Manage Payments",
+            "category": "payments",
+            "action": "manage",
+            "description": "Manage payment settings"
+          },
+          {
+            "id": "vouchers.view",
+            "name": "View Vouchers",
+            "category": "vouchers",
+            "action": "view",
+            "description": "View vouchers"
+          },
+          {
+            "id": "vouchers.create",
+            "name": "Create Vouchers",
+            "category": "vouchers",
+            "action": "create",
+            "description": "Create vouchers"
+          },
+          {
+            "id": "vouchers.edit",
+            "name": "Edit Vouchers",
+            "category": "vouchers",
+            "action": "edit",
+            "description": "Edit vouchers"
+          },
+          {
+            "id": "vouchers.delete",
+            "name": "Delete Vouchers",
+            "category": "vouchers",
+            "action": "delete",
+            "description": "Delete vouchers"
+          },
+          {
+            "id": "properties.view",
+            "name": "View Properties",
+            "category": "properties",
+            "action": "view",
+            "description": "View properties"
+          },
+          {
+            "id": "properties.create",
+            "name": "Create Properties",
+            "category": "properties",
+            "action": "create",
+            "description": "Create properties"
+          },
+          {
+            "id": "properties.edit",
+            "name": "Edit Properties",
+            "category": "properties",
+            "action": "edit",
+            "description": "Edit properties"
+          },
+          {
+            "id": "properties.delete",
+            "name": "Delete Properties",
+            "category": "properties",
+            "action": "delete",
+            "description": "Delete properties"
+          },
+          {
+            "id": "alerts.view",
+            "name": "View Alerts",
+            "category": "alerts",
+            "action": "view",
+            "description": "View alerts and notifications"
+          },
+          {
+            "id": "alerts.manage",
+            "name": "Manage Alerts",
+            "category": "alerts",
+            "action": "manage",
+            "description": "Manage alert settings"
+          },
+          {
+            "id": "tickets.view",
+            "name": "View Tickets",
+            "category": "tickets",
+            "action": "view",
+            "description": "View support tickets"
+          },
+          {
+            "id": "tickets.create",
+            "name": "Create Tickets",
+            "category": "tickets",
+            "action": "create",
+            "description": "Create support tickets"
+          },
+          {
+            "id": "tickets.edit",
+            "name": "Edit Tickets",
+            "category": "tickets",
+            "action": "edit",
+            "description": "Edit support tickets"
+          },
+          {
+            "id": "tickets.delete",
+            "name": "Delete Tickets",
+            "category": "tickets",
+            "action": "delete",
+            "description": "Delete support tickets"
+          },
+          {
+            "id": "tickets.assign",
+            "name": "Assign Tickets",
+            "category": "tickets",
+            "action": "manage",
+            "description": "Assign tickets to technicians"
+          },
+          {
+            "id": "tickets.reply",
+            "name": "Reply to Tickets",
+            "category": "tickets",
+            "action": "manage",
+            "description": "Reply to ticket messages"
+          },
+          {
+            "id": "tickets.approve",
+            "name": "Approve Tickets",
+            "category": "tickets",
+            "action": "manage",
+            "description": "Approve maintenance/repair tickets"
+          },
+          {
+            "id": "tickets.manage",
+            "name": "Manage Tickets",
+            "category": "tickets",
+            "action": "manage",
+            "description": "Full ticket management access"
+          },
+          {
+            "id": "tips.view",
+            "name": "View Tips",
+            "category": "tips",
+            "action": "view",
+            "description": "View water conservation tips"
+          },
+          {
+            "id": "tips.create",
+            "name": "Create Tips",
+            "category": "tips",
+            "action": "create",
+            "description": "Create water conservation tips"
+          },
+          {
+            "id": "tips.edit",
+            "name": "Edit Tips",
+            "category": "tips",
+            "action": "edit",
+            "description": "Edit water conservation tips"
+          },
+          {
+            "id": "tips.delete",
+            "name": "Delete Tips",
+            "category": "tips",
+            "action": "delete",
+            "description": "Delete water conservation tips"
+          },
+          {
+            "id": "tips.manage",
+            "name": "Manage Tips",
+            "category": "tips",
+            "action": "manage",
+            "description": "Full tips management access"
+          },
+          {
+            "id": "settings.view",
+            "name": "View Settings",
+            "category": "settings",
+            "action": "view",
+            "description": "View system settings"
+          },
+          {
+            "id": "settings.manage",
+            "name": "Manage Settings",
+            "category": "settings",
+            "action": "manage",
+            "description": "Manage system settings"
+          }
+        ],
+        "headers": {
+          "Content-Length": "5518",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:49 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "create_role": {
+        "success": true,
+        "status_code": 201,
+        "data": {
+          "message": "Role created successfully",
+          "role_id": "custom_test_role_1761767869"
+        },
+        "headers": {
+          "Content-Length": "79",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:49 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "assign_role": {
+        "success": false,
+        "status_code": 422,
+        "error": [
+          {
+            "type": "missing",
+            "loc": [
+              "body",
+              "role_id"
+            ],
+            "msg": "Field required",
+            "input": {
+              "user_id": "test-user-id",
+              "role_name": "customer"
+            },
+            "url": "https://errors.pydantic.dev/2.12/v/missing"
+          }
+        ],
+        "headers": {
+          "Content-Length": "188",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:50 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    }
+  },
+  "Technician": {
+    "login": {
+      "success": true,
+      "data": {
+        "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2OTAyNmZkM2M0ZTM2MzUzOTAzZjcyNGEiLCJleHAiOjE3NjIzNzI2NzF9.sqKeYKcPLD9kXUcpakCbQuSKw2wVMul88ZjLzDHfcEQ",
+        "token_type": "bearer",
+        "user": {
+          "email": "technician@indowater.com",
+          "full_name": "Technician User",
+          "role": "technician",
+          "phone": "+62-812-3456-7891",
+          "is_active": true,
+          "id": "69026fd3c4e36353903f724a",
+          "balance": 0.0,
+          "created_at": "2025-10-29T19:49:38.655098",
+          "updated_at": "2025-10-29T19:49:38.655113"
+        }
+      },
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2OTAyNmZkM2M0ZTM2MzUzOTAzZjcyNGEiLCJleHAiOjE3NjIzNzI2NzF9.sqKeYKcPLD9kXUcpakCbQuSKw2wVMul88ZjLzDHfcEQ",
+      "user": {
+        "email": "technician@indowater.com",
+        "full_name": "Technician User",
+        "role": "technician",
+        "phone": "+62-812-3456-7891",
+        "is_active": true,
+        "id": "69026fd3c4e36353903f724a",
+        "balance": 0.0,
+        "created_at": "2025-10-29T19:49:38.655098",
+        "updated_at": "2025-10-29T19:49:38.655113"
+      }
+    },
+    "authentication": {
+      "get_current_user": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "email": "technician@indowater.com",
+          "full_name": "Technician User",
+          "role": "technician",
+          "phone": "+62-812-3456-7891",
+          "is_active": true,
+          "id": "69026fd3c4e36353903f724a",
+          "balance": 0.0,
+          "created_at": "2025-10-29T19:49:38.655098",
+          "updated_at": "2025-10-29T19:49:38.655113"
+        },
+        "headers": {
+          "Content-Length": "261",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:50 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "update_profile": {
+        "success": false,
+        "status_code": 500,
+        "error": "Internal Server Error",
+        "headers": {
+          "Content-Length": "21",
+          "content-type": "text/plain; charset=utf-8",
+          "date": "Wed, 29 Oct 2025 19:57:50 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "dashboard": {
+      "dashboard_stats": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "total_devices": 0,
+          "active_devices": 0,
+          "maintenance_devices": 0,
+          "faulty_devices": 0
+        },
+        "headers": {
+          "Content-Length": "81",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:50 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "user_management": {
+      "skipped": "Not admin role"
+    },
+    "customer_management": {
+      "list_customers": {
+        "success": true,
+        "status_code": 200,
+        "data": [],
+        "headers": {
+          "Content-Length": "2",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:50 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "properties": {
+      "list_properties": {
+        "success": true,
+        "status_code": 200,
+        "data": [],
+        "headers": {
+          "Content-Length": "2",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:50 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "create_property": {
+        "success": false,
+        "status_code": 422,
+        "error": [
+          {
+            "type": "missing",
+            "loc": [
+              "body",
+              "property_name"
+            ],
+            "msg": "Field required",
+            "input": {
+              "name": "Test Property 1761767872",
+              "address": "Test Address 123",
+              "property_type": "residential",
+              "area_size": 100.5,
+              "owner_name": "Test Owner",
+              "owner_contact": "+6281234567890"
+            },
+            "url": "https://errors.pydantic.dev/2.12/v/missing"
+          },
+          {
+            "type": "missing",
+            "loc": [
+              "body",
+              "city"
+            ],
+            "msg": "Field required",
+            "input": {
+              "name": "Test Property 1761767872",
+              "address": "Test Address 123",
+              "property_type": "residential",
+              "area_size": 100.5,
+              "owner_name": "Test Owner",
+              "owner_contact": "+6281234567890"
+            },
+            "url": "https://errors.pydantic.dev/2.12/v/missing"
+          },
+          {
+            "type": "missing",
+            "loc": [
+              "body",
+              "province"
+            ],
+            "msg": "Field required",
+            "input": {
+              "name": "Test Property 1761767872",
+              "address": "Test Address 123",
+              "property_type": "residential",
+              "area_size": 100.5,
+              "owner_name": "Test Owner",
+              "owner_contact": "+6281234567890"
+            },
+            "url": "https://errors.pydantic.dev/2.12/v/missing"
+          },
+          {
+            "type": "missing",
+            "loc": [
+              "body",
+              "owner_phone"
+            ],
+            "msg": "Field required",
+            "input": {
+              "name": "Test Property 1761767872",
+              "address": "Test Address 123",
+              "property_type": "residential",
+              "area_size": 100.5,
+              "owner_name": "Test Owner",
+              "owner_contact": "+6281234567890"
+            },
+            "url": "https://errors.pydantic.dev/2.12/v/missing"
+          }
+        ],
+        "headers": {
+          "Content-Length": "1212",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:50 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "device_management": {
+      "list_devices": {
+        "success": true,
+        "status_code": 200,
+        "data": [],
+        "headers": {
+          "Content-Length": "2",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:52 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "comprehensive_devices": {
+        "success": false,
+        "status_code": 404,
+        "error": "Device not found",
+        "headers": {
+          "Content-Length": "29",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:52 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "batch_operations": {
+        "success": false,
+        "status_code": 422,
+        "error": [
+          {
+            "type": "missing",
+            "loc": [
+              "body",
+              "performed_by"
+            ],
+            "msg": "Field required",
+            "input": {
+              "device_ids": [
+                "test-device-1",
+                "test-device-2"
+              ],
+              "operation": "activate",
+              "parameters": {}
+            },
+            "url": "https://errors.pydantic.dev/2.12/v/missing"
+          }
+        ],
+        "headers": {
+          "Content-Length": "231",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:52 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "iot_monitoring": {
+      "list_iot_devices": {
+        "success": false,
+        "status_code": 404,
+        "error": "Not Found",
+        "headers": {
+          "Content-Length": "22",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:52 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "register_iot_device": {
+        "success": false,
+        "status_code": 422,
+        "error": [
+          {
+            "type": "missing",
+            "loc": [
+              "header",
+              "x-device-secret"
+            ],
+            "msg": "Field required",
+            "input": null,
+            "url": "https://errors.pydantic.dev/2.12/v/missing"
+          },
+          {
+            "type": "missing",
+            "loc": [
+              "body",
+              "hardware_version"
+            ],
+            "msg": "Field required",
+            "input": {
+              "device_id": "ESP32-TEST-1761767872",
+              "device_name": "Test IoT Device",
+              "device_type": "water_meter",
+              "location": "Test Location",
+              "customer_id": "test-customer-1",
+              "firmware_version": "1.0.0"
+            },
+            "url": "https://errors.pydantic.dev/2.12/v/missing"
+          }
+        ],
+        "headers": {
+          "Content-Length": "472",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:52 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "ingest_iot_data": {
+        "success": false,
+        "status_code": 404,
+        "error": "Not Found",
+        "headers": {
+          "Content-Length": "22",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:52 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "device_metrics": {
+        "success": false,
+        "status_code": 404,
+        "error": "Not Found",
+        "headers": {
+          "Content-Length": "22",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:52 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "device_command": {
+        "success": false,
+        "status_code": 404,
+        "error": "Not Found",
+        "headers": {
+          "Content-Length": "22",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:52 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "analytics": {
+      "usage_analytics": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "period": "month",
+          "start_date": "2025-09-29T19:57:53.622388",
+          "end_date": "2025-10-29T19:57:53.622388",
+          "customer_id": "69026fd3c4e36353903f724a",
+          "total_consumption": 0.0,
+          "total_cost": 0.0,
+          "average_daily": 0.0,
+          "data_points": [],
+          "device_count": 0
+        },
+        "headers": {
+          "Content-Length": "236",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:53 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "trends_analytics": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "period_type": "month",
+          "trends": [],
+          "overall_trend": "stable",
+          "growth_rate": 0.0
+        },
+        "headers": {
+          "Content-Length": "78",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:53 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "predictions": {
+        "success": false,
+        "status_code": 400,
+        "error": "Insufficient data for predictions (minimum 7 days required)",
+        "headers": {
+          "Content-Length": "72",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:53 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "comparison": {
+        "success": false,
+        "status_code": 422,
+        "error": [
+          {
+            "type": "missing",
+            "loc": [
+              "query",
+              "period1_start"
+            ],
+            "msg": "Field required",
+            "input": null,
+            "url": "https://errors.pydantic.dev/2.12/v/missing"
+          },
+          {
+            "type": "missing",
+            "loc": [
+              "query",
+              "period1_end"
+            ],
+            "msg": "Field required",
+            "input": null,
+            "url": "https://errors.pydantic.dev/2.12/v/missing"
+          },
+          {
+            "type": "missing",
+            "loc": [
+              "query",
+              "period2_start"
+            ],
+            "msg": "Field required",
+            "input": null,
+            "url": "https://errors.pydantic.dev/2.12/v/missing"
+          },
+          {
+            "type": "missing",
+            "loc": [
+              "query",
+              "period2_end"
+            ],
+            "msg": "Field required",
+            "input": null,
+            "url": "https://errors.pydantic.dev/2.12/v/missing"
+          }
+        ],
+        "headers": {
+          "Content-Length": "560",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:53 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "payments": {
+      "payment_history": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "transactions": [],
+          "total": 0,
+          "limit": 50,
+          "skip": 0
+        },
+        "headers": {
+          "Content-Length": "49",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:53 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "payment_history_filtered": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "transactions": [],
+          "total": 0,
+          "limit": 50,
+          "skip": 0
+        },
+        "headers": {
+          "Content-Length": "49",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:53 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "vouchers": {
+      "list_vouchers": {
+        "success": false,
+        "status_code": 404,
+        "error": "Not Found",
+        "headers": {
+          "Content-Length": "22",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:53 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "active_vouchers": {
+        "success": true,
+        "status_code": 200,
+        "data": [],
+        "headers": {
+          "Content-Length": "2",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:53 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "validate_voucher": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "valid": false,
+          "message": "Invalid voucher code",
+          "voucher": null,
+          "discount_amount": 0.0,
+          "final_amount": 200000.0
+        },
+        "headers": {
+          "Content-Length": "109",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:53 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "apply_voucher": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "valid": false,
+          "message": "Invalid voucher code",
+          "voucher": null,
+          "discount_amount": 0.0,
+          "final_amount": 200000.0
+        },
+        "headers": {
+          "Content-Length": "109",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:54 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "voucher_usage_history": {
+        "success": true,
+        "status_code": 200,
+        "data": [],
+        "headers": {
+          "Content-Length": "2",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:54 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "support_tickets": {
+      "list_tickets": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "tickets": [],
+          "total": 0,
+          "page": 1,
+          "limit": 20,
+          "has_more": false
+        },
+        "headers": {
+          "Content-Length": "61",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:54 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "create_ticket": {
+        "success": false,
+        "status_code": 500,
+        "error": "404: Customer not found",
+        "headers": {
+          "Content-Length": "36",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:54 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "water_tips": {
+      "list_tips": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "tips": [
+            {
+              "id": "690271b9ce99eeeb15a95a3d",
+              "title": "Test Water Tip 1761767865",
+              "description": "This is a test water conservation tip created via API testing",
+              "category": "general_savings",
+              "potential_savings_percentage": 20.0,
+              "potential_savings_amount": null,
+              "difficulty_level": "medium",
+              "implementation_time": "2 hours",
+              "implementation_steps": [
+                "Step 1: Identify water usage areas",
+                "Step 2: Install water-saving devices",
+                "Step 3: Monitor usage reduction"
+              ],
+              "benefits": [
+                "Reduces water consumption",
+                "Lowers water bills"
+              ],
+              "required_tools": [
+                "Water meter",
+                "Basic tools"
+              ],
+              "created_at": "2025-10-29T19:57:45.707000",
+              "updated_at": "2025-10-29T19:57:45.707000",
+              "created_by": "69026fd3c4e36353903f7249",
+              "is_active": true,
+              "view_count": 0,
+              "like_count": 0,
+              "implementation_count": 0,
+              "tags": [],
+              "image_url": null
+            }
+          ],
+          "total": 1,
+          "page": 1,
+          "limit": 20,
+          "has_more": false
+        },
+        "headers": {
+          "Content-Length": "829",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:54 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "filter_tips": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "tips": [
+            {
+              "id": "690271b9ce99eeeb15a95a3d",
+              "title": "Test Water Tip 1761767865",
+              "description": "This is a test water conservation tip created via API testing",
+              "category": "general_savings",
+              "potential_savings_percentage": 20.0,
+              "potential_savings_amount": null,
+              "difficulty_level": "medium",
+              "implementation_time": "2 hours",
+              "implementation_steps": [
+                "Step 1: Identify water usage areas",
+                "Step 2: Install water-saving devices",
+                "Step 3: Monitor usage reduction"
+              ],
+              "benefits": [
+                "Reduces water consumption",
+                "Lowers water bills"
+              ],
+              "required_tools": [
+                "Water meter",
+                "Basic tools"
+              ],
+              "created_at": "2025-10-29T19:57:45.707000",
+              "updated_at": "2025-10-29T19:57:45.707000",
+              "created_by": "69026fd3c4e36353903f7249",
+              "is_active": true,
+              "view_count": 0,
+              "like_count": 0,
+              "implementation_count": 0,
+              "tags": [],
+              "image_url": null
+            }
+          ],
+          "total": 1,
+          "page": 1,
+          "limit": 20,
+          "has_more": false
+        },
+        "headers": {
+          "Content-Length": "829",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:54 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "personalized_tips": {
+        "success": true,
+        "status_code": 200,
+        "data": [
+          {
+            "id": "690271b9ce99eeeb15a95a3d",
+            "title": "Test Water Tip 1761767865",
+            "description": "This is a test water conservation tip created via API testing",
+            "category": "general_savings",
+            "potential_savings_percentage": 20.0,
+            "potential_savings_amount": null,
+            "difficulty_level": "medium",
+            "implementation_time": "2 hours",
+            "implementation_steps": [
+              "Step 1: Identify water usage areas",
+              "Step 2: Install water-saving devices",
+              "Step 3: Monitor usage reduction"
+            ],
+            "benefits": [
+              "Reduces water consumption",
+              "Lowers water bills"
+            ],
+            "required_tools": [
+              "Water meter",
+              "Basic tools"
+            ],
+            "created_at": "2025-10-29T19:57:45.707000",
+            "updated_at": "2025-10-29T19:57:45.707000",
+            "created_by": "69026fd3c4e36353903f7249",
+            "is_active": true,
+            "view_count": 0,
+            "like_count": 0,
+            "implementation_count": 0,
+            "tags": [],
+            "image_url": null
+          }
+        ],
+        "headers": {
+          "Content-Length": "773",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:54 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "alerts": {
+      "get_alerts": {
+        "success": true,
+        "status_code": 200,
+        "data": [],
+        "headers": {
+          "Content-Length": "2",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:54 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "unread_count": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "unread_count": 0
+        },
+        "headers": {
+          "Content-Length": "18",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:54 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "mark_all_read": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "message": "Marked 0 alerts as read"
+        },
+        "headers": {
+          "Content-Length": "37",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:54 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "alert_preferences": {
+        "success": false,
+        "status_code": 500,
+        "error": "Failed to get alert preferences: alert_models.AlertPreferences() argument after ** must be a mapping, not AlertPreferences",
+        "headers": {
+          "Content-Length": "135",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:56 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "update_preferences": {
+        "success": false,
+        "status_code": 422,
+        "error": [
+          {
+            "type": "missing",
+            "loc": [
+              "body",
+              "customer_id"
+            ],
+            "msg": "Field required",
+            "input": {
+              "low_balance_threshold": 50000,
+              "high_usage_threshold": 100.0,
+              "leak_detection_enabled": true,
+              "email_notifications": true,
+              "sms_notifications": false,
+              "push_notifications": true
+            },
+            "url": "https://errors.pydantic.dev/2.12/v/missing"
+          }
+        ],
+        "headers": {
+          "Content-Length": "312",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:56 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "leak_events": {
+        "success": true,
+        "status_code": 200,
+        "data": [],
+        "headers": {
+          "Content-Length": "2",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:56 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "tampering_events": {
+        "success": true,
+        "status_code": 200,
+        "data": [],
+        "headers": {
+          "Content-Length": "2",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:56 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "water_saving_tips": {
+        "success": true,
+        "status_code": 200,
+        "data": [],
+        "headers": {
+          "Content-Length": "2",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:56 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "reports": {
+      "pdf_report": {
+        "success": false,
+        "status_code": 404,
+        "error": "No usage data found for the specified period",
+        "headers": {
+          "Content-Length": "57",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:56 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "excel_report": {
+        "success": false,
+        "status_code": 404,
+        "error": "No usage data found for the specified period",
+        "headers": {
+          "Content-Length": "57",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:57 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "admin_management": {
+      "dashboard_metrics": {
+        "success": false,
+        "status_code": 403,
+        "error": "Not enough permissions",
+        "headers": {
+          "Content-Length": "35",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:57 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "device_monitoring": {
+        "success": true,
+        "status_code": 200,
+        "data": [],
+        "headers": {
+          "Content-Length": "2",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:57 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "bulk_operations": {
+        "success": false,
+        "status_code": 403,
+        "error": "Not enough permissions",
+        "headers": {
+          "Content-Length": "35",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:57 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "maintenance_list": {
+        "success": true,
+        "status_code": 200,
+        "data": [],
+        "headers": {
+          "Content-Length": "2",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:57 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "create_maintenance": {
+        "success": false,
+        "status_code": 403,
+        "error": "Not enough permissions",
+        "headers": {
+          "Content-Length": "35",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:57 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "revenue_report": {
+        "success": false,
+        "status_code": 403,
+        "error": "Not enough permissions",
+        "headers": {
+          "Content-Length": "35",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:57 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "roles_permissions": {
+      "list_roles": {
+        "success": false,
+        "status_code": 403,
+        "error": "Admin access required",
+        "headers": {
+          "Content-Length": "34",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:57 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "list_permissions": {
+        "success": false,
+        "status_code": 403,
+        "error": "Admin access required",
+        "headers": {
+          "Content-Length": "34",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:57 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    }
+  },
+  "Customer": {
+    "login": {
+      "success": true,
+      "data": {
+        "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2OTAyNmZkM2M0ZTM2MzUzOTAzZjcyNGIiLCJleHAiOjE3NjIzNzI2Nzl9.P5z-iRL5KmFeEhVX_8afs2dpn0vRnVTiElGiVjyaZVE",
+        "token_type": "bearer",
+        "user": {
+          "email": "customer@indowater.com",
+          "full_name": "Customer User",
+          "role": "customer",
+          "phone": "+62-812-3456-7892",
+          "is_active": true,
+          "id": "69026fd3c4e36353903f724b",
+          "balance": 0.0,
+          "created_at": "2025-10-29T19:49:39.549213",
+          "updated_at": "2025-10-29T19:49:39.549228"
+        }
+      },
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2OTAyNmZkM2M0ZTM2MzUzOTAzZjcyNGIiLCJleHAiOjE3NjIzNzI2Nzl9.P5z-iRL5KmFeEhVX_8afs2dpn0vRnVTiElGiVjyaZVE",
+      "user": {
+        "email": "customer@indowater.com",
+        "full_name": "Customer User",
+        "role": "customer",
+        "phone": "+62-812-3456-7892",
+        "is_active": true,
+        "id": "69026fd3c4e36353903f724b",
+        "balance": 0.0,
+        "created_at": "2025-10-29T19:49:39.549213",
+        "updated_at": "2025-10-29T19:49:39.549228"
+      }
+    },
+    "authentication": {
+      "get_current_user": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "email": "customer@indowater.com",
+          "full_name": "Customer User",
+          "role": "customer",
+          "phone": "+62-812-3456-7892",
+          "is_active": true,
+          "id": "69026fd3c4e36353903f724b",
+          "balance": 0.0,
+          "created_at": "2025-10-29T19:49:39.549213",
+          "updated_at": "2025-10-29T19:49:39.549228"
+        },
+        "headers": {
+          "Content-Length": "255",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:58 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "update_profile": {
+        "success": false,
+        "status_code": 500,
+        "error": "Internal Server Error",
+        "headers": {
+          "Content-Length": "21",
+          "content-type": "text/plain; charset=utf-8",
+          "date": "Wed, 29 Oct 2025 19:57:58 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "dashboard": {
+      "dashboard_stats": {
+        "success": true,
+        "status_code": 200,
+        "data": {},
+        "headers": {
+          "Content-Length": "2",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:58 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "user_management": {
+      "skipped": "Not admin role"
+    },
+    "customer_management": {
+      "skipped": "Not admin/technician role"
+    },
+    "properties": {
+      "list_properties": {
+        "success": true,
+        "status_code": 200,
+        "data": [],
+        "headers": {
+          "Content-Length": "2",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:58 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "device_management": {
+      "list_devices": {
+        "success": true,
+        "status_code": 200,
+        "data": [],
+        "headers": {
+          "Content-Length": "2",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:58 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "comprehensive_devices": {
+        "success": false,
+        "status_code": 404,
+        "error": "Device not found",
+        "headers": {
+          "Content-Length": "29",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:58 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "iot_monitoring": {
+      "list_iot_devices": {
+        "success": false,
+        "status_code": 404,
+        "error": "Not Found",
+        "headers": {
+          "Content-Length": "22",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:57:58 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "ingest_iot_data": {
+        "success": false,
+        "status_code": 404,
+        "error": "Not Found",
+        "headers": {
+          "Content-Length": "22",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:58:00 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "device_metrics": {
+        "success": false,
+        "status_code": 404,
+        "error": "Not Found",
+        "headers": {
+          "Content-Length": "22",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:58:00 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "device_command": {
+        "success": false,
+        "status_code": 404,
+        "error": "Not Found",
+        "headers": {
+          "Content-Length": "22",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:58:00 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "analytics": {
+      "usage_analytics": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "period": "month",
+          "start_date": "2025-09-29T19:58:00.905675",
+          "end_date": "2025-10-29T19:58:00.905675",
+          "customer_id": "69026fd3c4e36353903f724b",
+          "total_consumption": 0.0,
+          "total_cost": 0.0,
+          "average_daily": 0.0,
+          "data_points": [],
+          "device_count": 0
+        },
+        "headers": {
+          "Content-Length": "236",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:58:00 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "trends_analytics": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "period_type": "month",
+          "trends": [],
+          "overall_trend": "stable",
+          "growth_rate": 0.0
+        },
+        "headers": {
+          "Content-Length": "78",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:58:00 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "predictions": {
+        "success": false,
+        "status_code": 400,
+        "error": "Insufficient data for predictions (minimum 7 days required)",
+        "headers": {
+          "Content-Length": "72",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:58:00 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "comparison": {
+        "success": false,
+        "status_code": 422,
+        "error": [
+          {
+            "type": "missing",
+            "loc": [
+              "query",
+              "period1_start"
+            ],
+            "msg": "Field required",
+            "input": null,
+            "url": "https://errors.pydantic.dev/2.12/v/missing"
+          },
+          {
+            "type": "missing",
+            "loc": [
+              "query",
+              "period1_end"
+            ],
+            "msg": "Field required",
+            "input": null,
+            "url": "https://errors.pydantic.dev/2.12/v/missing"
+          },
+          {
+            "type": "missing",
+            "loc": [
+              "query",
+              "period2_start"
+            ],
+            "msg": "Field required",
+            "input": null,
+            "url": "https://errors.pydantic.dev/2.12/v/missing"
+          },
+          {
+            "type": "missing",
+            "loc": [
+              "query",
+              "period2_end"
+            ],
+            "msg": "Field required",
+            "input": null,
+            "url": "https://errors.pydantic.dev/2.12/v/missing"
+          }
+        ],
+        "headers": {
+          "Content-Length": "560",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:58:00 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "payments": {
+      "payment_history": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "transactions": [],
+          "total": 0,
+          "limit": 50,
+          "skip": 0
+        },
+        "headers": {
+          "Content-Length": "49",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:58:00 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "payment_history_filtered": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "transactions": [],
+          "total": 0,
+          "limit": 50,
+          "skip": 0
+        },
+        "headers": {
+          "Content-Length": "49",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:58:00 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "vouchers": {
+      "list_vouchers": {
+        "success": false,
+        "status_code": 404,
+        "error": "Not Found",
+        "headers": {
+          "Content-Length": "22",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:58:00 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "active_vouchers": {
+        "success": true,
+        "status_code": 200,
+        "data": [],
+        "headers": {
+          "Content-Length": "2",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:58:00 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "validate_voucher": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "valid": false,
+          "message": "Invalid voucher code",
+          "voucher": null,
+          "discount_amount": 0.0,
+          "final_amount": 200000.0
+        },
+        "headers": {
+          "Content-Length": "109",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:58:01 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "apply_voucher": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "valid": false,
+          "message": "Invalid voucher code",
+          "voucher": null,
+          "discount_amount": 0.0,
+          "final_amount": 200000.0
+        },
+        "headers": {
+          "Content-Length": "109",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:58:01 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "voucher_usage_history": {
+        "success": true,
+        "status_code": 200,
+        "data": [],
+        "headers": {
+          "Content-Length": "2",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:58:01 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "support_tickets": {
+      "list_tickets": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "tickets": [],
+          "total": 0,
+          "page": 1,
+          "limit": 20,
+          "has_more": false
+        },
+        "headers": {
+          "Content-Length": "61",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:58:01 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "create_ticket": {
+        "success": false,
+        "status_code": 500,
+        "error": "404: Customer not found",
+        "headers": {
+          "Content-Length": "36",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:58:01 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "water_tips": {
+      "list_tips": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "tips": [
+            {
+              "id": "690271b9ce99eeeb15a95a3d",
+              "title": "Test Water Tip 1761767865",
+              "description": "This is a test water conservation tip created via API testing",
+              "category": "general_savings",
+              "potential_savings_percentage": 20.0,
+              "potential_savings_amount": null,
+              "difficulty_level": "medium",
+              "implementation_time": "2 hours",
+              "implementation_steps": [
+                "Step 1: Identify water usage areas",
+                "Step 2: Install water-saving devices",
+                "Step 3: Monitor usage reduction"
+              ],
+              "benefits": [
+                "Reduces water consumption",
+                "Lowers water bills"
+              ],
+              "required_tools": [
+                "Water meter",
+                "Basic tools"
+              ],
+              "created_at": "2025-10-29T19:57:45.707000",
+              "updated_at": "2025-10-29T19:57:45.707000",
+              "created_by": "69026fd3c4e36353903f7249",
+              "is_active": true,
+              "view_count": 0,
+              "like_count": 0,
+              "implementation_count": 0,
+              "tags": [],
+              "image_url": null
+            }
+          ],
+          "total": 1,
+          "page": 1,
+          "limit": 20,
+          "has_more": false
+        },
+        "headers": {
+          "Content-Length": "829",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:58:01 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "filter_tips": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "tips": [
+            {
+              "id": "690271b9ce99eeeb15a95a3d",
+              "title": "Test Water Tip 1761767865",
+              "description": "This is a test water conservation tip created via API testing",
+              "category": "general_savings",
+              "potential_savings_percentage": 20.0,
+              "potential_savings_amount": null,
+              "difficulty_level": "medium",
+              "implementation_time": "2 hours",
+              "implementation_steps": [
+                "Step 1: Identify water usage areas",
+                "Step 2: Install water-saving devices",
+                "Step 3: Monitor usage reduction"
+              ],
+              "benefits": [
+                "Reduces water consumption",
+                "Lowers water bills"
+              ],
+              "required_tools": [
+                "Water meter",
+                "Basic tools"
+              ],
+              "created_at": "2025-10-29T19:57:45.707000",
+              "updated_at": "2025-10-29T19:57:45.707000",
+              "created_by": "69026fd3c4e36353903f7249",
+              "is_active": true,
+              "view_count": 0,
+              "like_count": 0,
+              "implementation_count": 0,
+              "tags": [],
+              "image_url": null
+            }
+          ],
+          "total": 1,
+          "page": 1,
+          "limit": 20,
+          "has_more": false
+        },
+        "headers": {
+          "Content-Length": "829",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:58:01 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "personalized_tips": {
+        "success": true,
+        "status_code": 200,
+        "data": [
+          {
+            "id": "690271b9ce99eeeb15a95a3d",
+            "title": "Test Water Tip 1761767865",
+            "description": "This is a test water conservation tip created via API testing",
+            "category": "general_savings",
+            "potential_savings_percentage": 20.0,
+            "potential_savings_amount": null,
+            "difficulty_level": "medium",
+            "implementation_time": "2 hours",
+            "implementation_steps": [
+              "Step 1: Identify water usage areas",
+              "Step 2: Install water-saving devices",
+              "Step 3: Monitor usage reduction"
+            ],
+            "benefits": [
+              "Reduces water consumption",
+              "Lowers water bills"
+            ],
+            "required_tools": [
+              "Water meter",
+              "Basic tools"
+            ],
+            "created_at": "2025-10-29T19:57:45.707000",
+            "updated_at": "2025-10-29T19:57:45.707000",
+            "created_by": "69026fd3c4e36353903f7249",
+            "is_active": true,
+            "view_count": 0,
+            "like_count": 0,
+            "implementation_count": 0,
+            "tags": [],
+            "image_url": null
+          }
+        ],
+        "headers": {
+          "Content-Length": "773",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:58:01 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "alerts": {
+      "get_alerts": {
+        "success": true,
+        "status_code": 200,
+        "data": [],
+        "headers": {
+          "Content-Length": "2",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:58:01 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "unread_count": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "unread_count": 0
+        },
+        "headers": {
+          "Content-Length": "18",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:58:01 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "mark_all_read": {
+        "success": true,
+        "status_code": 200,
+        "data": {
+          "message": "Marked 0 alerts as read"
+        },
+        "headers": {
+          "Content-Length": "37",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:58:01 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "alert_preferences": {
+        "success": false,
+        "status_code": 500,
+        "error": "Failed to get alert preferences: alert_models.AlertPreferences() argument after ** must be a mapping, not AlertPreferences",
+        "headers": {
+          "Content-Length": "135",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:58:01 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "update_preferences": {
+        "success": false,
+        "status_code": 422,
+        "error": [
+          {
+            "type": "missing",
+            "loc": [
+              "body",
+              "customer_id"
+            ],
+            "msg": "Field required",
+            "input": {
+              "low_balance_threshold": 50000,
+              "high_usage_threshold": 100.0,
+              "leak_detection_enabled": true,
+              "email_notifications": true,
+              "sms_notifications": false,
+              "push_notifications": true
+            },
+            "url": "https://errors.pydantic.dev/2.12/v/missing"
+          }
+        ],
+        "headers": {
+          "Content-Length": "312",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:58:02 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "leak_events": {
+        "success": true,
+        "status_code": 200,
+        "data": [],
+        "headers": {
+          "Content-Length": "2",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:58:02 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "tampering_events": {
+        "success": true,
+        "status_code": 200,
+        "data": [],
+        "headers": {
+          "Content-Length": "2",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:58:02 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "water_saving_tips": {
+        "success": true,
+        "status_code": 200,
+        "data": [],
+        "headers": {
+          "Content-Length": "2",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:58:02 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "reports": {
+      "pdf_report": {
+        "success": false,
+        "status_code": 404,
+        "error": "No usage data found for the specified period",
+        "headers": {
+          "Content-Length": "57",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:58:02 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "excel_report": {
+        "success": false,
+        "status_code": 404,
+        "error": "No usage data found for the specified period",
+        "headers": {
+          "Content-Length": "57",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:58:02 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    },
+    "admin_management": {
+      "skipped": "Not admin/technician role"
+    },
+    "roles_permissions": {
+      "list_roles": {
+        "success": false,
+        "status_code": 403,
+        "error": "Admin access required",
+        "headers": {
+          "Content-Length": "34",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:58:02 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      },
+      "list_permissions": {
+        "success": false,
+        "status_code": 403,
+        "error": "Admin access required",
+        "headers": {
+          "Content-Length": "34",
+          "content-type": "application/json",
+          "date": "Wed, 29 Oct 2025 19:58:02 GMT",
+          "server": "uvicorn",
+          "via": "1.1 google",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        }
+      }
+    }
+  }
+}
