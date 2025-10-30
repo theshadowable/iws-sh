@@ -3,7 +3,7 @@
 import requests
 import json
 
-BACKEND_URL = "https://bug-sweep.preview.emergentagent.com/api"
+BACKEND_URL = "https://bug-hunter-83.preview.emergentagent.com/api"
 ADMIN_CREDS = {"email": "admin@indowater.com", "password": "admin123"}
 
 def test_quick_verification():

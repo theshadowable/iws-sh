@@ -158,8 +158,9 @@ async def get_alert_preferences(
         
         if not prefs:
             # Create default preferences
-            prefs = AlertPreferences(customer_id=customer_id)
-            await db.alert_preferences.insert_one(prefs.dict())
+            prefs_obj = AlertPreferences(customer_id=customer_id)
+            await db.alert_preferences.insert_one(prefs_obj.dict())
+            return prefs_obj
         
         return AlertPreferences(**prefs)
         
