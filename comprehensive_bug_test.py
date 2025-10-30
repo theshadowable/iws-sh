@@ -12,7 +12,7 @@ import time
 from typing import Dict, Any, Optional
 
 # Backend URL from environment
-BACKEND_URL = "https://fix-bugs-backend.preview.emergentagent.com/api"
+BACKEND_URL = "https://comprehensive-fix-1.preview.emergentagent.com/api"
 
 # Demo accounts to test
 DEMO_ACCOUNTS = [
